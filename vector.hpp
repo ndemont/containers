@@ -34,7 +34,7 @@ class vector
 				m_vector[i] = val;
 			std::cout << "Size construction done" << std::endl;
 		}
-        vector<T>(iterator first, iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
+		vector<T>(iterator first, iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			m_size = last - first;
 			m_vector = m_alloc.allocate(m_size);
@@ -89,10 +89,15 @@ class vector
 				iterator&	operator=(const iterator& x)
 				{
 					m_iterator = x.m_iterator;
+					return *this;
 				}
-				iterator&	operator-(const iterator& x)
+				bool	operator!=(const iterator& x)
 				{
-					return (x.m_iterator - m_iterator);
+					return (m_iterator != x.m_iterator);
+				}
+				size_type	operator-(const iterator& x)
+				{
+					return (m_iterator - x.m_iterator);
 				}
 				iterator&	operator++(void)
 				{
@@ -102,7 +107,7 @@ class vector
 				iterator	operator++(int)
 				{
 					++m_iterator;
-					return this;
+					return *this;
 				}
 				T	operator*(void) 
 				{
@@ -115,9 +120,9 @@ class vector
   		};
 		
 	private:
-	value_type			*m_vector;
-	size_type			m_size;
-	allocator_type 		m_alloc;
+		value_type			*m_vector;
+		size_type			m_size;
+		allocator_type 		m_alloc;
 };
 
 #endif

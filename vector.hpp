@@ -3,6 +3,7 @@
 
 //# include "iterator_traits.hpp"
 # include <iostream>
+# include <stdexcept>
 
 template <typename T, class Alloc = std::allocator<T> >
 class vector
@@ -11,35 +12,34 @@ class vector
 		
 		/* MEMBER TYPES */
 		class iterator;
-		typedef T													value_type;
-		typedef Alloc												allocator_type;
-		// typedef allocator_type::reference						reference;
-		// typedef allocator_type::const_reference					const_reference;
-		// typedef allocator_type::pointer							pointer;
-		// typedef allocator_type::const_pointer					const_pointer;
-		// typedef random_access_iterator_tag						iterator;
-		// typedef const random_access_iterator_tag					const_iterator;
+		typedef T					value_type;
+		typedef Alloc				allocator_type;
+		typedef value_type &		reference;
+		typedef value_type const &	const_reference;
+		typedef value_type *		pointer;
+		typedef value_type const *	const_pointer;
+		typedef const iterator								const_iterator;
 		// typedef reverse_iterator<iterator>						reverse_iterator;
 		// typedef const reverse_iterator<iterator>					const_reverse_iterator;
-		//typedef	ft::iterator_traits<iterator>::difference_type	difference_type;
-		typedef	size_t												size_type;
+		typedef	std::ptrdiff_t								difference_type;
+		typedef	size_t										size_type;
 
 		/* CONSTRUCTORS */
-		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_vector(0), m_size(0) {};
-		explicit vector<T>(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_size(n)
+		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_vector(NULL), m_size(0), m_capacity(0) {};
+		explicit vector<T>(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_size(n), m_capacity(n)
 		{
-			m_vector = m_alloc.allocate(m_size);
-			std::cout << "Size constructor called" << std::endl;
+			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; i < m_size; i++) 
 				m_vector[i] = val;
-			std::cout << "Size construction done" << std::endl;
 		}
 		vector<T>(iterator first, iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
-			m_size = last - first;
-			m_vector = m_alloc.allocate(m_size);
+			m_capacity = last - first;
+			m_size = m_capacity;
+			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; first != last; i++)
 			{
+				std::cout << *first << std::endl;
 				m_vector[i] = *first;
 				i++;
 				first++;
@@ -50,32 +50,28 @@ class vector
 			if (this != &x)
 				*this = x;
 		}
+
+		/* DESTRUCTOR */
+
 		~vector<T>(void)
 		{
 			if (m_vector)
-				delete m_vector;
+				m_alloc.deallocate(m_vector, m_capacity);
 		}
 
-		/* OPERATORS */
+		/* OPERATOR= */
+
 		vector& operator=(const vector& x)
 		{
 			if (m_vector)
-				delete m_vector;
+				m_alloc.deallocate(m_vector, m_capacity);
 			m_alloc = x.m_alloc;
+			m_capacity = x.m_capacity;
 			m_size = x.m_size;
-			m_vector = m_alloc.allocate(m_size);
-			for (size_type i = 0; i < m_size; i++)
-				m_vector[i] = x[i];
+			m_vector = m_alloc.allocate(m_capacity);
+			for (size_type i = 0; i < x.m_size; i++)
+				this->push_back(x[i]);
 			return *this;
-		}
-		value_type & operator[](size_type n)
-		{
-			return m_vector[n];
-		}
-
-		value_type const & operator[](size_type n) const
-		{
-			return m_vector[n];
 		}
 
 		/* ITERATOR */
@@ -95,6 +91,14 @@ class vector
 				{
 					return (m_iterator != x.m_iterator);
 				}
+				size_type operator+(const iterator& x)
+				{
+					return (m_iterator + x.m_iterator);
+				}
+				iterator	operator+(size_type n) const
+				{
+					return (m_iterator + n);
+				}
 				size_type	operator-(const iterator& x)
 				{
 					return (m_iterator - x.m_iterator);
@@ -109,19 +113,175 @@ class vector
 					++m_iterator;
 					return *this;
 				}
-				T	operator*(void) 
+				reference	operator*(void)
 				{
 					return *m_iterator;
 				}
 
 			private:
 				iterator(void){};
-				T*	m_iterator;
+				value_type*	m_iterator;
   		};
+
+		/* ITERATORS */
+		iterator begin(void)
+		{
+			iterator begin(m_vector);
+			return begin;
+		}
+		const_iterator begin(void) const
+		{
+			iterator begin(m_vector);
+			return begin;
+		}
+		iterator end()
+		{
+			iterator end(m_vector + m_size);
+			return end;
+		}
+		const_iterator end() const
+		{
+			iterator end(m_vector + m_size);
+			return end;
+		}
+		//rbegin;
+		//rend;
 		
+		/* CAPACITY */
+		size_type size(void) const
+		{
+			return m_size;
+		}
+		size_type max_size() const
+		{
+			return (m_alloc.max_size());
+		}
+		void resize (size_type n, value_type val = value_type())
+		{
+			if (n < m_size)
+			{
+				for (size_t i = n; n < m_size; i++)
+					m_vector[i].~value_type();
+				m_size = n;
+			}
+			else if (n > m_size)
+			{
+				if (n > m_capacity)
+				{
+					m_vector = m_alloc.allocate(n, m_vector);
+					m_capacity = n;
+				}
+				for (size_type i = m_size; i < n; i++)
+					m_vector[i] = val;
+				m_size = n;
+			}
+
+		}
+		size_type capacity() const
+		{
+			return m_capacity;
+		}
+		bool empty() const
+		{
+			return (m_size);
+		}
+		void reserve (size_type n)
+		{
+			if (n > m_capacity)
+			{
+				m_vector = m_alloc.allocate(n, m_vector);
+				m_capacity = n;
+			}
+		}
+
+		/* ELEMENT ACCESS */
+		reference operator[](size_type n)
+		{
+			value_type	*elem = this->begin() + n;
+			return	*elem;
+		}
+		const_reference operator[](size_type n) const
+		{
+			return *(this->begin() + n);
+		}
+		reference at (size_type n)
+		{
+			try
+			{
+				if (m_size < n)
+					throw std::out_of_range("element is out of range");
+			}
+			catch(const std::exception& e)
+			{
+				std::cerr << e.what() << '\n';
+			}
+			return m_vector[n];
+		}
+		const_reference at (size_type n) const
+		{
+			try
+			{
+				if (m_size < n)
+					throw std::out_of_range("element is out of range");
+			}
+			catch(const std::exception& e)
+			{
+				std::cerr << e.what() << '\n';
+			}
+			return m_vector[n];
+		}
+		//at;
+		//front;
+		//back;
+
+		/* MODIFIERS */
+		//assign;
+		void push_back (const value_type& val)
+		{
+			if (m_size == m_capacity)
+			{
+				m_vector = m_alloc.allocate(m_capacity + 1, m_vector);
+				m_capacity++;
+			}
+			if (m_size)
+			{
+				for (size_type i = m_size; i > 0; i--)
+					m_vector[i] = m_vector[i - 1];
+			}
+			m_vector[0] = val;
+			m_size++;
+		}
+		//pop_back;
+		//insert;
+		//erase;
+		void swap (vector& x)
+		{
+			vector tmp;
+
+			tmp = x;
+			x = this;
+			this = tmp;
+		}
+		void clear(void)
+		{
+			for (size_type i = 0; i < m_size; i++)
+				m_vector[i].~value_type();
+		}
+
+		/* ALLOCATOR */
+		//get_allocator;
+
+		/* NON-MEMBER FONCTION OVERLOADS */
+		//relational operators;
+		//swap;
+
+		/* TEMPLATE SPEXIALIZATIONS */
+		//vector<bool>;
+
 	private:
 		value_type			*m_vector;
 		size_type			m_size;
+		size_type			m_capacity;
 		allocator_type 		m_alloc;
 };
 

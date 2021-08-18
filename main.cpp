@@ -2,24 +2,25 @@
 
 int		main(void)
 {
-	vector<int>				array1(5, 12);
-	vector<int>				array2(10, 2);
-	vector<int>				array3(10, 2);
+	vector<int>	array1(5, 12);
+	vector<int>	array2(10, 2);
 
-	for (int i = 0; i < 10; i++)
-		std::cout << array2[i] << std::endl;
-	for (int i = 0; i < 5; i++)
-		std::cout << array1[i] << std::endl;
-	array3 = array1;
+	std::cout << "Array 1" << std::endl;
+	for (size_t i = 0; i < array1.size(); i++)
+		std::cout << array1.at(i) << std::endl;
+	std::cout << "Array 2" << std::endl;
+	for (size_t i = 0; i < array2.size(); i++)
+		std::cout << array2.at(i) << std::endl;
 	array1 = array2;
-	for (int i = 0; i < 10; i++)
-		std::cout << array1[i] << std::endl;
-	for (int i = 0; i < 5; i++)
-		std::cout << array3[i] << std::endl;
-	vector<int>::iterator	begin(&array1[0]);
-	vector<int>::iterator	end(&array1[4]);
-	vector<int>	array4(begin, end);
-	for (int i = 0; i < 4; i++)
-		std::cout << array4[i] << std::endl;
+	std::cout << "New Array 1" << std::endl;
+	for (size_t i = 0; i < array1.size(); i++)
+		std::cout << array1.at(i) << std::endl;
+	std::cout << std::endl;
+	vector<int>::iterator	first(array1.begin());
+	vector<int>::iterator	last(array1.end());
+	vector<int>	array4(first, last);
+	std::cout << "Array 4" << std::endl;
+	for (size_t i = 0; i < 15; i++)
+		std::cout << array4.at(i) << std::endl;
 	return 0;
 }

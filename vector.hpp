@@ -18,11 +18,11 @@ class vector
 		typedef value_type const &	const_reference;
 		typedef value_type *		pointer;
 		typedef value_type const *	const_pointer;
-		typedef const iterator								const_iterator;
-		// typedef reverse_iterator<iterator>						reverse_iterator;
-		// typedef const reverse_iterator<iterator>					const_reverse_iterator;
-		typedef	std::ptrdiff_t								difference_type;
-		typedef	size_t										size_type;
+		typedef const iterator						const_iterator;
+		// typedef reverse_iterator<iterator>		reverse_iterator;
+		// typedef const reverse_iterator<iterator>	const_reverse_iterator;
+		typedef	std::ptrdiff_t						difference_type;
+		typedef	size_t								size_type;
 
 		/* CONSTRUCTORS */
 		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_vector(NULL), m_size(0), m_capacity(0) {};
@@ -52,7 +52,6 @@ class vector
 		}
 
 		/* DESTRUCTOR */
-
 		~vector<T>(void)
 		{
 			if (m_vector)
@@ -60,14 +59,13 @@ class vector
 		}
 
 		/* OPERATOR= */
-
 		vector& operator=(const vector& x)
 		{
 			if (m_vector)
 				m_alloc.deallocate(m_vector, m_capacity);
 			m_alloc = x.m_alloc;
-			m_capacity = x.m_capacity;
-			m_size = x.m_size;
+			m_capacity = 0;
+			m_size = 0;
 			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; i < x.m_size; i++)
 				this->push_back(x[i]);
@@ -230,30 +228,89 @@ class vector
 			}
 			return m_vector[n];
 		}
-		//at;
-		//front;
-		//back;
+		reference front(void)
+		{
+			return this->begin();
+		}
+		const_reference front(void) const
+		{
+			return this->begin();
+		}
+		reference back(void)
+		{
+			return this->end();
+		}
+		const_reference back(void) const
+		{
+			return this->end();
+		}
 
 		/* MODIFIERS */
-		//assign;
-		void push_back (const value_type& val)
+		template <class InputIterator>
+		void assign	(InputIterator first, InputIterator last)
+		{
+
+		}
+		void assign	(size_type n, const value_type& val)
+		{
+			if (n > m_capacity)
+			{
+				m_vector = m_alloc.allocate(n, m_vector);
+				m_capacity = n;
+			}
+			for (size_type i = 0; i < n; i++)
+				m_vector[i] = val;
+			m_size = n;
+		}
+		void push_back	(const value_type& val)
 		{
 			if (m_size == m_capacity)
 			{
 				m_vector = m_alloc.allocate(m_capacity + 1, m_vector);
 				m_capacity++;
 			}
-			if (m_size)
-			{
-				for (size_type i = m_size; i > 0; i--)
-					m_vector[i] = m_vector[i - 1];
-			}
-			m_vector[0] = val;
+			m_vector[m_size] = val;
 			m_size++;
 		}
-		//pop_back;
-		//insert;
-		//erase;
+		void pop_back (void)
+		{
+			m_size--;
+			m_vector[m_size].~value_type();
+		}
+
+		iterator insert (iterator position, const value_type& val)
+		{
+
+		}
+		void insert (iterator position, size_type n, const value_type& val)
+		{
+
+		}
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last)
+		{
+
+		}
+
+		iterator erase (iterator position)
+		{
+			iterator erased;
+
+			(*position).~value_type();
+			erased = position;
+			position++;
+			while (position != this->end())
+			{
+				*(position - 1) = *position;
+				position++;
+			}
+			return erased;
+		}
+		iterator erase (iterator first, iterator last)
+		{
+			return first;
+		}
+
 		void swap (vector& x)
 		{
 			vector tmp;

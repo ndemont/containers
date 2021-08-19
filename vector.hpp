@@ -5,6 +5,9 @@
 # include <iostream>
 # include <stdexcept>
 
+namespace ft
+{
+
 template <typename T, class Alloc = std::allocator<T> >
 class vector
 {
@@ -340,6 +343,8 @@ class vector
 		size_type			m_size;
 		size_type			m_capacity;
 		allocator_type 		m_alloc;
+};
+
 };
 
 #endif

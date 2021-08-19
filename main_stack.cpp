@@ -1,9 +1,11 @@
 #include "stack.hpp"
 
+#include <iostream>
+
 int		main(void)
 {
-	stack<int>	files;
-	stack<int>	cards;
+	stack<int, ft::vector<int> >	files;
+	stack<int, ft::vector<int> >	cards;
 
 	files.push(21);
 	files.push(12);

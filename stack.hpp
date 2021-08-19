@@ -47,35 +47,31 @@ class stack
 	}
 
 	/* Non-member function overloads */
-	bool operator==(const stack<T,Container>& rhs)
+	bool	operator==(const stack<T,Container>& rhs)
 	{
 		return (this->m_ctnr == rhs.m_ctnr);
 	}
-	bool operator!=(const stack<T,Container>& rhs)
+	bool	operator!=(const stack<T,Container>& rhs)
 	{
 		return (this->m_ctnr != rhs.m_ctnr);
 	}
-	bool operator<(const stack<T,Container>& rhs)
+	bool	operator<(const stack<T,Container>& rhs)
 	{
 		return (this->m_ctnr < rhs.m_ctnr);
 	}
-	bool operator<=(const stack<T,Container>& rhs)
+	bool	operator<=(const stack<T,Container>& rhs)
 	{
 		return (this->m_ctnr <= rhs.m_ctnr);
 	}
-	bool operator>(const stack<T,Container>& rhs)
+	bool	operator>(const stack<T,Container>& rhs)
 	{
 		return (this->m_ctnr > rhs.m_ctnr);
 	}
-	bool operator>=(const stack<T,Container>& rhs)
+	bool	operator>=(const stack<T,Container>& rhs)
 	{
 		return (this->m_ctnr >= rhs.m_ctnr);
 	}
-	//void swap (stack<T,Container>& x, stack<T,Container>& y) noexcept(noexcept(x.swap(y)));
 
-	/* Non-member class specializations */
-	//template <class T, class Container, class Alloc>
-	//struct std::uses_allocator<stack<T,Container>,Alloc>;
 	private:
 		container_type	m_ctnr;
 };

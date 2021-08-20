@@ -4,6 +4,7 @@
 //# include "iterator_traits.hpp"
 # include <iostream>
 # include <stdexcept>
+#
 
 namespace ft
 {
@@ -21,6 +22,7 @@ class vector
 		typedef value_type const &	const_reference;
 		typedef value_type *		pointer;
 		typedef value_type const *	const_pointer;
+		typedef ft::vectorIterator					iterator;
 		typedef const iterator						const_iterator;
 		// typedef reverse_iterator<iterator>		reverse_iterator;
 		// typedef const reverse_iterator<iterator>	const_reverse_iterator;

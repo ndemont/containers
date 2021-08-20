@@ -22,48 +22,43 @@ struct pair
 	{
 		m_first = pr.m_first;
 		m_second = pr.m_second;
+		
+		return (*this);
 	}
 
 	/* Non-member function overloads */
-	template <class T1, class T2>
 	friend bool	operator==(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
 		return (lhs.m_first == rhs.m_first && lhs.m_second == rhs.m_second);
 	}
 
-	template <class T1, class T2>
 	friend bool	operator!=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
 		return !(lhs == rhs);
 	}
 
-	template <class T1, class T2>
 	friend bool	operator<(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
 		return (lhs.m_first < rhs.m_first || (!(rhs.m_first < lhs.m_first) && lhs.m_second < rhs.m_second));
 	}
 
-	template <class T1, class T2>
 	friend bool	operator<=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
 		return !(rhs < lhs);
 	}
 
-	template <class T1, class T2>
 	friend bool	operator>(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
 		return (rhs < lhs);
 	}
 
-	template <class T1, class T2>
-	friend bool	operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs);
+	friend bool	operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
 		return !(lhs < rhs);
 	}
 
-	private:
-		first_type	m_first;
-		second_type	m_second;
+	first_type	m_first;
+	second_type	m_second;
 };
 
 template <class T1, class T2>

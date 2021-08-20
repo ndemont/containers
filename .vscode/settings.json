@@ -11,6 +11,8 @@
 		"string_view": "cpp",
 		"unordered_map": "cpp",
 		"vector": "cpp",
-		"utility": "cpp"
+		"utility": "cpp",
+		"__node_handle": "cpp",
+		"functional": "cpp"
 	}
 }

@@ -85,12 +85,13 @@ class map
 	/* ELEMENT ACCESS */
 	mapped_type&	operator[](const key_type& k)
 	{
-		if (!check_key(m_root, k))
-		{
-			addNode(k, mapped_type());
-			m_size++;
-		}
-		return (m_root->value);
+		//if (!check_key(m_root, k))
+		//{
+		//	addNode(k, mapped_type());
+		//	m_size++;
+		//}
+		//return (findKey(k));
+		return (*((this->insert(make_pair(k,mapped_type()))).m_first)).m_second;
 	}
 
 	/* MODIFIERS */
@@ -109,13 +110,13 @@ class map
 	value_compare	value_comp(void) const;
 
 	/* OPERATIONS */
-	iterator							find(const key_type& k);
-	const_iterator						find(const key_type& k) const;
-	size_type							count(const key_type& k) const;
-	iterator							lower_bound(const key_type& k);
-	const_iterator						lower_bound(const key_type& k) const;
-	iterator							upper_bound(const key_type& k);
-	const_iterator						upper_bound(const key_type& k) const;
+	iterator								find(const key_type& k);
+	const_iterator							find(const key_type& k) const;
+	size_type								count(const key_type& k) const;
+	iterator								lower_bound(const key_type& k);
+	const_iterator							lower_bound(const key_type& k) const;
+	iterator								upper_bound(const key_type& k);
+	const_iterator							upper_bound(const key_type& k) const;
 	ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const;
 	ft::pair<iterator,iterator>				equal_range(const key_type& k);
 
@@ -175,6 +176,25 @@ class map
 		}
 	}
 
+	mapped_type&	findKey(const key_type& k)
+	{
+		t_binary_tree *root = m_root;
+	
+		while (root)
+		{
+			if (k < root->value)
+				root = root->left;
+			else if (k > root->value)
+				root = root->right;
+			else
+				break;
+		}
+		if (root)
+			return root->value;
+		else
+			return NULL;
+	}
+	
 	t_binary_tree	*newNode(key_type key, mapped_type value)
 	{
 		t_binary_tree	*newNode = new t_binary_tree();

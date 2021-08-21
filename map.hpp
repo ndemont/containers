@@ -85,17 +85,20 @@ class map
 	/* ELEMENT ACCESS */
 	mapped_type&	operator[](const key_type& k)
 	{
-		//if (!check_key(m_root, k))
-		//{
-		//	addNode(k, mapped_type());
-		//	m_size++;
-		//}
-		//return (findKey(k));
-		return (*((this->insert(make_pair(k,mapped_type()))).m_first)).m_second;
+		if (!check_key(m_root, k))
+		{
+			addNode(k, mapped_type());
+			m_size++;
+		}
+		return (findKey(k));
+		//return (*((this->insert(make_pair(k,mapped_type()))).m_first)).m_second;
 	}
 
 	/* MODIFIERS */
-	ft::pair<iterator,bool>	insert(const value_type& val);
+	ft::pair<iterator,bool>	insert(const value_type& val)
+	{
+
+	}
 	iterator					insert(iterator position, const value_type& val);
 	template <class InputIterator>
 	void				insert(InputIterator first, InputIterator last);

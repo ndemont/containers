@@ -12,16 +12,16 @@ struct pair
 		typedef	T2	second_type;
 
 	/* CONSTRUCTORS */
-	pair(void) : m_first(first_type()), m_second(second_type()) {};
+	pair(void) : first(first_type()), second(second_type()) {};
 	template<class U, class V>
-	pair(const pair<U,V>& pr) : m_first(pr.m_first), m_second(pr.m_second) {};
-	pair(const first_type& a, const second_type& b) : m_first(a), m_second(b) {};
+	pair(const pair<U,V>& pr) : first(pr.first), second(pr.second) {};
+	pair(const first_type& a, const second_type& b) : first(a), second(b) {};
 
 	/* OPERATOR= */
 	pair&	operator=(const pair& pr)
 	{
-		m_first = pr.m_first;
-		m_second = pr.m_second;
+		first = pr.first;
+		second = pr.second;
 		
 		return (*this);
 	}
@@ -29,7 +29,7 @@ struct pair
 	/* Non-member function overloads */
 	friend bool	operator==(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
-		return (lhs.m_first == rhs.m_first && lhs.m_second == rhs.m_second);
+		return (lhs.first == rhs.first && lhs.second == rhs.second);
 	}
 
 	friend bool	operator!=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
@@ -39,7 +39,7 @@ struct pair
 
 	friend bool	operator<(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
-		return (lhs.m_first < rhs.m_first || (!(rhs.m_first < lhs.m_first) && lhs.m_second < rhs.m_second));
+		return (lhs.first < rhs.first || (!(rhs.first < lhs.first) && lhs.second < rhs.second));
 	}
 
 	friend bool	operator<=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
@@ -57,8 +57,8 @@ struct pair
 		return !(lhs < rhs);
 	}
 
-	first_type	m_first;
-	second_type	m_second;
+	first_type	first;
+	second_type	second;
 };
 
 template <class T1, class T2>

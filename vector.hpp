@@ -39,7 +39,6 @@ class vector
 		vector<T>(iterator first, iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			m_capacity = last - first;
-			std::cout << "capacity = " << m_capacity << std::endl;
 			m_size = m_capacity;
 			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; first != last; i++)
@@ -48,7 +47,7 @@ class vector
 				first++;
 			}
 		}
-		vector<T>(const vector<T>&x) 
+		vector<T>(const vector<T>&x) : m_alloc(x.m_alloc), m_vector(NULL), m_size(0), m_capacity(0)
 		{
 			if (this != &x)
 				*this = x;
@@ -62,18 +61,21 @@ class vector
 		}
 
 		/* OPERATOR= */
-		// vector& operator=(const vector& x)
-		// {
-		// 	if (m_vector)
-		// 		m_alloc.deallocate(m_vector, m_capacity);
-		// 	m_alloc = x.m_alloc;
-		// 	m_capacity = 0;
-		// 	m_size = 0;
-		// 	m_vector = m_alloc.allocate(m_capacity);
-		// 	for (size_type i = 0; i < x.m_size; i++)
-		// 		this->push_back(x[i]);
-		// 	return *this;
-		// }
+		vector& operator=(const vector& x)
+		{
+			if (m_vector)
+				m_alloc.deallocate(m_vector, m_capacity);
+			m_alloc = x.m_alloc;
+			m_capacity = x.m_capacity;
+			m_size = 0;
+			m_vector = m_alloc.allocate(m_capacity);
+			for (size_type i = 0; i < x.m_size; i++)
+			{
+				value_type a = x[i];
+				this->push_back(a);
+			}
+			return *this;
+		}
 
 		/* ITERATORS */
 		iterator	begin(void)
@@ -154,8 +156,9 @@ class vector
 		}
 		const_reference operator[](size_type n) const
 		{
-			value_type	*elem = (this->begin() + n);
-			return *elem;
+			iterator pos = this->begin();
+			pos = pos + n;
+			return *pos;
 		}
 		reference at (size_type n)
 		{

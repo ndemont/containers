@@ -17,5 +17,8 @@ int		main(void)
 	std::cout << "Array 3" << std::endl;
 	for (size_t i = 0; i < array3.size(); i++)
 		std::cout << array3.at(i) << std::endl;
+	ft::vector<int> array4 = array2;
+	for (size_t i = 0; i < array4.size(); i++)
+		std::cout << array4.at(i) << std::endl;
 	return 0;
 }

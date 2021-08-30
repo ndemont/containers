@@ -73,7 +73,8 @@ class iterator
 
 		iterator&	operator+(size_type n)
 		{
-			return (m_iterator + n);
+			m_iterator = m_iterator + n;
+			return *this;
 		}		
 		// iterator&	operator+(size_type n, const iterator& x)
 		// {

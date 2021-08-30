@@ -18,7 +18,16 @@ int		main(void)
 	for (size_t i = 0; i < array3.size(); i++)
 		std::cout << array3.at(i) << std::endl;
 	ft::vector<int> array4 = array2;
+	std::cout << "Array 4" << std::endl;
+	for (size_t i = 0; i < array4.size(); i++)
+		std::cout << array4[i] << std::endl;
+	std::cout << "Array 4" << std::endl;
+	array4.resize(12, 6);
 	for (size_t i = 0; i < array4.size(); i++)
 		std::cout << array4.at(i) << std::endl;
+	std::cout << array4.empty() << std::endl;
+	std::cout << "front = " << array4.front() << std::endl;
+	std::cout << "back = " << array4.back() << std::endl;
+
 	return 0;
 }

@@ -114,7 +114,7 @@ class vector
 		{
 			if (n < m_size)
 			{
-				for (size_t i = n; n < m_size; i++)
+				for (size_t i = n; i < m_size; i++)
 					m_vector[i].~value_type();
 				m_size = n;
 			}
@@ -122,8 +122,15 @@ class vector
 			{
 				if (n > m_capacity)
 				{
+					value_type *tmp = new value_type(m_size);
+
+					for (size_type i = 0; i < m_size; i++)
+						tmp[i] = m_vector[i];
 					m_vector = m_alloc.allocate(n, m_vector);
 					m_capacity = n;
+					for (size_type i = 0; i < n; i++)
+						m_vector[i] = tmp[i];
+					delete tmp;
 				}
 				for (size_type i = m_size; i < n; i++)
 					m_vector[i] = val;
@@ -131,11 +138,11 @@ class vector
 			}
 
 		}
-		size_type capacity() const
+		size_type capacity(void) const
 		{
 			return m_capacity;
 		}
-		bool empty() const
+		bool empty(void) const
 		{
 			return (m_size);
 		}
@@ -143,16 +150,24 @@ class vector
 		{
 			if (n > m_capacity)
 			{
+				value_type *tmp = new value_type(m_size);
+
+				for (size_type i = 0; i < m_size; i++)
+					tmp[i] = m_vector[i];
 				m_vector = m_alloc.allocate(n, m_vector);
 				m_capacity = n;
+				for (size_type i = 0; i < n; i++)
+					m_vector[i] = tmp[i];
+				delete tmp;
 			}
 		}
 
 		/* ELEMENT ACCESS */
 		reference operator[](size_type n)
 		{
-			value_type	*elem = this->begin() + n;
-			return	*elem;
+			iterator pos = this->begin();
+			pos = pos + n;
+			return *pos;
 		}
 		const_reference operator[](size_type n) const
 		{
@@ -188,19 +203,27 @@ class vector
 		}
 		reference front(void)
 		{
-			return this->begin();
+			iterator pos = this->begin();
+			return *pos;
 		}
 		const_reference front(void) const
 		{
-			return this->begin();
+			iterator pos = this->begin();
+			return *pos;
 		}
 		reference back(void)
 		{
-			return this->end();
+			iterator pos = this->end();
+
+			pos--;
+			return *pos;
 		}
 		const_reference back(void) const
 		{
-			return this->end();
+			iterator pos = this->end();
+
+			pos--;
+			return *pos;
 		}
 
 		/* MODIFIERS */

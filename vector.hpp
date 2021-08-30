@@ -39,13 +39,12 @@ class vector
 		vector<T>(iterator first, iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			m_capacity = last - first;
+			std::cout << "capacity = " << m_capacity << std::endl;
 			m_size = m_capacity;
 			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; first != last; i++)
 			{
-				std::cout << *first << std::endl;
 				m_vector[i] = *first;
-				i++;
 				first++;
 			}
 		}

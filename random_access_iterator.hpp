@@ -35,18 +35,32 @@ class iterator
 		{
 			return (m_iterator != x.m_iterator);
 		}
-		size_type operator+(const iterator& x)
+			bool	operator!=(const iterator& x)
 		{
-			return (m_iterator + x.m_iterator);
+			return (m_iterator != x.m_iterator);
 		}
-		iterator	operator+(size_type n) const
+
+		iterator&	operator+(size_type n)
 		{
 			return (m_iterator + n);
+		}		
+		iterator&	operator+(size_type n, const iterator& x)
+		{
+			return (x.m_iterator + n);
 		}
-		size_type	operator-(const iterator& x)
+		iterator&	operator-(size_type n)
+		{
+			return (m_iterator - n);
+		}
+		iterator&	operator-(size_type n, const iterator& x)
+		{
+			return (x.m_iterator + n);
+		}
+		iterator&	operator-(const iterator& x)
 		{
 			return (m_iterator - x.m_iterator);
 		}
+
 		iterator&	operator++(void)
 		{
 			m_iterator++;
@@ -55,6 +69,16 @@ class iterator
 		iterator	operator++(int)
 		{
 			++m_iterator;
+			return *this;
+		}
+				iterator&	operator--(void)
+		{
+			m_iterator--;
+			return *this;
+		}
+		iterator	operator--(int)
+		{
+			--m_iterator;
 			return *this;
 		}
 		reference	operator*(void)

@@ -4,7 +4,7 @@
 //# include "iterator_traits.hpp"
 # include <iostream>
 # include <stdexcept>
-#
+# include "random_access_iterator.hpp"
 
 namespace ft
 {
@@ -15,14 +15,13 @@ class vector
 	public:
 		
 		/* MEMBER TYPES */
-		class iterator;
-		typedef T					value_type;
-		typedef Alloc				allocator_type;
-		typedef value_type &		reference;
-		typedef value_type const &	const_reference;
-		typedef value_type *		pointer;
-		typedef value_type const *	const_pointer;
-		typedef ft::vectorIterator					iterator;
+		typedef T									value_type;
+		typedef Alloc								allocator_type;
+		typedef value_type &						reference;
+		typedef value_type const &					const_reference;
+		typedef value_type *						pointer;
+		typedef value_type const *					const_pointer;
+		typedef ft::iterator<value_type>			iterator;
 		typedef const iterator						const_iterator;
 		// typedef reverse_iterator<iterator>		reverse_iterator;
 		// typedef const reverse_iterator<iterator>	const_reverse_iterator;
@@ -64,72 +63,23 @@ class vector
 		}
 
 		/* OPERATOR= */
-		vector& operator=(const vector& x)
-		{
-			if (m_vector)
-				m_alloc.deallocate(m_vector, m_capacity);
-			m_alloc = x.m_alloc;
-			m_capacity = 0;
-			m_size = 0;
-			m_vector = m_alloc.allocate(m_capacity);
-			for (size_type i = 0; i < x.m_size; i++)
-				this->push_back(x[i]);
-			return *this;
-		}
-
-		/* ITERATOR */
-		class iterator
-		{
-			public:
-				iterator(T *vector) : m_iterator(vector) {};
-				iterator(iterator const & x) : m_iterator(x.m_iterator) {};
-				~iterator(void){};
-
-				iterator&	operator=(const iterator& x)
-				{
-					m_iterator = x.m_iterator;
-					return *this;
-				}
-				bool	operator!=(const iterator& x)
-				{
-					return (m_iterator != x.m_iterator);
-				}
-				size_type operator+(const iterator& x)
-				{
-					return (m_iterator + x.m_iterator);
-				}
-				iterator	operator+(size_type n) const
-				{
-					return (m_iterator + n);
-				}
-				size_type	operator-(const iterator& x)
-				{
-					return (m_iterator - x.m_iterator);
-				}
-				iterator&	operator++(void)
-				{
-					m_iterator++;
-					return *this;
-				}
-				iterator	operator++(int)
-				{
-					++m_iterator;
-					return *this;
-				}
-				reference	operator*(void)
-				{
-					return *m_iterator;
-				}
-
-			private:
-				iterator(void){};
-				value_type*	m_iterator;
-  		};
+		// vector& operator=(const vector& x)
+		// {
+		// 	if (m_vector)
+		// 		m_alloc.deallocate(m_vector, m_capacity);
+		// 	m_alloc = x.m_alloc;
+		// 	m_capacity = 0;
+		// 	m_size = 0;
+		// 	m_vector = m_alloc.allocate(m_capacity);
+		// 	for (size_type i = 0; i < x.m_size; i++)
+		// 		this->push_back(x[i]);
+		// 	return *this;
+		// }
 
 		/* ITERATORS */
-		iterator begin(void)
+		iterator	begin(void)
 		{
-			iterator begin(m_vector);
+			iterator	begin(m_vector);
 			return begin;
 		}
 		const_iterator begin(void) const
@@ -205,7 +155,8 @@ class vector
 		}
 		const_reference operator[](size_type n) const
 		{
-			return *(this->begin() + n);
+			value_type	*elem = (this->begin() + n);
+			return *elem;
 		}
 		reference at (size_type n)
 		{

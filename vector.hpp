@@ -326,14 +326,17 @@ class vector
 		}
 
 		/* ALLOCATOR */
-		//get_allocator;
+		allocator_type get_allocator() const;
 
 		/* NON-MEMBER FONCTION OVERLOADS */
-		//relational operators;
-		//swap;
+		friend bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		friend bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		friend bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		friend bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
-		/* TEMPLATE SPEXIALIZATIONS */
-		//vector<bool>;
+		friend void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
 
 	private:
 		value_type			*m_vector;
@@ -341,6 +344,11 @@ class vector
 		size_type			m_capacity;
 		allocator_type 		m_alloc;
 };
+
+/* TEMPLATE SPEXIALIZATIONS */
+template <class Alloc>
+class vector<bool,Alloc>;
+
 
 };
 

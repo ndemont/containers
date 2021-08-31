@@ -28,11 +28,11 @@ class map
 	typedef const value_type*						const_pointer;
 	class iterator;
 	typedef const iterator							const_iterator;
-	//reverse_iterator	reverse_iterator<iterator>	
-	//const_reverse_iterator	reverse_iterator<const_iterator>
-	typedef ptrdiff_t							difference_type;
-	typedef size_t								size_type;
-	typedef struct								s_binary_tree
+	reverse_iterator								reverse_iterator<iterator>	
+	const_reverse_iterator							reverse_iterator<const_iterator>
+	typedef ptrdiff_t								difference_type;
+	typedef size_t									size_type;
+	typedef struct									s_binary_tree
 	{
 		key_type				key;
 		mapped_type				value;

@@ -1,19 +1,31 @@
 #ifndef ITERATOR_TRAITS_HPP
 # define ITERATOR_TRAITS_HPP
 
-# include <iostream>
 
 namespace ft
 {
-	template <typename Iterator>
+
+	# define INPUT 1;
+# define OUTPUT 2;
+# define FORWARD 3;
+# define BIDIRECTIONAL 4;
+# define RANDOM 5;
+
+	struct output_iterator_tag {};
+	struct input_iterator_tag {};
+	struct forward_iterator_tag {};
+	struct bidirectional_iterator_tag {};
+	struct random_access_iterator_tag {};
+
+	template <class Iterator>
 	class iterator_traits
 	{
 		public:
-			typedef Iterator::difference_type	difference_type;
-			typedef Iterator::value_type		value_type;
-			typedef Iterator::pointer			pointer;
-			typedef Iterator::reference			reference;
-			typedef Iterator::iterator_category	iterator_category;
+			typedef typename Iterator::difference_type		difference_type;
+			typedef typename Iterator::value_type			value_type;
+			typedef typename Iterator::pointer				pointer;
+			typedef typename Iterator::reference			reference;
+			typedef typename Iterator::iterator_category	iterator_category;
 	};
 
 	template <class T>

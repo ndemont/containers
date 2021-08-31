@@ -37,7 +37,7 @@ class iterator
 			return (m_iterator != x.m_iterator);
 		}
 
-		reference	operator*(void)
+		reference	operator*(void) const
 		{
 			return *m_iterator;
 		}
@@ -91,14 +91,14 @@ class iterator
 			return (m_iterator - x.m_iterator);
 		}
 
-		bool	operator<(const iterator& x)
+		friend bool	operator<(const iterator& lhs, const iterator& rhs)
 		{
-			return (m_iterator < x.m_iterator);
+			return (lhs.m_iterator < rhs.m_iterator);
 		}
 
-		bool	operator>(const iterator& x)
+		friend bool	operator>(const iterator& lhs, const iterator& rhs)
 		{
-			return (m_iterator > x.m_iterator);
+			return (lhs.m_iterator > rhs.m_iterator);
 		}
 		bool	operator<=(const iterator& x)
 		{
@@ -118,7 +118,7 @@ class iterator
 			return (m_iterator -= x.m_iterator);
 		}
 
-		value_type	operator[](size_type n)
+		reference	operator[](difference_type n) const
 		{
 			return (m_iterator[n]);
 		}

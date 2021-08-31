@@ -2,12 +2,10 @@
 #ifndef RANDOM_ACCESS_ITERATOR_HPP
 # define RANDOM_ACCESS_ITERATOR_HPP
 
-# include <cstddef>
-
 namespace ft
 {
 
-template <class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
+template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
 class iterator
 {
 	public:
@@ -16,7 +14,7 @@ class iterator
 		typedef Distance	difference_type;
 		typedef Pointer		pointer;
 		typedef Reference	reference;
-		//typedef Category	iterator_category;
+		typedef Category	iterator_category;
 
 
 		iterator(void) {};

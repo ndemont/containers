@@ -28,6 +28,9 @@ int		main(void)
 	std::cout << array4.empty() << std::endl;
 	std::cout << "front = " << array4.front() << std::endl;
 	std::cout << "back = " << array4.back() << std::endl;
-
+	ft::reverse_iterator<ft::vector<int>::iterator>	fst(array4.rbegin());
+	ft::reverse_iterator<ft::vector<int>::iterator>	lst(array4.rend());
+	for (ft::reverse_iterator<ft::vector<int>::iterator> i = fst; i < lst; i++)
+		std::cout << *i << std::endl;
 	return 0;
 }

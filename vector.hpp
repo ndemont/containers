@@ -5,6 +5,7 @@
 # include <iostream>
 # include <stdexcept>
 # include "random_access_iterator.hpp"
+# include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -15,18 +16,18 @@ class vector
 	public:
 		
 		/* MEMBER TYPES */
-		typedef T									value_type;
-		typedef Alloc								allocator_type;
-		typedef value_type &						reference;
-		typedef value_type const &					const_reference;
-		typedef value_type *						pointer;
-		typedef value_type const *					const_pointer;
-		typedef ft::iterator<value_type>			iterator;
-		typedef const iterator						const_iterator;
-		// typedef reverse_iterator<iterator>		reverse_iterator;
-		// typedef const reverse_iterator<iterator>	const_reverse_iterator;
-		typedef	std::ptrdiff_t						difference_type;
-		typedef	size_t								size_type;
+		typedef T														value_type;
+		typedef Alloc													allocator_type;
+		typedef value_type &											reference;
+		typedef value_type const &										const_reference;
+		typedef value_type *											pointer;
+		typedef value_type const *										const_pointer;
+		typedef ft::iterator<random_access_iterator_tag, value_type>	iterator;
+		typedef const iterator											const_iterator;
+		typedef ft::reverse_iterator<iterator>							reverse_iterator;
+		typedef const reverse_iterator									const_reverse_iterator;
+		typedef	std::ptrdiff_t											difference_type;
+		typedef	size_t													size_type;
 
 		/* CONSTRUCTORS */
 		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_vector(NULL), m_size(0), m_capacity(0) {};

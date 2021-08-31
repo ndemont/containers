@@ -83,7 +83,23 @@ class reverse_iterator
 			return (m_iterator[n]);
 		}
 
-
+		/*RELATIONAL OPERATORS - Non Member function Overloads*/
+		friend bool operator==(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+		{
+		return (lhs.m_iterator == rhs.m_iterator);
+		}
+		friend bool operator!=(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+		{
+		return (lhs.m_iterator != rhs.m_iterator);
+		}
+		friend bool operator<=(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+		{
+			return (lhs.m_iterator >= rhs.m_iterator);
+		}
+		friend bool operator>=(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+		{
+			return (lhs.m_iterator <= rhs.m_iterator);
+		}
 		friend bool operator>(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
 		{
 			return (lhs.m_iterator < rhs.m_iterator);
@@ -95,27 +111,7 @@ class reverse_iterator
 	private:
 		iterator_type	m_iterator;
 };
-	/*RELATIONAL OPERATORS - Non Member function Overloads*/
-	template <class Iterator>
-	bool operator==(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.m_iterator == rhs.m_iterator);
-	}
-	template <class Iterator>
-	bool operator!=(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.m_iterator != rhs.m_iterator);
-	}
-	template <class Iterator>
-	bool operator<=(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.m_iterator >= rhs.m_iterator);
-	}
-	template <class Iterator>
-	bool operator>=(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.m_iterator <= rhs.m_iterator);
-	}
+
 
 	/*OPERAROR+ - Non Member function Overloads*/
 	template <class Iterator>

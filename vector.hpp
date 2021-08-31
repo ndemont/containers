@@ -99,9 +99,27 @@ class vector
 			iterator end(m_vector + m_size);
 			return end;
 		}
-		//rbegin;
-		//rend;
-		
+		reverse_iterator rbegin()
+		{
+			reverse_iterator	rbegin(m_vector + m_size - 1);
+			return rbegin;
+		}
+		const_reverse_iterator rbegin() const
+		{
+			reverse_iterator	rbegin(m_vector + m_size - 1);
+			return rbegin;
+		}
+		reverse_iterator rend()
+		{
+			reverse_iterator rend(m_vector - 1);
+			return rend;
+		}
+		const_reverse_iterator rend() const
+		{
+			reverse_iterator rend(m_vector - 1);
+			return rend;
+		}
+
 		/* CAPACITY */
 		size_type size(void) const
 		{

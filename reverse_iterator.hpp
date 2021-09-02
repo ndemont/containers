@@ -22,7 +22,7 @@ class reverse_iterator
 		reverse_iterator(void) {};
 		explicit reverse_iterator (iterator_type it) : m_iterator(it) {};
 		template <class Iter>
-		reverse_iterator(const reverse_iterator<Iter>& rev_it) : m_iterator(rev_it) {};
+		reverse_iterator(const reverse_iterator<Iter>& rev_it) : m_iterator(rev_it.m_iterator) {};
 		
 		/*BASE - Member functions*/
 		iterator_type base() const
@@ -39,7 +39,11 @@ class reverse_iterator
 		}
 
 		/*OPERATOR+ - Member functions*/
-		reverse_iterator operator+(difference_type n) const;
+		reverse_iterator operator+(difference_type n) const
+		{
+			reverse_iterator	plus(m_iterator - n);
+			return plus;
+		}
 
 		/*OPERATOR++ - Member functions*/
 		reverse_iterator& operator++()
@@ -54,10 +58,18 @@ class reverse_iterator
 		}
 
 		/*OPERATOR+= - Member functions*/
-		reverse_iterator& operator+= (difference_type n);
+		reverse_iterator& operator+= (difference_type n)
+		{
+			m_iterator -= n;
+			return *this;
+		}
 
 		/*OPERATOR- - Member functions*/
-		reverse_iterator operator-(difference_type n) const;
+		reverse_iterator operator-(difference_type n) const
+		{
+			reverse_iterator	minus(m_iterator + n);
+			return minus;
+		}
 
 		/*OPERATOR-- - Member functions*/
 		reverse_iterator& operator--(void)
@@ -72,10 +84,17 @@ class reverse_iterator
 		}
 
 		/*OPERATOR-= - Member functions*/
-		reverse_iterator& operator-= (difference_type n);
+		reverse_iterator& operator-= (difference_type n)
+		{
+			m_iterator += n;
+			return *this;
+		}
 
 		/*OPERATOR-> - Member functions*/
-		pointer operator->() const;
+		pointer operator->() const
+		{
+			return	&(*m_iterator);
+		}
 
 		/*OPERATOR[] - Member functions*/
 		reference operator[] (difference_type n) const

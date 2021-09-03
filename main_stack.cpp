@@ -4,14 +4,19 @@
 
 int		main(void)
 {
-	stack<int, ft::vector<int> >	files;
-	stack<int, ft::vector<int> >	cards;
+	ft::stack<int, ft::vector<int> >	files;
+	ft::stack<int, ft::vector<int> >	cards;
 
 	files.push(21);
+	std::cout << files.top() << std::endl;
 	files.push(12);
+	std::cout << files.top() << std::endl;
 	files.push(15);
+	std::cout << files.top() << std::endl;
 	files.push(1);
+	std::cout << files.top() << std::endl;
 	files.pop();
+	std::cout << files.top() << std::endl;
 	std::cout << "The number of files in the stack FILES is: " << files.size() << std::endl;
 	std::cout << "The first file in the stack FILES is: " << files.top() << std::endl;
 

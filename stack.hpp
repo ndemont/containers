@@ -8,6 +8,9 @@
 # include <memory>
 # include "vector.hpp"
 
+namespace ft
+{
+
 template <class T, class Container = ft::vector<T> >
 class stack
 {
@@ -73,6 +76,7 @@ class stack
 
 	private:
 		container_type	m_ctnr;
+};
 };
 
 #endif

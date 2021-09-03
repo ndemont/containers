@@ -2,6 +2,8 @@
 #ifndef RANDOM_ACCESS_ITERATOR_HPP
 # define RANDOM_ACCESS_ITERATOR_HPP
 
+# include "iterator_traits.hpp"
+
 namespace ft
 {
 
@@ -22,6 +24,10 @@ class iterator
 		iterator(iterator const & x) : m_iterator(x.m_iterator) {};
 		~iterator(void){};
 
+		value_type*	get_iterator(void) const
+		{
+			return m_iterator;
+		}
 		iterator&	operator=(const iterator& x)
 		{
 			m_iterator = x.m_iterator;
@@ -144,11 +150,13 @@ class const_iterator
 		typedef Pointer		pointer;
 		typedef Reference	reference;
 		typedef Category	const_iterator_category;
+		typedef ft::iterator<random_access_iterator_tag, value_type>	iterator;
 
 
 		const_iterator(void) {};
 		const_iterator(value_type *x) : m_const_iterator(x) {};
-		const_iterator(const_iterator const & x) : m_const_iterator(x.m_const_iterator) {};
+		const_iterator(const const_iterator & x) : m_const_iterator(x.m_const_iterator) {};
+		const_iterator(const iterator & x) : m_const_iterator(x.get_iterator()) {};
 		~const_iterator(void){};
 
 		const_iterator&	operator=(const const_iterator& x)

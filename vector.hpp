@@ -16,18 +16,18 @@ class vector
 	public:
 		
 		/* MEMBER TYPES */
-		typedef T														value_type;
-		typedef Alloc													allocator_type;
-		typedef value_type &											reference;
-		typedef value_type const &										const_reference;
-		typedef value_type *											pointer;
-		typedef value_type const *										const_pointer;
-		typedef ft::iterator<random_access_iterator_tag, value_type>	iterator;
+		typedef T															value_type;
+		typedef Alloc														allocator_type;
+		typedef value_type &												reference;
+		typedef value_type const &											const_reference;
+		typedef value_type *												pointer;
+		typedef value_type const *											const_pointer;
+		typedef ft::iterator<random_access_iterator_tag, value_type>		iterator;
 		typedef ft::const_iterator<random_access_iterator_tag, value_type>	const_iterator;
-		typedef ft::reverse_iterator<iterator>							reverse_iterator;
-		typedef const reverse_iterator									const_reverse_iterator;
-		typedef	std::ptrdiff_t											difference_type;
-		typedef	size_t													size_type;
+		typedef ft::reverse_iterator<iterator>								reverse_iterator;
+		typedef const reverse_iterator										const_reverse_iterator;
+		typedef	std::ptrdiff_t												difference_type;
+		typedef	size_t														size_type;
 
 		/* CONSTRUCTORS */
 		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
@@ -38,6 +38,17 @@ class vector
 				m_vector[i] = val;
 		}
 		vector<T>(iterator first, iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
+		{
+			m_capacity = last - first;
+			m_size = m_capacity;
+			m_vector = m_alloc.allocate(m_capacity);
+			for (size_type i = 0; first != last; i++)
+			{
+				m_vector[i] = *first;
+				first++;
+			}
+		}
+		vector<T>(const_iterator first, const_iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			m_capacity = last - first;
 			m_size = m_capacity;
@@ -86,8 +97,7 @@ class vector
 		}
 		const_iterator begin(void) const
 		{
-			const_iterator begin(m_vector);
-			return begin;
+			return const_iterator(m_vector);
 		}
 		iterator end()
 		{
@@ -96,8 +106,7 @@ class vector
 		}
 		const_iterator end() const
 		{
-			const_iterator end(m_vector + m_size);
-			return end;
+			return const_iterator(m_vector + m_size);
 		}
 		reverse_iterator rbegin()
 		{

@@ -11,12 +11,12 @@ int		main(void)
 	std::cout << "Array 2" << std::endl;
 	for (size_t i = 0; i < array2.size(); i++)
 		std::cout << array2.at(i) << std::endl;
-	ft::vector<int>::iterator	first(array1.begin());
-	ft::vector<int>::iterator	last(array1.end());
+	ft::vector<int>::const_iterator	first(array1.begin());
+	ft::vector<int>::const_iterator	last(array1.end());
 	ft::vector<int>	array3(first, last);
 	std::cout << "Array 3" << std::endl;
-	for (size_t i = 0; i < array3.size(); i++)
-		std::cout << array3.at(i) << std::endl;
+	for (; first < last; ++first)
+		std::cout << *first << std::endl;
 	ft::vector<int> array4 = array2;
 	std::cout << "Array 4" << std::endl;
 	for (size_t i = 0; i < array4.size(); i++)

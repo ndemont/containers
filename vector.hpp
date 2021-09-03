@@ -23,14 +23,14 @@ class vector
 		typedef value_type *											pointer;
 		typedef value_type const *										const_pointer;
 		typedef ft::iterator<random_access_iterator_tag, value_type>	iterator;
-		typedef const iterator											const_iterator;
+		typedef ft::const_iterator<random_access_iterator_tag, value_type>	const_iterator;
 		typedef ft::reverse_iterator<iterator>							reverse_iterator;
 		typedef const reverse_iterator									const_reverse_iterator;
 		typedef	std::ptrdiff_t											difference_type;
 		typedef	size_t													size_type;
 
 		/* CONSTRUCTORS */
-		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_size(0), m_alloc(alloc), m_vector(NULL), m_capacity(0) {};
+		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
 		explicit vector<T>(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_size(n), m_capacity(n), m_alloc(alloc)
 		{
 			m_vector = m_alloc.allocate(m_capacity);
@@ -86,7 +86,7 @@ class vector
 		}
 		const_iterator begin(void) const
 		{
-			iterator begin(m_vector);
+			const_iterator begin(m_vector);
 			return begin;
 		}
 		iterator end()
@@ -96,7 +96,7 @@ class vector
 		}
 		const_iterator end() const
 		{
-			iterator end(m_vector + m_size);
+			const_iterator end(m_vector + m_size);
 			return end;
 		}
 		reverse_iterator rbegin()
@@ -106,7 +106,7 @@ class vector
 		}
 		const_reverse_iterator rbegin() const
 		{
-			reverse_iterator	rbegin(m_vector + m_size - 1);
+			const_reverse_iterator	rbegin(m_vector + m_size - 1);
 			return rbegin;
 		}
 		reverse_iterator rend()
@@ -116,7 +116,7 @@ class vector
 		}
 		const_reverse_iterator rend() const
 		{
-			reverse_iterator rend(m_vector - 1);
+			const_reverse_iterator rend(m_vector - 1);
 			return rend;
 		}
 
@@ -190,7 +190,7 @@ class vector
 		}
 		const_reference operator[](size_type n) const
 		{
-			iterator pos = this->begin();
+			const_iterator pos = this->begin();
 			pos = pos + n;
 			return *pos;
 		}
@@ -227,7 +227,7 @@ class vector
 		}
 		const_reference front(void) const
 		{
-			iterator pos = this->begin();
+			const_iterator pos = this->begin();
 			return *pos;
 		}
 		reference back(void)
@@ -239,7 +239,7 @@ class vector
 		}
 		const_reference back(void) const
 		{
-			iterator pos = this->end();
+			const_iterator pos = this->end();
 
 			pos--;
 			return *pos;
@@ -249,8 +249,8 @@ class vector
 		template <class InputIterator>
 		void assign	(InputIterator first, InputIterator last)
 		{
-			vois(first);
-			vois(last);
+			(void)first;
+			(void)last;
 		}
 		void assign	(size_type n, const value_type& val)
 		{
@@ -336,14 +336,46 @@ class vector
 		allocator_type get_allocator() const;
 
 		/* NON-MEMBER FONCTION OVERLOADS */
-		friend bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		friend bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		friend bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		friend bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		friend bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			(void)lhs;
+			(void)rhs;
+		}
+		friend bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			(void)lhs;
+			(void)rhs;
+		}
+		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			(void)lhs;
+			(void)rhs;
+			return true;
+		}
+		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			(void)lhs;
+			(void)rhs;
+			return true;
+		}
+		friend bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			(void)lhs;
+			(void)rhs;
+			return true;
+		}
+		friend bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			(void)lhs;
+			(void)rhs;
+			return true;
+		}
 
-		friend void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
+		friend void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+		{
+			(void)x;
+			(void)y;
+		}
 
 	private:
 		value_type			*m_vector;
@@ -352,7 +384,7 @@ class vector
 		allocator_type 		m_alloc;
 };
 
-/* TEMPLATE SPEXIALIZATIONS */
+/* TEMPLATE SPECIALIZATIONS */
 template <class Alloc>
 class vector<bool,Alloc>;
 

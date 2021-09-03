@@ -30,8 +30,8 @@ class vector
 		typedef	size_t													size_type;
 
 		/* CONSTRUCTORS */
-		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_vector(NULL), m_size(0), m_capacity(0) {};
-		explicit vector<T>(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_alloc(alloc), m_size(n), m_capacity(n)
+		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_size(0), m_alloc(alloc), m_vector(NULL), m_capacity(0) {};
+		explicit vector<T>(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_size(n), m_capacity(n), m_alloc(alloc)
 		{
 			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; i < m_size; i++) 
@@ -48,7 +48,7 @@ class vector
 				first++;
 			}
 		}
-		vector<T>(const vector<T>&x) : m_alloc(x.m_alloc), m_vector(NULL), m_size(0), m_capacity(0)
+		vector<T>(const vector<T>&x) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(x.m_alloc)
 		{
 			if (this != &x)
 				*this = x;
@@ -249,7 +249,8 @@ class vector
 		template <class InputIterator>
 		void assign	(InputIterator first, InputIterator last)
 		{
-
+			vois(first);
+			vois(last);
 		}
 		void assign	(size_type n, const value_type& val)
 		{
@@ -280,16 +281,21 @@ class vector
 
 		iterator insert (iterator position, const value_type& val)
 		{
-
+			(void)position;
+			(void)val;
 		}
 		void insert (iterator position, size_type n, const value_type& val)
 		{
-
+			(void)position;
+			(void)val;
+			(void)n;
 		}
 		template <class InputIterator>
 		void insert (iterator position, InputIterator first, InputIterator last)
 		{
-
+			(void)position;
+			(void)first;
+			(void)last;
 		}
 
 		iterator erase (iterator position)
@@ -308,6 +314,7 @@ class vector
 		}
 		iterator erase (iterator first, iterator last)
 		{
+			(void)last;
 			return first;
 		}
 

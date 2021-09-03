@@ -90,7 +90,7 @@ class vector
 		}
 
 		/* ITERATORS */
-		iterator	begin(void)
+		iterator		begin(void)
 		{
 			iterator	begin(m_vector);
 			return begin;
@@ -99,7 +99,7 @@ class vector
 		{
 			return const_iterator(m_vector);
 		}
-		iterator	end()
+		iterator		end()
 		{
 			iterator end(m_vector + m_size);
 			return end;
@@ -138,7 +138,7 @@ class vector
 		{
 			return (m_alloc.max_size());
 		}
-		void	resize(size_type n, value_type val = value_type())
+		void		resize(size_type n, value_type val = value_type())
 		{
 			if (n < m_size)
 			{
@@ -166,15 +166,15 @@ class vector
 			}
 
 		}
-		size_type capacity(void) const
+		size_type	capacity(void) const
 		{
 			return m_capacity;
 		}
-		bool empty(void) const
+		bool	empty(void) const
 		{
 			return (m_size);
 		}
-		void reserve (size_type n)
+		void	reserve (size_type n)
 		{
 			if (n > m_capacity)
 			{
@@ -191,29 +191,22 @@ class vector
 		}
 
 		/* ELEMENT ACCESS */
-		reference operator[](size_type n)
+		reference	operator[](size_type n)
 		{
 			iterator pos = this->begin();
 			pos = pos + n;
 			return *pos;
 		}
-		const_reference operator[](size_type n) const
+		const_reference	operator[](size_type n) const
 		{
 			const_iterator pos = this->begin();
 			pos = pos + n;
 			return *pos;
 		}
-		reference at (size_type n)
+		reference	at(size_type n)
 		{
-			try
-			{
-				if (m_size < n)
-					throw std::out_of_range("element is out of range");
-			}
-			catch(const std::exception& e)
-			{
-				std::cerr << e.what() << '\n';
-			}
+			if (m_size < n)
+				throw std::out_of_range("element is out of range");
 			return m_vector[n];
 		}
 		const_reference at (size_type n) const
@@ -283,7 +276,7 @@ class vector
 				m_vector[i] = val;
 			m_size = n;
 		}
-		void push_back	(const value_type& val)
+		void	push_back(const value_type& val)
 		{
 			if (m_size == m_capacity)
 			{
@@ -293,7 +286,7 @@ class vector
 			m_vector[m_size] = val;
 			m_size++;
 		}
-		void pop_back (void)
+		void	pop_back(void)
 		{
 			m_size--;
 			m_vector[m_size].~value_type();

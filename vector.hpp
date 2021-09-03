@@ -95,50 +95,50 @@ class vector
 			iterator	begin(m_vector);
 			return begin;
 		}
-		const_iterator begin(void) const
+		const_iterator	begin(void) const
 		{
 			return const_iterator(m_vector);
 		}
-		iterator end()
+		iterator	end()
 		{
 			iterator end(m_vector + m_size);
 			return end;
 		}
-		const_iterator end() const
+		const_iterator	end() const
 		{
 			return const_iterator(m_vector + m_size);
 		}
-		reverse_iterator rbegin()
+		reverse_iterator	rbegin()
 		{
 			reverse_iterator	rbegin(m_vector + m_size - 1);
 			return rbegin;
 		}
-		const_reverse_iterator rbegin() const
+		const_reverse_iterator	rbegin() const
 		{
 			const_reverse_iterator	rbegin(m_vector + m_size - 1);
 			return rbegin;
 		}
-		reverse_iterator rend()
+		reverse_iterator	rend()
 		{
 			reverse_iterator rend(m_vector - 1);
 			return rend;
 		}
-		const_reverse_iterator rend() const
+		const_reverse_iterator	rend() const
 		{
 			const_reverse_iterator rend(m_vector - 1);
 			return rend;
 		}
 
 		/* CAPACITY */
-		size_type size(void) const
+		size_type	size(void) const
 		{
 			return m_size;
 		}
-		size_type max_size() const
+		size_type	max_size() const
 		{
 			return (m_alloc.max_size());
 		}
-		void resize (size_type n, value_type val = value_type())
+		void	resize(size_type n, value_type val = value_type())
 		{
 			if (n < m_size)
 			{
@@ -246,7 +246,7 @@ class vector
 			pos--;
 			return *pos;
 		}
-		const_reference back(void) const
+		const_reference	back(void) const
 		{
 			const_iterator pos = this->end();
 
@@ -256,12 +256,23 @@ class vector
 
 		/* MODIFIERS */
 		template <class InputIterator>
-		void assign	(InputIterator first, InputIterator last)
+		void	assign(InputIterator first, InputIterator last)
 		{
-			(void)first;
-			(void)last;
+			vector<T>	newVector(first, last);
+
+			m_size = newVector.size();
+			if (m_size > m_capacity)
+			{
+				m_vector = m_alloc.allocate(m_size, m_vector);
+				m_capacity = m_size;
+			}
+			for (size_type i = 0; i < m_size; i++)
+			{
+				m_vector[i] = newVector[i];
+				first++;
+			}
 		}
-		void assign	(size_type n, const value_type& val)
+		void	assign(size_type n, const value_type& val)
 		{
 			if (n > m_capacity)
 			{
@@ -288,26 +299,26 @@ class vector
 			m_vector[m_size].~value_type();
 		}
 
-		iterator insert (iterator position, const value_type& val)
+		iterator	insert(iterator position, const value_type& val)
 		{
 			(void)position;
 			(void)val;
 		}
-		void insert (iterator position, size_type n, const value_type& val)
+		void	insert(iterator position, size_type n, const value_type& val)
 		{
 			(void)position;
 			(void)val;
 			(void)n;
 		}
 		template <class InputIterator>
-		void insert (iterator position, InputIterator first, InputIterator last)
+		void	insert(iterator position, InputIterator first, InputIterator last)
 		{
 			(void)position;
 			(void)first;
 			(void)last;
 		}
 
-		iterator erase (iterator position)
+		iterator	erase(iterator position)
 		{
 			iterator erased;
 
@@ -321,13 +332,14 @@ class vector
 			}
 			return erased;
 		}
-		iterator erase (iterator first, iterator last)
+
+		iterator	erase(iterator first, iterator last)
 		{
 			(void)last;
 			return first;
 		}
 
-		void swap (vector& x)
+		void	swap(vector& x)
 		{
 			vector tmp;
 
@@ -335,7 +347,7 @@ class vector
 			x = this;
 			this = tmp;
 		}
-		void clear(void)
+		void	clear(void)
 		{
 			for (size_type i = 0; i < m_size; i++)
 				m_vector[i].~value_type();

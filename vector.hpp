@@ -31,13 +31,14 @@ class vector
 
 		/* CONSTRUCTORS */
 		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
-		explicit vector<T>(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_size(n), m_capacity(n), m_alloc(alloc)
+		explicit vector<T>(int n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_size(n), m_capacity(n), m_alloc(alloc)
 		{
 			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; i < m_size; i++) 
 				m_vector[i] = val;
 		}
-		vector<T>(iterator first, iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
+		template <class InputIterator>
+		vector<T>(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			m_capacity = last - first;
 			m_size = m_capacity;
@@ -75,17 +76,18 @@ class vector
 		/* OPERATOR= */
 		vector& operator=(const vector& x)
 		{
-			if (m_vector)
-				m_alloc.deallocate(m_vector, m_capacity);
-			m_alloc = x.m_alloc;
-			m_capacity = x.m_capacity;
-			m_size = 0;
-			m_vector = m_alloc.allocate(m_capacity);
-			for (size_type i = 0; i < x.m_size; i++)
-			{
-				value_type a = x[i];
-				this->push_back(a);
-			}
+			this->assign(x.begin(), x.end());
+			//if (m_vector)
+			//	m_alloc.deallocate(m_vector, m_capacity);
+			//m_alloc = x.m_alloc;
+			//m_capacity = x.m_capacity;
+			//m_size = 0;
+			//m_vector = m_alloc.allocate(m_capacity);
+			//for (size_type i = 0; i < x.m_size; i++)
+			//{
+			//	value_type a = x[i];
+			//	this->push_back(a);
+			//}
 			return *this;
 		}
 
@@ -174,7 +176,7 @@ class vector
 		{
 			return (m_size);
 		}
-		void	reserve (size_type n)
+		void	reserve(size_type n)
 		{
 			if (n > m_capacity)
 			{
@@ -209,17 +211,10 @@ class vector
 				throw std::out_of_range("element is out of range");
 			return m_vector[n];
 		}
-		const_reference at (size_type n) const
+		const_reference at(size_type n) const
 		{
-			try
-			{
-				if (m_size < n)
-					throw std::out_of_range("element is out of range");
-			}
-			catch(const std::exception& e)
-			{
-				std::cerr << e.what() << '\n';
-			}
+			if (m_size < n)
+				throw std::out_of_range("element is out of range");
 			return m_vector[n];
 		}
 		reference front(void)
@@ -262,9 +257,10 @@ class vector
 			for (size_type i = 0; i < m_size; i++)
 			{
 				m_vector[i] = newVector[i];
-				first++;
+				//first++;
 			}
 		}
+
 		void	assign(size_type n, const value_type& val)
 		{
 			if (n > m_capacity)
@@ -278,13 +274,20 @@ class vector
 		}
 		void	push_back(const value_type& val)
 		{
-			if (m_size == m_capacity)
+			vector<T>	newVector(this->begin(), this->end());
+
+			m_size = newVector.size();
+			if (m_size >= m_capacity)
 			{
-				m_vector = m_alloc.allocate(m_capacity + 1, m_vector);
-				m_capacity++;
+				m_vector = m_alloc.allocate(m_size + 1, m_vector);
+				m_capacity += m_size;
+				if (!m_capacity)
+					m_capacity++;
 			}
-			m_vector[m_size] = val;
+			for (size_type i = 0; i < m_size; i++)
+				m_vector[i] = newVector[i];
 			m_size++;
+			m_vector[m_size - 1] = val;
 		}
 		void	pop_back(void)
 		{
@@ -342,8 +345,8 @@ class vector
 		}
 		void	clear(void)
 		{
-			for (size_type i = 0; i < m_size; i++)
-				m_vector[i].~value_type();
+			while (m_size)
+				pop_back();
 		}
 
 		/* ALLOCATOR */

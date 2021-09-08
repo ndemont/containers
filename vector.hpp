@@ -40,7 +40,14 @@ class vector
 		template <class InputIterator>
 		vector<T>(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
-			m_capacity = last - first;
+			InputIterator tmp = first;
+			
+			m_capacity = 0;
+			while (tmp != last)
+			{
+				m_capacity++;
+				tmp++;
+			}
 			m_size = m_capacity;
 			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; first != last; i++)
@@ -69,25 +76,14 @@ class vector
 		/* DESTRUCTOR */
 		~vector<T>(void)
 		{
-			if (m_vector)
-				m_alloc.deallocate(m_vector, m_capacity);
+			//if (m_vector)
+				//m_alloc.deallocate(m_vector, m_capacity);
 		}
 
 		/* OPERATOR= */
 		vector& operator=(const vector& x)
 		{
 			this->assign(x.begin(), x.end());
-			//if (m_vector)
-			//	m_alloc.deallocate(m_vector, m_capacity);
-			//m_alloc = x.m_alloc;
-			//m_capacity = x.m_capacity;
-			//m_size = 0;
-			//m_vector = m_alloc.allocate(m_capacity);
-			//for (size_type i = 0; i < x.m_size; i++)
-			//{
-			//	value_type a = x[i];
-			//	this->push_back(a);
-			//}
 			return *this;
 		}
 
@@ -144,29 +140,14 @@ class vector
 		{
 			if (n < m_size)
 			{
-				for (size_t i = n; i < m_size; i++)
-					m_vector[i].~value_type();
-				m_size = n;
+				while (m_size > n)
+					pop_back();
 			}
 			else if (n > m_size)
 			{
-				if (n > m_capacity)
-				{
-					value_type *tmp = new value_type(m_size);
-
-					for (size_type i = 0; i < m_size; i++)
-						tmp[i] = m_vector[i];
-					m_vector = m_alloc.allocate(n, m_vector);
-					m_capacity = n;
-					for (size_type i = 0; i < n; i++)
-						m_vector[i] = tmp[i];
-					delete tmp;
-				}
-				for (size_type i = m_size; i < n; i++)
-					m_vector[i] = val;
-				m_size = n;
+				while (m_size != n)
+					push_back(val);
 			}
-
 		}
 		size_type	capacity(void) const
 		{
@@ -180,15 +161,12 @@ class vector
 		{
 			if (n > m_capacity)
 			{
-				value_type *tmp = new value_type(m_size);
+				vector<T>	newVector(begin(), end());
 
-				for (size_type i = 0; i < m_size; i++)
-					tmp[i] = m_vector[i];
 				m_vector = m_alloc.allocate(n, m_vector);
-				m_capacity = n;
-				for (size_type i = 0; i < n; i++)
-					m_vector[i] = tmp[i];
-				delete tmp;
+				m_capacity = m_capacity * 2;
+				for (size_type i = 0; i < m_size; i++)
+					m_vector[i] = newVector[i];
 			}
 		}
 
@@ -246,7 +224,7 @@ class vector
 		template <class InputIterator>
 		void	assign(InputIterator first, InputIterator last)
 		{
-			vector<T>	newVector(first, last);
+			vector	newVector(first, last);
 
 			m_size = newVector.size();
 			if (m_size > m_capacity)
@@ -257,7 +235,6 @@ class vector
 			for (size_type i = 0; i < m_size; i++)
 			{
 				m_vector[i] = newVector[i];
-				//first++;
 			}
 		}
 
@@ -274,13 +251,13 @@ class vector
 		}
 		void	push_back(const value_type& val)
 		{
-			vector<T>	newVector(this->begin(), this->end());
+			vector	newVector(this->begin(), this->end());
 
 			m_size = newVector.size();
 			if (m_size >= m_capacity)
 			{
 				m_vector = m_alloc.allocate(m_size + 1, m_vector);
-				m_capacity += m_size;
+				m_capacity = m_capacity * 2;
 				if (!m_capacity)
 					m_capacity++;
 			}
@@ -299,7 +276,9 @@ class vector
 		{
 			(void)position;
 			(void)val;
+			return position;
 		}
+
 		void	insert(iterator position, size_type n, const value_type& val)
 		{
 			(void)position;
@@ -318,14 +297,15 @@ class vector
 		{
 			iterator erased;
 
-			(*position).~value_type();
-			erased = position;
-			position++;
-			while (position != this->end())
-			{
-				*(position - 1) = *position;
-				position++;
-			}
+			(void)position;
+			//(*position).~value_type();
+			//erased = position;
+			//position++;
+			//while (position != this->end())
+			//{
+			//	*(position - 1) = *position;
+			//	position++;
+			//}
 			return erased;
 		}
 
@@ -337,11 +317,10 @@ class vector
 
 		void	swap(vector& x)
 		{
-			vector tmp;
+			vector tmp(x);
 
-			tmp = x;
-			x = this;
-			this = tmp;
+			x = *this;
+			*this = tmp;
 		}
 		void	clear(void)
 		{
@@ -357,11 +336,13 @@ class vector
 		{
 			(void)lhs;
 			(void)rhs;
+			return true;
 		}
 		friend bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
 			(void)lhs;
 			(void)rhs;
+			return true;
 		}
 		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
@@ -388,7 +369,7 @@ class vector
 			return true;
 		}
 
-		friend void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+		friend void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
 		{
 			(void)x;
 			(void)y;

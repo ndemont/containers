@@ -10,6 +10,9 @@ namespace ft
 template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
 class iterator
 {
+
+	class const_iterator;
+
 	public:
 		typedef T			value_type;
 		typedef size_t		size_type;
@@ -17,7 +20,6 @@ class iterator
 		typedef Pointer		pointer;
 		typedef Reference	reference;
 		typedef Category	iterator_category;
-
 
 		iterator(void) {};
 		iterator(value_type *x) : m_iterator(x) {};
@@ -28,6 +30,7 @@ class iterator
 		{
 			return m_iterator;
 		}
+
 		iterator&	operator=(const iterator& x)
 		{
 			m_iterator = x.m_iterator;
@@ -38,7 +41,19 @@ class iterator
 		{
 			return (m_iterator != x.m_iterator);
 		}
+
+		bool	operator==(const const_iterator& x) const
+		{
+			return (m_iterator != x.m_iterator);
+		}
+		
+
 		bool	operator!=(const iterator& x) const
+		{
+			return (m_iterator != x.m_iterator);
+		}
+
+		bool	operator!=(const const_iterator& x) const
 		{
 			return (m_iterator != x.m_iterator);
 		}
@@ -47,11 +62,11 @@ class iterator
 		{
 			return *m_iterator;
 		}
-		reference	operator->(void)
-		{
-			return *m_iterator;
-		}
 
+		pointer operator->(void) const
+		{
+			return	&(*m_iterator);
+		}
 
 		iterator&	operator++(void)
 		{
@@ -90,7 +105,8 @@ class iterator
 
 		iterator&	operator-(size_type n)
 		{
-			return (m_iterator - n);
+			m_iterator = m_iterator - n;
+			return *this;
 		}
 
 		iterator operator-(difference_type n) const
@@ -113,6 +129,14 @@ class iterator
 		{
 			return (lhs.m_iterator > rhs.m_iterator);
 		}
+
+		friend iterator& operator+(size_type n, const iterator& rhs)
+		{
+			ft::iterator<iterator_category, value_type> *plus = NULL;
+			*plus = rhs.m_iterator + n;
+			return *plus;
+		}
+
 		bool	operator<=(const iterator& x)
 		{
 			return (m_iterator <= x.m_iterator);
@@ -126,9 +150,22 @@ class iterator
 		{
 			return (m_iterator += x.m_iterator);
 		}
+
+		iterator&	operator+=(size_type n)
+		{
+			m_iterator += n;
+			return *this;
+		}
+
 		iterator&	operator-=(const iterator& x)
 		{
 			return (m_iterator -= x.m_iterator);
+		}
+
+		iterator&	operator-=(size_type n)
+		{
+			m_iterator -= n;
+			return *this;
 		}
 
 		reference	operator[](difference_type n) const
@@ -150,14 +187,17 @@ class const_iterator
 		typedef Pointer		pointer;
 		typedef Reference	reference;
 		typedef Category	const_iterator_category;
-		typedef ft::iterator<random_access_iterator_tag, value_type>	iterator;
-
 
 		const_iterator(void) {};
 		const_iterator(value_type *x) : m_const_iterator(x) {};
 		const_iterator(const const_iterator & x) : m_const_iterator(x.m_const_iterator) {};
-		const_iterator(const iterator & x) : m_const_iterator(x.get_iterator()) {};
+		const_iterator(const iterator<const_iterator_category, value_type> & x) : m_const_iterator(x.get_iterator()) {};
 		~const_iterator(void){};
+
+		value_type*	get_const_iterator(void) const
+		{
+			return m_const_iterator;
+		}
 
 		const_iterator&	operator=(const const_iterator& x)
 		{
@@ -206,7 +246,6 @@ class const_iterator
 			return *this;
 		}
 
-
 		const_iterator&	operator+(size_type n)
 		{
 			m_const_iterator = m_const_iterator + n;
@@ -230,7 +269,7 @@ class const_iterator
 			return minus;
 		}
 
-		size_type	operator-(const const_iterator& x)
+		size_type	operator-(const const_iterator& x) const
 		{
 			return (m_const_iterator - x.m_const_iterator);
 		}
@@ -238,6 +277,11 @@ class const_iterator
 		friend bool	operator<(const const_iterator& lhs, const const_iterator& rhs)
 		{
 			return (lhs.m_const_iterator < rhs.m_const_iterator);
+		}
+
+		friend const_iterator& operator+(size_type n, const const_iterator& rhs)
+		{
+			return (rhs + n);
 		}
 
 		friend bool	operator>(const const_iterator& lhs, const const_iterator& rhs)
@@ -257,9 +301,22 @@ class const_iterator
 		{
 			return (m_const_iterator += x.m_const_iterator);
 		}
+
+		const_iterator&	operator+=(size_type n)
+		{
+			m_const_iterator += n;
+			return *this;
+		}
+
 		const_iterator&	operator-=(const const_iterator& x)
 		{
 			return (m_const_iterator -= x.m_const_iterator);
+		}
+
+		const_iterator&	operator-=(size_type n)
+		{
+			m_const_iterator -= n;
+			return *this;
 		}
 
 		reference	operator[](difference_type n) const
@@ -270,6 +327,7 @@ class const_iterator
 	private:
 		value_type*	m_const_iterator;
 };
+
 
 };
 

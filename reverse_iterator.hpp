@@ -23,8 +23,8 @@ class reverse_iterator
 		explicit reverse_iterator (iterator_type it) : m_iterator(it) {};
 		template <class Iter>
 		reverse_iterator(const reverse_iterator<Iter>& rev_it) : m_iterator(rev_it.m_iterator) {};
-		template <class Category, class T>
-		reverse_iterator(const const_iterator<Category, T>& rev_it) : m_iterator(rev_it.get_const_iterator()) {};
+		//template <class Category, class T>
+		//reverse_iterator(const const_iterator<Category, T>& rev_it) : m_iterator(rev_it.get_const_iterator()) {};
 		
 		/*BASE - Member functions*/
 		iterator_type base() const
@@ -60,7 +60,12 @@ class reverse_iterator
 		}
 
 		/*OPERATOR+= - Member functions*/
-		reverse_iterator& operator+=(difference_type n)
+		reverse_iterator&	operator+=(const reverse_iterator& x)
+		{
+			return (m_iterator -= x.m_iterator);
+		}
+
+		reverse_iterator& operator+=(difference_type n) const
 		{
 			m_iterator -= n;
 			return *this;
@@ -86,6 +91,11 @@ class reverse_iterator
 		}
 
 		/*OPERATOR-= - Member functions*/
+		reverse_iterator&	operator-=(const reverse_iterator& x)
+		{
+			return (m_iterator -= x.m_iterator);
+		}
+
 		reverse_iterator& operator-=(difference_type n)
 		{
 			m_iterator += n;
@@ -156,10 +166,10 @@ class const_reverse_iterator
 		/*CONSTRUCTORS - Member functions*/ 
 		const_reverse_iterator(void) {};
 		explicit const_reverse_iterator (iterator_type it) : m_iterator(it) {};
-		template <class Iter>
-		const_reverse_iterator(const const_reverse_iterator<Iter>& rev_it) : m_iterator(rev_it.m_iterator) {};
-		template <class Category, class T>
-		const_reverse_iterator(const const_iterator<Category, T>& rev_it) : m_iterator(rev_it.m_const_iterator) {};
+		//template <class Iter>
+		//const_reverse_iterator(const const_reverse_iterator<Iter>& rev_it) : m_iterator(rev_it.m_iterator) {};
+		//template <class Category, class T>
+		//const_reverse_iterator(const const_iterator<Category, T>& rev_it) : m_iterator(rev_it.m_const_iterator) {};
 		
 		/*BASE - Member functions*/
 		iterator_type base() const
@@ -195,7 +205,13 @@ class const_reverse_iterator
 		}
 
 		/*OPERATOR+= - Member functions*/
-		const_reverse_iterator& operator+=(difference_type n)
+
+		const_reverse_iterator&	operator+=(const const_reverse_iterator& x)
+		{
+			return (m_iterator -= x.m_iterator);
+		}
+
+		const_reverse_iterator& operator+=(size_t n)
 		{
 			m_iterator -= n;
 			return *this;

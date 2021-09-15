@@ -1,0 +1,15 @@
+{
+	"files.associations": {
+		"__bit_reference": "cpp",
+		"__hash_table": "cpp",
+		"__tree": "cpp",
+		"deque": "cpp",
+		"iterator": "cpp",
+		"list": "cpp",
+		"map": "cpp",
+		"unordered_map": "cpp",
+		"__split_buffer": "cpp",
+		"string": "cpp",
+		"vector": "cpp"
+	}
+}

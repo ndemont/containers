@@ -10,12 +10,13 @@
 # include "iterator.hpp"
 # include "vector_iterator.hpp"
 # include <cstddef>
+# include <type_traits>
 
 namespace ft
 {
 
 template <typename T, class Alloc = std::allocator<T> >
-class vector : public ft::random_access_iterator_tag<T>
+class vector : public ft::random_access_iterator<T>
 {
 	public:
 		
@@ -34,19 +35,20 @@ class vector : public ft::random_access_iterator_tag<T>
 		typedef	size_t														size_type;
 
 		/* CONSTRUCTORS */
-		explicit vector<T>(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
-		explicit vector<T>(size_t n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(n), m_capacity(n), m_alloc(alloc)
+		explicit vector(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
+		explicit vector(size_t n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(n), m_capacity(n), m_alloc(alloc)
 		{
 			m_vector = m_alloc.allocate(m_capacity);
 			for (size_type i = 0; i < n; i++) 
 				m_vector[i] = val;
 		}
-		template <class input_iterator>
-		vector<T>(input_iterator first, input_iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
+
+		template <class InputIterator>
+		vector(InputIterator first, typename ft::enable_if<ft::is_iterator<InputIterator>::value, InputIterator>::type last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			this->assign(first, last);
 		}
-		vector<T>(const_iterator first, const_iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
+		vector(const_iterator first, const_iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			m_capacity = last - first;
 			m_size = m_capacity;
@@ -57,21 +59,21 @@ class vector : public ft::random_access_iterator_tag<T>
 				first++;
 			}
 		}
-		vector<T>(const vector<T>&x) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(x.m_alloc)
+		vector(const vector<T>&x) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(x.m_alloc)
 		{
 			if (this != &x)
 				*this = x;
 		}
 
 		/* DESTRUCTOR */
-		~vector<T>(void)
+		~vector(void)
 		{
 			//if (m_vector)
 				//m_alloc.deallocate(m_vector, m_capacity);
 		}
 
 		/* OPERATOR= */
-		vector& operator=(const vector& x)
+		vector<T>& operator=(const vector& x)
 		{
 			this->assign(x.begin(), x.end());
 			return *this;
@@ -212,9 +214,10 @@ class vector : public ft::random_access_iterator_tag<T>
 		}
 
 		/* MODIFIERS */
-		void	assign(input_iterator_tag<T> first, input_iterator_tag<T> last)
+		template <class InputIterator>
+		void	assign(InputIterator first, InputIterator last)
 		{
- 			input_iterator_tag<T> tmp = first;
+ 			InputIterator tmp = first;
 			
 			//m_alloc.deallocate(m_vector, m_capacity);
 			size_type	k = 0;
@@ -224,7 +227,7 @@ class vector : public ft::random_access_iterator_tag<T>
 				m_capacity = k;
 			m_vector = m_alloc.allocate(k);
 			m_size = 0;
-			for (input_iterator_tag<T> it = first; it != last; it++)
+			for (InputIterator it = first; it != last; it++)
 			{
 				this->push_back(*it);
 			}

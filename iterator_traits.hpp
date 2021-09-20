@@ -1,8 +1,30 @@
 #ifndef ITERATOR_TRAITS_HPP
 # define ITERATOR_TRAITS_HPP
 
+# include <type_traits>
+#include "random_access_iterator.hpp"
+
 namespace ft
 {
+	struct random_access_iterator_tag {};
+
+	template<bool Cond, class T = void> 
+	struct enable_if {};
+	template<class T> 
+	struct enable_if<true, T> { typedef T type; };
+
+	template <class T, T v>
+	struct iterator_constant
+	{
+  		const static T 					value = v;
+  		typedef T						value_type;
+  		typedef iterator_constant<T,v>	type;
+ 		bool operatorT()				{ return v; }
+	};
+
+	typedef iterator_constant<bool,true> true_type;
+	typedef iterator_constant<bool,false> false_type;
+
 	template <class Iterator>
 	class iterator_traits
 	{
@@ -22,7 +44,7 @@ namespace ft
 			typedef T 										value_type;
 			typedef T* 										pointer;
 			typedef T& 										reference;
-			typedef ft::random_access_iterator_tag<T>		iterator_category;
+			typedef	ft::random_access_iterator_tag			iterator_category;
 	};
 
 	template <class T>
@@ -33,7 +55,21 @@ namespace ft
 			typedef T 										value_type;
 			typedef T* 										pointer;
 			typedef T& 										reference;
-			typedef ft::random_access_iterator_tag<T>		iterator_category;
+			typedef ft::random_access_iterator_tag			iterator_category;
+	};
+
+		template<class T>
+	struct is_iterator
+	{
+		static bool value;
+
+		void check_type(T) 
+		{
+			if (ft::iterator_traits<T>::iterator_category != NULL)
+				value = true;
+			else
+				value = false;
+		}
 	};
 };
 

@@ -3,6 +3,7 @@
 # define VECTOR_ITERATOR_HPP
 
 # include "iterator_traits.hpp"
+# include "random_access_iterator.hpp"
 # include "iterator.hpp"
 # include <cstddef>
 
@@ -10,7 +11,7 @@ namespace ft
 {
 
 template <class T>
-class vector_iterator : public ft::iterator<ft::random_access_iterator_tag<T>, T>
+class vector_iterator : public ft::random_access_iterator<T>
 {
 
 	public:

@@ -7,9 +7,9 @@
 
 namespace ft
 {
-	struct input_iterator_tag {};
+
 template <typename T>
-class input_iterator : public iterator<input_iterator_tag, T>
+class input_iterator
 {
 	public:
 		input_iterator(void) {};
@@ -24,8 +24,8 @@ class input_iterator : public iterator<input_iterator_tag, T>
 		T&						operator*(void) const { return *m_iterator; }
 		T*						operator->(void) const { return	m_iterator; }
 
-		input_iterator<T>&	operator++(void) { m_iterator++; return *this; }
-		input_iterator<T>	operator++(int) { ++m_iterator; return *this; }
+		input_iterator<T>&		operator++(void) { m_iterator++; return *this; }
+		input_iterator<T>		operator++(int) { ++m_iterator; return *this; }
 
 		bool					operator<(const input_iterator& x) const { return (m_iterator < x.m_iterator); }
 		bool					operator>(const input_iterator& x) const { return (m_iterator > x.m_iterator); }

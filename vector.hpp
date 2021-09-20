@@ -16,7 +16,7 @@ namespace ft
 {
 
 template <typename T, class Alloc = std::allocator<T> >
-class vector : public ft::random_access_iterator<T>
+class vector
 {
 	public:
 		
@@ -44,7 +44,7 @@ class vector : public ft::random_access_iterator<T>
 		}
 
 		template <class InputIterator>
-		vector(InputIterator first, typename ft::enable_if<ft::is_iterator<InputIterator>::value, InputIterator>::type last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
+		vector(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			this->assign(first, last);
 		}

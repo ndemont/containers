@@ -9,7 +9,7 @@ namespace ft
 {
 
 template <typename T>
-class random_access_iterator : public ft::input_iterator<T>, public ft::iterator<random_access_iterator_tag, T>
+class random_access_iterator
 {
 	public:
 		random_access_iterator(void) {};
@@ -18,11 +18,11 @@ class random_access_iterator : public ft::input_iterator<T>, public ft::iterator
 		~random_access_iterator(void){};
 		random_access_iterator&	operator=(const random_access_iterator& x) { m_iterator = x.m_iterator; return *this; }
 
-		bool				operator==(const random_access_iterator& x) const { return (m_iterator != x.m_iterator); }
-		bool				operator!=(const random_access_iterator& x) const { return (m_iterator != x.m_iterator); }
+		bool						operator==(const random_access_iterator& x) const { return (m_iterator != x.m_iterator); }
+		bool						operator!=(const random_access_iterator& x) const { return (m_iterator != x.m_iterator); }
 
-		T&					operator*(void) const { return *m_iterator; }
-		T*					operator->(void) const { return	m_iterator; }
+		T&							operator*(void) const { return *m_iterator; }
+		T*							operator->(void) const { return	m_iterator; }
 
 		random_access_iterator<T>&	operator++(void) { m_iterator++; return *this; }
 		random_access_iterator<T>	operator++(int) { ++m_iterator; return *this; }
@@ -33,15 +33,15 @@ class random_access_iterator : public ft::input_iterator<T>, public ft::iterator
 		random_access_iterator<T>	operator-(ptrdiff_t n) const { return random_access_iterator(m_iterator - n); }
 		random_access_iterator<T>	operator-(const random_access_iterator& x) const { return random_access_iterator(m_iterator - x.m_iterator); }
 
-		bool				operator<(const random_access_iterator& x) const { return (m_iterator < x.m_iterator); }
-		bool				operator>(const random_access_iterator& x) const { return (m_iterator > x.m_iterator); }
-		bool				operator<=(const random_access_iterator& x) const { return (m_iterator <= x.m_iterator); }
-		bool				operator>=(const random_access_iterator& x) const { return (m_iterator >= x.m_iterator); }
+		bool						operator<(const random_access_iterator& x) const { return (m_iterator < x.m_iterator); }
+		bool						operator>(const random_access_iterator& x) const { return (m_iterator > x.m_iterator); }
+		bool						operator<=(const random_access_iterator& x) const { return (m_iterator <= x.m_iterator); }
+		bool						operator>=(const random_access_iterator& x) const { return (m_iterator >= x.m_iterator); }
 
 		random_access_iterator<T>&	operator+=(ptrdiff_t n) { m_iterator += n; return *this; }
 		random_access_iterator<T>&	operator-=(ptrdiff_t n) { m_iterator -= n; return *this; }
 
-		T&					operator[](ptrdiff_t n) const { return (m_iterator[n]); }
+		T&							operator[](ptrdiff_t n) const { return (m_iterator[n]); }
 
 	private:
 		T*	m_iterator;

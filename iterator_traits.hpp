@@ -3,10 +3,12 @@
 
 # include <type_traits>
 #include "random_access_iterator.hpp"
+#include "input_iterator.hpp"
 
 namespace ft
 {
 	struct random_access_iterator_tag {};
+	struct input_iterator_tag {};
 
 	template<bool Cond, class T = void> 
 	struct enable_if {};
@@ -58,19 +60,34 @@ namespace ft
 			typedef ft::random_access_iterator_tag			iterator_category;
 	};
 
-		template<class T>
-	struct is_iterator
-	{
-		static bool value;
+	template<typename T>
+	struct is_integral : false_type {};
+	template<>
+	struct is_integral<bool> : true_type {};
+	template<>
+	struct is_integral<char> : true_type {};
+	template<>
+	struct is_integral<signed char> : true_type {};
+	template<>
+	struct is_integral<short int> : true_type {};
+	template<>
+	struct is_integral<int> : true_type {};
+	template<>
+	struct is_integral<long int> : true_type {};
+	template<>
+	struct is_integral<long long int> : true_type {};
+	template<>
+	struct is_integral<unsigned char> : true_type {};
+	template<>
+	struct is_integral<unsigned short int> : true_type {};
+	template<>
+	struct is_integral<unsigned int> : true_type {};
+	template<>
+	struct is_integral<unsigned long int> : true_type {};
+	template<>
+	struct is_integral<unsigned long long int> : true_type {};
+	// template<typename T>
+	// struct is_integral<typename ft::iterator_traits<T> > : true_type {};
 
-		void check_type(T) 
-		{
-			if (ft::iterator_traits<T>::iterator_category != NULL)
-				value = true;
-			else
-				value = false;
-		}
-	};
 };
-
 #endif

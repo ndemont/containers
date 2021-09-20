@@ -11,7 +11,7 @@ namespace ft
 {
 
 template <class T>
-class vector_iterator : public ft::random_access_iterator<T>
+class vector_iterator : public iterator<random_access_iterator_tag, T>, public iterator_traits<iterator<random_access_iterator_tag, T> >
 {
 
 	public:

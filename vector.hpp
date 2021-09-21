@@ -4,6 +4,7 @@
 //# include "iterator_traits.hpp"
 # include <iostream>
 # include <stdexcept>
+# include <new>
 # include "random_access_iterator.hpp"
 # include "input_iterator.hpp"
 # include "reverse_iterator.hpp"
@@ -28,7 +29,7 @@ class vector
 		typedef value_type *												pointer;
 		typedef value_type const *											const_pointer;
 		typedef ft::vector_iterator<value_type>								iterator;
-		typedef ft::vector_iterator<const value_type>						const_iterator;
+		typedef ft::const_vector_iterator<value_type>						const_iterator;
 		typedef ft::reverse_iterator<iterator>								reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
 		typedef	ptrdiff_t													difference_type;
@@ -38,19 +39,15 @@ class vector
 		explicit vector(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) { };
 		explicit vector(size_t n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(n), m_capacity(n), m_alloc(alloc)
 		{
-			m_vector = m_alloc.allocate(m_capacity);
-			for (size_type i = 0; i < n; i++) 
-				m_vector[i] = val;
+			this->assign(n, val);
 		}
 
 		template <class InputIterator>
-		vector(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
+		vector(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last, const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc)
 		{
-			m_capacity = 0;
-			m_size = 0;
-			m_vector = NULL;
 			this->assign(first, last);
 		}
+		
 		vector(const_iterator first, const_iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
 			m_capacity = last - first;
@@ -83,15 +80,15 @@ class vector
 		}
 
 		/* ITERATORS */
-		iterator		begin(void)
-		{
-			iterator	begin(m_vector);
+		iterator		begin(void) {
+		iterator	begin(m_vector);
 			return begin;
 		}
 		const_iterator	begin(void) const
 		{
 			return const_iterator(m_vector);
 		}
+
 		iterator		end()
 		{
 			iterator end(m_vector + m_size);
@@ -238,15 +235,19 @@ class vector
 
 		void	assign(size_type n, const value_type& val)
 		{
+			
+			m_alloc.deallocate(m_vector, m_capacity);
+
 			if (n > m_capacity)
-			{
-				m_vector = m_alloc.allocate(n, m_vector);
 				m_capacity = n;
-			}
+			m_vector = m_alloc.allocate(m_capacity);
+			m_size = 0;
 			for (size_type i = 0; i < n; i++)
-				m_vector[i] = val;
-			m_size = n;
+			{
+				this->push_back(val);
+			}
 		}
+
 		void	push_back(const value_type& val)
 		{
 			int amount = 0;
@@ -276,23 +277,29 @@ class vector
 			iterator	begin = this->begin();
 			size_type	i = 0;
 
-			std::cout << "vector size = " << m_size << std::endl;
-			*this = vector(m_size + 1);
-			std::cout << "OK 2" << std::endl;
+			
+			m_alloc.deallocate(m_vector, m_capacity);
+			try 
+			{
+				m_vector = m_alloc.allocate(tmp.m_capacity + 1);
+			}
+			catch (std::bad_alloc& ba)
+  			{
+   				std::cerr << "bad_alloc caught: " << ba.what() << '\n';
+  			}
+			m_size = 0;
 			while (begin < position)
 			{
-				m_vector[i] = tmp[i];
+				this->push_back(tmp[i]);
 				i++;
 				begin++;
 			}
-			std::cout << "OK 3" << std::endl;
-			m_vector[i] = val;
+			this->push_back(val);
 			while (tmp[i])
 			{
-				m_vector[i + 1] = tmp[i];
+				this->push_back(tmp[i]);
 				i++;
 			}
-			std::cout << "OK 4" << std::endl;
 			return --position;
 		}
 
@@ -434,7 +441,7 @@ class vector
 		}
 
 	private:
-		value_type			*m_vector;
+		pointer				m_vector;
 		size_type			m_size;
 		size_type			m_capacity;
 		allocator_type 		m_alloc;

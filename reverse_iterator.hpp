@@ -27,92 +27,38 @@ class reverse_iterator
 		//reverse_iterator(const const_iterator<Category, T>& rev_it) : m_iterator(rev_it.get_const_iterator()) {};
 		
 		/*BASE - Member functions*/
-		iterator_type base() const
-		{
-			iterator_type copy(m_iterator);
-
-			return copy;
-		}
+		iterator_type base() const { return copy; }
 
 		/*OPERATOR* - Member functions*/
-		reference operator*() const
-		{
-			return *m_iterator;
-		}
+		reference operator*() const { return *m_iterator; }
 
 		/*OPERATOR+ - Member functions*/
-		reverse_iterator operator+(difference_type n) const
-		{
-			reverse_iterator	plus(m_iterator - n);
-			return plus;
-		}
+		reverse_iterator operator+(difference_type n) const { return reverse_iterator(m_iterator - n); }
 
 		/*OPERATOR++ - Member functions*/
-		reverse_iterator& operator++(void)
-		{
-			m_iterator--;
-			return *this;
-		}
-		reverse_iterator  operator++(int)
-		{
-			--m_iterator;
-			return *this;
-		}
+		reverse_iterator& operator++(void) { m_iterator--; return *this; }
+		reverse_iterator  operator++(int) { --m_iterator; return *this; }
 
 		/*OPERATOR+= - Member functions*/
-		reverse_iterator&	operator+=(const reverse_iterator& x)
-		{
-			return (m_iterator -= x.m_iterator);
-		}
-
-		reverse_iterator& operator+=(difference_type n) const
-		{
-			m_iterator -= n;
-			return *this;
-		}
+		reverse_iterator&	operator+=(const reverse_iterator& x) { return (m_iterator -= x.m_iterator); }
+		reverse_iterator&	operator+=(difference_type n) const { m_iterator -= n; return *this; }
 
 		/*OPERATOR- - Member functions*/
-		reverse_iterator operator-(difference_type n) const
-		{
-			reverse_iterator	minus(m_iterator + n);
-			return minus;
-		}
+		reverse_iterator operator-(difference_type n) const	{ return reverse_iterator(m_iterator - n); }
 
 		/*OPERATOR-- - Member functions*/
-		reverse_iterator& operator--(void)
-		{
-			m_iterator++;
-			return *this;
-		}
-		reverse_iterator  operator--(int)
-		{
-			++m_iterator;
-			return *this;
-		}
+		reverse_iterator& operator--(void) { m_iterator++; return *this; }
+		reverse_iterator  operator--(int) { ++m_iterator; return *this; }
 
 		/*OPERATOR-= - Member functions*/
-		reverse_iterator&	operator-=(const reverse_iterator& x)
-		{
-			return (m_iterator -= x.m_iterator);
-		}
-
-		reverse_iterator& operator-=(difference_type n)
-		{
-			m_iterator += n;
-			return *this;
-		}
+		reverse_iterator&	operator-=(const reverse_iterator& x) { return (m_iterator -= x.m_iterator); }
+		reverse_iterator& operator-=(difference_type n) { m_iterator += n; return *this; }
 
 		/*OPERATOR-> - Member functions*/
-		pointer operator->() const
-		{
-			return	&(*m_iterator);
-		}
+		pointer operator->() const { return	&(*m_iterator); }
 
 		/*OPERATOR[] - Member functions*/
-		reference operator[](difference_type n) const
-		{
-			return (m_iterator[n]);
-		}
+		reference operator[](difference_type n) const { return (m_iterator[n]); }
 
 		/*RELATIONAL OPERATORS - Non Member function Overloads*/
 		friend bool operator==(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)

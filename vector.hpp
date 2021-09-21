@@ -35,7 +35,7 @@ class vector
 		typedef	size_t														size_type;
 
 		/* CONSTRUCTORS */
-		explicit vector(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
+		explicit vector(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) { };
 		explicit vector(size_t n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(n), m_capacity(n), m_alloc(alloc)
 		{
 			m_vector = m_alloc.allocate(m_capacity);
@@ -46,6 +46,9 @@ class vector
 		template <class InputIterator>
 		vector(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
 		{
+			m_capacity = 0;
+			m_size = 0;
+			m_vector = NULL;
 			this->assign(first, last);
 		}
 		vector(const_iterator first, const_iterator last, const allocator_type& alloc = allocator_type()) : m_alloc(alloc)
@@ -68,8 +71,8 @@ class vector
 		/* DESTRUCTOR */
 		~vector(void)
 		{
-			//if (m_vector)
-				//m_alloc.deallocate(m_vector, m_capacity);
+			if (m_vector)
+				m_alloc.deallocate(m_vector, m_capacity);
 		}
 
 		/* OPERATOR= */
@@ -215,17 +218,17 @@ class vector
 
 		/* MODIFIERS */
 		template <class InputIterator>
-		void	assign(InputIterator first, InputIterator last)
+		void	assign(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last)
 		{
  			InputIterator tmp = first;
 			
-			//m_alloc.deallocate(m_vector, m_capacity);
+			m_alloc.deallocate(m_vector, m_capacity);
 			size_type	k = 0;
 			for ( ; tmp != last; tmp++)
 				k++;
 			if (k > m_capacity)
 				m_capacity = k;
-			m_vector = m_alloc.allocate(k);
+			m_vector = m_alloc.allocate(m_capacity);
 			m_size = 0;
 			for (InputIterator it = first; it != last; it++)
 			{
@@ -235,7 +238,6 @@ class vector
 
 		void	assign(size_type n, const value_type& val)
 		{
-			printf("before iterator assign\n");
 			if (n > m_capacity)
 			{
 				m_vector = m_alloc.allocate(n, m_vector);
@@ -250,6 +252,7 @@ class vector
 			int amount = 0;
 			if (m_capacity <= m_size)
 			{
+
 				if (m_capacity == 0)
 					amount = 1;
 				else
@@ -269,23 +272,76 @@ class vector
 
 		iterator	insert(iterator position, const value_type& val)
 		{
-			(void)position;
-			(void)val;
-			return position;
+			value_type*	tmp = m_vector;
+			iterator	begin = this->begin();
+			size_type	i = 0;
+
+			*this = vector(m_size + 1);
+			while (begin < position)
+			{
+				m_vector[i] = tmp[i];
+				i++;
+				begin++;
+			}
+			m_vector[i] = val;
+			while (tmp[i])
+			{
+				m_vector[i + 1] = tmp[i];
+				i++;
+			}
+			return --position;
 		}
 
 		void	insert(iterator position, size_type n, const value_type& val)
 		{
-			(void)position;
-			(void)val;
-			(void)n;
+			value_type*	tmp = m_vector;
+			iterator	begin = this->begin();
+			iterator	new_it;
+			size_type	i = 0;
+
+			*this = vector(m_size + n);
+			while (begin < position)
+			{
+				m_vector[i] = tmp[i];
+				i++;
+				begin++;
+			}
+			new_it = begin;
+			for (size_t j; j < n; j++)
+				m_vector[i + j] = val;
+			while (tmp[i])
+			{
+				m_vector[i + n] = tmp[i];
+				i++;
+			}
+			return begin;
 		}
 		template <class InputIterator>
-		void	insert(iterator position, InputIterator first, InputIterator last)
+		void	insert(iterator position, InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last)
 		{
-			(void)position;
-			(void)first;
-			(void)last;
+			value_type*	tmp = m_vector;
+			iterator	begin = this->begin();
+			iterator	new_it;
+			size_type	i = 0;
+			size_type	j = 0;
+			size_type	len = last - first;
+
+			*this = vector(m_size + len);
+			while (begin < position)
+			{
+				m_vector[i] = tmp[i];
+				i++;
+				begin++;
+			}
+			new_it = begin;
+			for (; first != last; first++)
+				m_vector[i + j++] = first;
+			while (tmp[i])
+			{
+				m_vector[i + len] = tmp[i];
+				i++;
+			}
+			return begin;
 		}
 
 		iterator	erase(iterator position)

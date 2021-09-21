@@ -9,7 +9,7 @@ namespace ft
 {
 
 template <typename T>
-class random_access_iterator
+class random_access_iterator : public input_iterator<T>
 {
 	public:
 		random_access_iterator(void) {};

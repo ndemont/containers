@@ -27,7 +27,7 @@ class reverse_iterator
 		//reverse_iterator(const const_iterator<Category, T>& rev_it) : m_iterator(rev_it.get_const_iterator()) {};
 		
 		/*BASE - Member functions*/
-		iterator_type base() const { return copy; }
+		iterator_type base() const { return m_iterator; }
 
 		/*OPERATOR* - Member functions*/
 		reference operator*() const { return *m_iterator; }

@@ -272,31 +272,34 @@ class vector
 
 		iterator	insert(iterator position, const value_type& val)
 		{
-			value_type*	tmp = m_vector;
+			vector<T>	tmp(*this);
 			iterator	begin = this->begin();
 			size_type	i = 0;
 
+			std::cout << "vector size = " << m_size << std::endl;
 			*this = vector(m_size + 1);
+			std::cout << "OK 2" << std::endl;
 			while (begin < position)
 			{
 				m_vector[i] = tmp[i];
 				i++;
 				begin++;
 			}
+			std::cout << "OK 3" << std::endl;
 			m_vector[i] = val;
 			while (tmp[i])
 			{
 				m_vector[i + 1] = tmp[i];
 				i++;
 			}
+			std::cout << "OK 4" << std::endl;
 			return --position;
 		}
 
 		void	insert(iterator position, size_type n, const value_type& val)
 		{
-			value_type*	tmp = m_vector;
+			vector<T>	tmp(*this);
 			iterator	begin = this->begin();
-			iterator	new_it;
 			size_type	i = 0;
 
 			*this = vector(m_size + n);
@@ -306,26 +309,26 @@ class vector
 				i++;
 				begin++;
 			}
-			new_it = begin;
-			for (size_t j; j < n; j++)
+			for (size_t j = 0; j < n; j++)
 				m_vector[i + j] = val;
 			while (tmp[i])
 			{
 				m_vector[i + n] = tmp[i];
 				i++;
 			}
-			return begin;
 		}
+
 		template <class InputIterator>
 		void	insert(iterator position, InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last)
 		{
-			value_type*	tmp = m_vector;
+			vector<T>	tmp(*this);
 			iterator	begin = this->begin();
-			iterator	new_it;
 			size_type	i = 0;
 			size_type	j = 0;
-			size_type	len = last - first;
+			size_type	len = 0;
 
+			for (InputIterator it = first; it != last; it++)
+				len++;
 			*this = vector(m_size + len);
 			while (begin < position)
 			{
@@ -333,15 +336,13 @@ class vector
 				i++;
 				begin++;
 			}
-			new_it = begin;
 			for (; first != last; first++)
-				m_vector[i + j++] = first;
+				m_vector[i + j++] = *first;
 			while (tmp[i])
 			{
 				m_vector[i + len] = tmp[i];
 				i++;
 			}
-			return begin;
 		}
 
 		iterator	erase(iterator position)

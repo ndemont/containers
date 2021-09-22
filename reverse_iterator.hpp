@@ -22,7 +22,7 @@ class reverse_iterator
 		reverse_iterator(void) {};
 		explicit reverse_iterator (iterator_type it) : m_iterator(it) {};
 		template <class Iter>
-		reverse_iterator(const reverse_iterator<Iter>& rev_it) : m_iterator(rev_it.m_iterator) {};
+		reverse_iterator(const reverse_iterator<Iter>& rev_it) : m_iterator(rev_it.base()) {};
 		//template <class Category, class T>
 		//reverse_iterator(const const_iterator<Category, T>& rev_it) : m_iterator(rev_it.get_const_iterator()) {};
 		
@@ -85,6 +85,7 @@ class reverse_iterator
 		{
 			return (lhs.m_iterator > rhs.m_iterator);
 		}
+
 	private:
 		iterator_type	m_iterator;
 };

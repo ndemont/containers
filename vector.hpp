@@ -402,7 +402,7 @@ class vector
 		{
 			if (lhs.m_size == rhs.m_size)
 			{
-				for (size_t i = 0; i < lhs.size; i++)
+				for (size_t i = 0; i < lhs.m_size; i++)
 				{
 					if (lhs.m_vector[i] != rhs.m_vector[i])
 						return false;
@@ -419,7 +419,7 @@ class vector
 
 		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			for (size_t i = 0; i < lhs.size; i++)
+			for (size_t i = 0; i < lhs.m_size; i++)
 			{
 				if (lhs.m_vector[i] < rhs.m_vector[i])
 					return true;

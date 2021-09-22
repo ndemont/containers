@@ -354,23 +354,30 @@ class vector
 
 		iterator	erase(iterator position)
 		{
-			iterator erased;
+			size_t	pos = position - begin();
+			size_t	len = end() - begin() - 1;
 
-			(void)position;
-			//(*position).~value_type();
-			//erased = position;
-			//position++;
-			//while (position != this->end())
-			//{
-			//	*(position - 1) = *position;
-			//	position++;
-			//}
-			return erased;
+			for (; pos < len; pos++)
+			{
+				(*this)[pos] = (*this)[pos + 1];
+			}
+			(*(end())).~value_type();
+			m_size--;
+			return position;
 		}
 
 		iterator	erase(iterator first, iterator last)
 		{
-			(void)last;
+			size_t	start = first - begin();
+			size_t	end = last - begin();
+			size_t	erased = last - first;
+
+			for (; start <= end; start++)
+			{
+				(*this)[start] = (*this)[start + erased];
+			}
+			//(*(end())).~value_type();
+			m_size = m_size - erased;
 			return first;
 		}
 

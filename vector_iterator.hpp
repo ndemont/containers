@@ -44,12 +44,13 @@ class vector_iterator : public iterator<random_access_iterator_tag, T>
 		vector_iterator			operator--(int)  { return vector_iterator(m_iterator--); }
 
 		vector_iterator			operator+(difference_type n) { return vector_iterator(m_iterator + n); }
-		vector_iterator&		operator+(difference_type n) const { return vector_iterator	(m_iterator + n); }
+		vector_iterator			operator+(difference_type n) const { return vector_iterator	(m_iterator + n); }
 		friend vector_iterator	operator+(difference_type n, const vector_iterator& x) { return vector_iterator(n + x.base()); }
 
 		template <class U>
 		friend difference_type	operator-(const vector_iterator& lhs, const vector_iterator<U>& rhs) { return (lhs.m_iterator - rhs.m_iterator); }
-		vector_iterator&		operator-(difference_type n) { m_iterator = m_iterator - n; return *this; }
+		
+		vector_iterator			operator-(difference_type n) { return vector_iterator(m_iterator - n); }
 		vector_iterator			operator-(difference_type n) const { return vector_iterator(m_iterator - n); }
 		
 		bool					operator<(const vector_iterator& x) const { return (m_iterator < x.m_iterator); }
@@ -102,7 +103,7 @@ class const_vector_iterator : public iterator<random_access_iterator_tag, T>
 
 
 		const_vector_iterator			operator+(difference_type n) { return const_vector_iterator(m_iterator + n); }
-		const_vector_iterator&			operator+(difference_type n) const { return const_vector_iterator(m_iterator + n); }
+		const_vector_iterator			operator+(difference_type n) const { return const_vector_iterator(m_iterator + n); }
 		friend const_vector_iterator	operator+(difference_type n, const const_vector_iterator& x) { return const_vector_iterator(n + x.base()); }
 		
 		template <class U>

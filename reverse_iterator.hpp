@@ -39,9 +39,9 @@ class reverse_iterator
 		difference_type 		operator-(const reverse_iterator& x) const { return (m_iterator - x.base()); }
 
 		reverse_iterator& 		operator++(void) { m_iterator--; return *this; }
-		reverse_iterator  		operator++(int) { --m_iterator; return *this; }
+		reverse_iterator  		operator++(int) { return reverse_iterator(m_iterator--); }
 		reverse_iterator& 		operator--(void) { m_iterator++; return *this; }
-		reverse_iterator  		operator--(int) { ++m_iterator; return *this; }
+		reverse_iterator  		operator--(int) { return reverse_iterator(m_iterator++); }
 
 		reverse_iterator&		operator+=(const reverse_iterator& x) { return (m_iterator -= x.base()); }
 		reverse_iterator&		operator+=(difference_type n) { m_iterator = m_iterator - n; return *this; }

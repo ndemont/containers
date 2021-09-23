@@ -137,18 +137,13 @@ class vector
 			}
 			else if (n > m_size)
 			{
-				while (m_size != n)
+				while (m_size < n)
 					push_back(val);
 			}
 		}
-		size_type	capacity(void) const
-		{
-			return m_capacity;
-		}
-		bool	empty(void) const
-		{
-			return (m_size);
-		}
+		size_type	capacity(void) const { return m_capacity; }
+		bool		empty(void) const { return (m_size); }
+		
 		void	reserve(size_type n)
 		{
 			if (n > m_capacity)
@@ -419,22 +414,37 @@ class vector
 
 		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			for (size_t i = 0; i < lhs.m_size; i++)
+			for (size_t i = 0; i < lhs.size(); i++)
 			{
+				if (i >= rhs.size())
+					return false;
 				if (lhs.m_vector[i] < rhs.m_vector[i])
 					return true;
 				else if (lhs.m_vector[i] > rhs.m_vector[i])
 					return false;
 			}
+			if (lhs.size() < rhs.size())
+				return true;
+			return false;
+		}
+		friend bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			for (size_t i = 0; i < lhs.m_size; i++)
+			{
+				if (i >= rhs.size())
+					return true;
+				if (lhs.m_vector[i] > rhs.m_vector[i])
+					return true;
+				else if (lhs.m_vector[i] < rhs.m_vector[i])
+					return false;
+			}
+			if (lhs.size() > rhs.size())
+				return true;
 			return false;
 		}
 		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			return (!(rhs < lhs));
-		}
-		friend bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-		{
-			return (rhs < lhs);
+			return (!(lhs > rhs));
 		}
 		friend bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
@@ -443,8 +453,10 @@ class vector
 
 		friend void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
 		{
-			(void)x;
-			(void)y;
+			vector<T> tmp = x;
+			
+			x = y;
+			y = tmp;
 		}
 
 	private:

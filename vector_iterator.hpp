@@ -32,19 +32,19 @@ class vector_iterator : public iterator<random_access_iterator_tag, T>
 
 		vector_iterator&		operator=(const vector_iterator& x) { m_iterator = x.m_iterator; return *this; }
 		
-		bool					operator==(const vector_iterator& x) const { return (m_iterator != x.m_iterator); }
-		bool					operator!=(const vector_iterator& x) const { return (m_iterator != x.m_iterator); }
+		bool					operator==(const vector_iterator& x) const { return (m_iterator == x.base()); }
+		bool					operator!=(const vector_iterator& x) const { return (m_iterator != x.base()); }
 
 		reference				operator*(void) const { return *m_iterator; }
 		pointer					operator->(void) const { return	&(*m_iterator); }
 
 		vector_iterator&		operator++(void) { m_iterator++; return *this; }
-		vector_iterator			operator++(int)  { m_iterator++; return *this; }
+		vector_iterator			operator++(int)  { return vector_iterator(m_iterator++); }
 		vector_iterator&		operator--(void) { m_iterator--; return *this; }
-		vector_iterator			operator--(int)  { --m_iterator; return *this; }
+		vector_iterator			operator--(int)  { return vector_iterator(m_iterator--); }
 
-		vector_iterator&		operator+(difference_type n) { m_iterator = m_iterator + n; return *this; }
-		vector_iterator			operator+(difference_type n) const { return vector_iterator	(m_iterator - n); }
+		vector_iterator			operator+(difference_type n) { return vector_iterator(m_iterator + n); }
+		vector_iterator&		operator+(difference_type n) const { return vector_iterator	(m_iterator + n); }
 		friend vector_iterator	operator+(difference_type n, const vector_iterator& x) { return vector_iterator(n + x.base()); }
 
 		template <class U>
@@ -89,20 +89,20 @@ class const_vector_iterator : public iterator<random_access_iterator_tag, T>
 
 		const_vector_iterator&			operator=(const const_vector_iterator& x) { m_iterator = x.m_iterator; return *this; }
 
-		bool							operator==(const const_vector_iterator& x) const { return (m_iterator == x.m_iterator); }
+		bool							operator==(const const_vector_iterator& x) const { return (m_iterator == x.base()); }
 		bool							operator!=(const const_vector_iterator& x) const { return (m_iterator != x.m_iterator); }
 
 		reference						operator*(void) const { return *m_iterator; }
 		pointer							operator->(void) const { return	&(*m_iterator); }
 
 		const_vector_iterator&			operator++(void) { m_iterator++; return *this; }
-		const_vector_iterator			operator++(int)  { m_iterator++; return *this; }
+		const_vector_iterator			operator++(int)  { return const_vector_iterator(m_iterator++); }
 		const_vector_iterator&			operator--(void) { m_iterator--; return *this; }
-		const_vector_iterator			operator--(int)  { --m_iterator; return *this; }
+		const_vector_iterator			operator--(int)  { return const_vector_iterator(m_iterator--); }
 
 
-		const_vector_iterator&			operator+(difference_type n) { m_iterator = m_iterator + n; return *this; }
-		const_vector_iterator			operator+(difference_type n) const { return const_vector_iterator(m_iterator + n); }
+		const_vector_iterator			operator+(difference_type n) { return const_vector_iterator(m_iterator + n); }
+		const_vector_iterator&			operator+(difference_type n) const { return const_vector_iterator(m_iterator + n); }
 		friend const_vector_iterator	operator+(difference_type n, const const_vector_iterator& x) { return const_vector_iterator(n + x.base()); }
 		
 		template <class U>

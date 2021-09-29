@@ -80,54 +80,18 @@ class vector
 		}
 
 		/* ITERATORS */
-		iterator		begin(void) {
-		iterator	begin(m_vector);
-			return begin;
-		}
-		const_iterator	begin(void) const
-		{
-			return const_iterator(m_vector);
-		}
-
-		iterator		end()
-		{
-			iterator end(m_vector + m_size);
-			return end;
-		}
-		const_iterator	end() const
-		{
-			return const_iterator(m_vector + m_size);
-		}
-		reverse_iterator	rbegin()
-		{
-			reverse_iterator	rbegin(m_vector + m_size - 1);
-			return rbegin;
-		}
-		const_reverse_iterator	rbegin() const
-		{
-			const_reverse_iterator	rbegin(m_vector + m_size - 1);
-			return rbegin;
-		}
-		reverse_iterator	rend()
-		{
-			reverse_iterator rend(m_vector - 1);
-			return rend;
-		}
-		const_reverse_iterator	rend() const
-		{
-			const_reverse_iterator rend(m_vector - 1);
-			return rend;
-		}
+		iterator				begin(void) { return iterator(m_vector); }
+		const_iterator			begin(void) const { return const_iterator(m_vector); }
+		iterator				end(void) { return iterator(m_vector + m_size); }
+		const_iterator			end(void) const { return const_iterator(m_vector + m_size); }
+		reverse_iterator		rbegin(void) { return reverse_iterator(m_vector + m_size - 1); }
+		const_reverse_iterator	rbegin(void) const { return const_reverse_iterator(m_vector + m_size - 1); }
+		reverse_iterator		rend(void) { return reverse_iterator(m_vector - 1); }
+		const_reverse_iterator	rend(void) const { return const_reverse_iterator(m_vector - 1); return rend; }
 
 		/* CAPACITY */
-		size_type	size(void) const
-		{
-			return m_size;
-		}
-		size_type	max_size() const
-		{
-			return (m_alloc.max_size());
-		}
+		size_type	size(void) const { return m_size; }
+		size_type	max_size() const { return (m_alloc.max_size()); }
 		void		resize(size_type n, value_type val = value_type())
 		{
 			if (n < m_size)
@@ -260,12 +224,7 @@ class vector
 			m_size++;
 		}
 
-		void	pop_back(void)
-		{
-			m_size--;
-			m_vector[m_size].~value_type();
-		}
-
+		void		pop_back(void) { m_size--; m_vector[m_size].~value_type(); }
 		iterator	insert(iterator position, const value_type& val)
 		{
 			vector<T>	tmp(*this);
@@ -389,10 +348,8 @@ class vector
 				pop_back();
 		}
 
-		/* ALLOCATOR */
 		allocator_type get_allocator() const;
 
-		/* NON-MEMBER FONCTION OVERLOADS */
 		friend bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
 			if (lhs.m_size == rhs.m_size)
@@ -407,11 +364,7 @@ class vector
 			else
 				return false;
 		}
-		friend bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-		{
-			return (!(lhs == rhs));
-		}
-
+		friend bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs)); }
 		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
 			for (size_t i = 0; i < lhs.size(); i++)
@@ -442,14 +395,8 @@ class vector
 				return true;
 			return false;
 		}
-		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-		{
-			return (!(lhs > rhs));
-		}
-		friend bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-		{
-			return (!(lhs < rhs));
-		}
+		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs > rhs)); }
+		friend bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs < rhs)); }
 
 		friend void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
 		{
@@ -466,7 +413,6 @@ class vector
 		allocator_type 		m_alloc;
 };
 
-/* TEMPLATE SPECIALIZATIONS */
 template <class Alloc>
 class vector<bool,Alloc>;
 

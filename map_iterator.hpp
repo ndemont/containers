@@ -37,7 +37,7 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		bool					operator!=(const map_iterator& x) const { return (m_iterator != x.base()); }
 
 		reference				operator*(void) const { return *m_iterator; }
-		pointer					operator->(void) const { return	&(*m_iterator); }
+		pointer					operator->(void) const { return	m_iterator; }
 
 		map_iterator&			operator++(void) { m_iterator++; return *this; }
 		map_iterator			operator++(int)  { return map_iterator(m_iterator++); }
@@ -66,10 +66,10 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		
 		reference				operator[](difference_type n) const { return (m_iterator[n]); }
 
-		value_type*				base(void) const {return m_iterator;};
+		pointer					base(void) const {return m_iterator;};
 
 	private:
-		tree<T>		*m_iterator;
+		pointer		m_iterator;
 };
 
 template <class T>
@@ -95,7 +95,7 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		bool						operator!=(const const_map_iterator& x) const { return (m_iterator != x.m_iterator); }
 
 		reference					operator*(void) const { return *m_iterator; }
-		pointer						operator->(void) const { return	&(*m_iterator); }
+		pointer						operator->(void) const { return	m_iterator; }
 
 		const_map_iterator&			operator++(void) { m_iterator++; return *this; }
 		const_map_iterator			operator++(int)  { return const_map_iterator(m_iterator++); }
@@ -126,11 +126,11 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		
 		reference					operator[](difference_type n) const { return (m_iterator[n]); }
 
-		value_type*					base(void) const {return m_iterator;};
+		pointer						base(void) const { return m_iterator; };
 
 
 	private:
-		tree<T>		*m_iterator;
+		pointer		m_iterator;
 };
 };
 

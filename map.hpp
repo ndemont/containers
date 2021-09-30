@@ -37,61 +37,78 @@ class map
 
 		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_alloc(alloc), m_root(NULL) { (void)comp; }
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type());
+		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_alloc(alloc), m_compare(comp)
+		{
+			for (InputIterator it = first; it != last; it++)
+				insert(*it);
+		};
 		map(const map& x) { (void)x; };
 		~map(void) {};
 	
-		//map&	operator=(const map& x) { (void)x; };
+		map&	operator=(const map& x) { (void)x; };
 
 		iterator				begin(void) { return iterator(m_root); };
 		const_iterator			begin(void) const { return const_iterator(m_root); };
 		iterator				end(void) { return iterator(m_root); };
 		const_iterator			end(void) const { return const_iterator(m_root); };
-		//reverse_iterator		rbegin(void) { return rbegin(m_root); };
-		//const_reverse_iterator	rbegin(void) const { return rbegin(m_root); };
-		//reverse_iterator		rend(void) { return rbegin(m_root); };
-		//const_reverse_iterator	rend(void) const { return rbegin(m_root); };
+		reverse_iterator		rbegin(void) { return rbegin(m_root); };
+		const_reverse_iterator	rbegin(void) const { return rbegin(m_root); };
+		reverse_iterator		rend(void) { return rbegin(m_root); };
+		const_reverse_iterator	rend(void) const { return rbegin(m_root); };
 
 
 		bool					empty(void) const { return (m_size); }
 		size_type				size(void) const { return (m_size); }
 		size_type				max_size(void) const { return (m_alloc.max_size()); }
 
-		//mapped_type&	operator[](const key_type& k)
-		//{
-		//	if (!check_key(m_root, k))
-		//	{
-		//		addNode(k, mapped_type());
-		//		m_size++;
-		//	}
-		//	return (findKey(k));
-		//}
+		mapped_type&	operator[](const key_type& k)
+		{
+			if (!check_key(m_root, k))
+			{
+				addNode(k, mapped_type());
+				m_size++;
+			}
+			return (findKey(k));
+		}
 
-		//ft::pair<iterator,bool>					insert(const value_type& val) { (void)val; };
-		//iterator								insert(iterator position, const value_type& val) {(void)position; (void)val;};
-		//template <class InputIterator>
-		//void									insert(InputIterator first, InputIterator last) {(void)last; (void)first;};
+		//ft::pair<iterator,bool>		insert(const value_type& val)
+		void		insert(const value_type& val)
+		{
+			tree<value_type> newNode(val);
+
+			std::cout << "New node created" << std::endl;
+			std::cout << "Key =   " << newNode.pair->first << std::endl;
+			std::cout << "Value = " << newNode.pair->second << std::endl;
+		};
+
+		iterator insert(iterator position, const value_type& val)
+		{
+			(void)position;
+			(void)val;
+		};
+		template <class InputIterator>
+		void									insert(InputIterator first, InputIterator last) {(void)last; (void)first;};
 		
-		//void									erase(iterator position) {  (void)position; };
-		//size_type								erase(const key_type& k) { (void)k; };
-		//void									erase(iterator first, iterator last) { (void)last; (void)first; };
+		void									erase(iterator position) {  (void)position; };
+		size_type								erase(const key_type& k) { (void)k; };
+		void									erase(iterator first, iterator last) { (void)last; (void)first; };
 
 
-		//void									swap(map& x) 
-		//{ 
-		//	map<Key, T> tmp = x;
+		void									swap(map& x) 
+		{ 
+			map<Key, T> tmp = x;
 				
-		//	x = *this;
-		//	*this = tmp;
-		//};
-		//void									clear(void) {};
+			x = *this;
+			*this = tmp;
+		};
+		void									clear(void) {};
 
-		//key_compare								key_comp(void) const {};
-		//value_compare							value_comp(void) const {};
+		key_compare								key_comp(void) const {};
+		value_compare							value_comp(void) const {};
 
-		//iterator								find(const key_type& k) { (void)k; };
-		//const_iterator							find(const key_type& k) const { (void)k; };
-		//size_type								count(const key_type& k) const { (void)k;};
+		iterator								find(const key_type& k) { (void)k; };
+		const_iterator							find(const key_type& k) const { (void)k; };
+		size_type								count(const key_type& k) const { (void)k;};
 		iterator								lower_bound(const key_type& k) { (void)k; };
 		const_iterator							lower_bound(const key_type& k) const { (void)k; };
 		iterator								upper_bound(const key_type& k) { (void)k; };
@@ -99,12 +116,13 @@ class map
 		ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const { (void)k; };
 		ft::pair<iterator,iterator>				equal_range(const key_type& k) { (void)k; };
 
-		//allocator_type get_allocator() const;
+		allocator_type get_allocator() const;
 
 		private:
-			allocator_type		m_alloc;
 			size_type			m_size;
 			tree<value_type>	*m_root;
+			allocator_type		m_alloc;
+			key_compare			m_compare;
 };
 };
 

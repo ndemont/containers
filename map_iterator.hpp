@@ -2,10 +2,11 @@
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
 
+# include <cstddef>
 # include "iterator_traits.hpp"
 # include "random_access_iterator.hpp"
+# include "binary_search_tree.hpp"
 # include "iterator.hpp"
-# include <cstddef>
 
 namespace ft
 {
@@ -30,7 +31,7 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		map_iterator(const_map_iterator<T> const & x) : m_iterator(x.base()) {};
 		~map_iterator(void){};
 
-		map_iterator&		operator=(const map_iterator& x) { m_iterator = x.m_iterator; return *this; }
+		map_iterator&			operator=(const map_iterator& x) { m_iterator = x.m_iterator; return *this; }
 		
 		bool					operator==(const map_iterator& x) const { return (m_iterator == x.base()); }
 		bool					operator!=(const map_iterator& x) const { return (m_iterator != x.base()); }
@@ -38,9 +39,9 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		reference				operator*(void) const { return *m_iterator; }
 		pointer					operator->(void) const { return	&(*m_iterator); }
 
-		map_iterator&		operator++(void) { m_iterator++; return *this; }
+		map_iterator&			operator++(void) { m_iterator++; return *this; }
 		map_iterator			operator++(int)  { return map_iterator(m_iterator++); }
-		map_iterator&		operator--(void) { m_iterator--; return *this; }
+		map_iterator&			operator--(void) { m_iterator--; return *this; }
 		map_iterator			operator--(int)  { return map_iterator(m_iterator--); }
 
 		map_iterator			operator+(difference_type n) { return map_iterator(m_iterator + n); }
@@ -58,17 +59,17 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		bool					operator<=(const map_iterator& x) const { return (m_iterator <= x.m_iterator); }
 		bool					operator>=(const map_iterator& x) const { return (m_iterator >= x.m_iterator); }
 
-		map_iterator&		operator+=(const map_iterator& x) { return (m_iterator += x.m_iterator); }
-		map_iterator&		operator+=(size_type n) { m_iterator += n; return *this; }
-		map_iterator&		operator-=(const map_iterator& x) { return (m_iterator -= x.m_iterator); }
-		map_iterator&		operator-=(size_type n) { m_iterator -= n; return *this; } 
+		map_iterator&			operator+=(const map_iterator& x) { return (m_iterator += x.m_iterator); }
+		map_iterator&			operator+=(size_type n) { m_iterator += n; return *this; }
+		map_iterator&			operator-=(const map_iterator& x) { return (m_iterator -= x.m_iterator); }
+		map_iterator&			operator-=(size_type n) { m_iterator -= n; return *this; } 
 		
 		reference				operator[](difference_type n) const { return (m_iterator[n]); }
 
-		value_type*				base() const {return m_iterator;};
+		value_type*				base(void) const {return m_iterator;};
 
 	private:
-		value_type*	m_iterator;
+		tree<T>		*m_iterator;
 };
 
 template <class T>
@@ -90,11 +91,11 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 
 		const_map_iterator&			operator=(const const_map_iterator& x) { m_iterator = x.m_iterator; return *this; }
 
-		bool							operator==(const const_map_iterator& x) const { return (m_iterator == x.base()); }
-		bool							operator!=(const const_map_iterator& x) const { return (m_iterator != x.m_iterator); }
+		bool						operator==(const const_map_iterator& x) const { return (m_iterator == x.base()); }
+		bool						operator!=(const const_map_iterator& x) const { return (m_iterator != x.m_iterator); }
 
-		reference						operator*(void) const { return *m_iterator; }
-		pointer							operator->(void) const { return	&(*m_iterator); }
+		reference					operator*(void) const { return *m_iterator; }
+		pointer						operator->(void) const { return	&(*m_iterator); }
 
 		const_map_iterator&			operator++(void) { m_iterator++; return *this; }
 		const_map_iterator			operator++(int)  { return const_map_iterator(m_iterator++); }
@@ -107,14 +108,14 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		friend const_map_iterator	operator+(difference_type n, const const_map_iterator& x) { return const_map_iterator(n + x.base()); }
 		
 		template <class U>
-		friend difference_type			operator-(const const_map_iterator& lhs, const const_map_iterator<U>& rhs) { return (lhs.m_iterator - rhs.base()); }
+		friend difference_type		operator-(const const_map_iterator& lhs, const const_map_iterator<U>& rhs) { return (lhs.m_iterator - rhs.base()); }
 		const_map_iterator&			operator-(difference_type n) { m_iterator = m_iterator - n; return *this; }
 		const_map_iterator			operator-(difference_type n) const { return const_map_iterator(m_iterator - n); }
 		
-		bool							operator<(const const_map_iterator& x) const { return (m_iterator < x.m_iterator); }
-		bool							operator>(const const_map_iterator& x) const { return (m_iterator > x.m_iterator); }
-		bool							operator<=(const const_map_iterator& x) const { return (m_iterator <= x.m_iterator); }
-		bool							operator>=(const const_map_iterator& x) const { return (m_iterator >= x.m_iterator); }
+		bool						operator<(const const_map_iterator& x) const { return (m_iterator < x.m_iterator); }
+		bool						operator>(const const_map_iterator& x) const { return (m_iterator > x.m_iterator); }
+		bool						operator<=(const const_map_iterator& x) const { return (m_iterator <= x.m_iterator); }
+		bool						operator>=(const const_map_iterator& x) const { return (m_iterator >= x.m_iterator); }
 
 		friend const_map_iterator& operator+(size_type n, const const_map_iterator& rhs) { const_map_iterator<T> *plus = rhs.m_iterator + n; return *plus; }
 
@@ -123,15 +124,14 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		const_map_iterator&			operator-=(const const_map_iterator& x) { return (m_iterator -= x.m_iterator); }
 		const_map_iterator&			operator-=(size_type n) { m_iterator -= n; return *this; }
 		
-		reference						operator[](difference_type n) const { return (m_iterator[n]); }
+		reference					operator[](difference_type n) const { return (m_iterator[n]); }
 
-		value_type*						base() const {return m_iterator;};
+		value_type*					base(void) const {return m_iterator;};
 
 
 	private:
-		value_type*	m_iterator;
+		tree<T>		*m_iterator;
 };
-
 };
 
 #endif

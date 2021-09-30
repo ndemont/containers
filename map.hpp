@@ -35,7 +35,7 @@ class map
 		typedef ptrdiff_t									difference_type;
 		typedef size_t										size_type;
 
-		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_alloc(alloc), m_root(NULL) { (void)comp); }
+		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_alloc(alloc), m_root(NULL) { (void)comp; }
 		template <class InputIterator>
 		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type());
 		map(const map& x) { (void)x; };
@@ -43,13 +43,8 @@ class map
 	
 		//map&	operator=(const map& x) { (void)x; };
 
-		iterator				begin(void) {if (m_root) {return iterator(m_root->pair);}return iterator(NULL);};
-		const_iterator			begin(void) const 
-		{ 
-			if (m_root)
-				return const_iterator(m_root->pair);
-			return const_iterator(NULL);
-		};
+		iterator				begin(void) { return iterator(m_root); };
+		const_iterator			begin(void) const { return const_iterator(m_root); };
 		iterator				end(void) { return iterator(m_root); };
 		const_iterator			end(void) const { return const_iterator(m_root); };
 		//reverse_iterator		rbegin(void) { return rbegin(m_root); };
@@ -98,9 +93,9 @@ class map
 		//const_iterator							find(const key_type& k) const { (void)k; };
 		//size_type								count(const key_type& k) const { (void)k;};
 		iterator								lower_bound(const key_type& k) { (void)k; };
-		//const_iterator							lower_bound(const key_type& k) const { (void)k; };
+		const_iterator							lower_bound(const key_type& k) const { (void)k; };
 		iterator								upper_bound(const key_type& k) { (void)k; };
-		//const_iterator							upper_bound(const key_type& k) const { (void)k; };
+		const_iterator							upper_bound(const key_type& k) const { (void)k; };
 		ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const { (void)k; };
 		ft::pair<iterator,iterator>				equal_range(const key_type& k) { (void)k; };
 

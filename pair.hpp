@@ -8,14 +8,14 @@ template <class T1, class T2>
 struct pair
 {
 	public:
-		typedef	T1	first_type;
-		typedef	T2	second_type;
+		typedef	T1	key;
+		typedef	T2	map;
 
 	/* CONSTRUCTORS */
-	pair(void) : first(first_type()), second(second_type()) {};
+	pair(void) : first(key()), second(map()) {};
 	template<class U, class V>
 	pair(const pair<U,V>& pr) : first(pr.first), second(pr.second) {};
-	pair(const first_type& a, const second_type& b) : first(a), second(b) {};
+	pair(const key& a, const map& b) : first(a), second(b) {};
 
 	/* OPERATOR= */
 	pair&	operator=(const pair& pr)
@@ -57,8 +57,8 @@ struct pair
 		return !(lhs < rhs);
 	}
 
-	first_type	first;
-	second_type	second;
+	key	first;
+	map	second;
 };
 
 template <class T1, class T2>

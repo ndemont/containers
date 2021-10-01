@@ -20,7 +20,6 @@ struct pair
 		{
 			first = pr.first;
 			second = pr.second;
-			
 			return (*this);
 		}
 
@@ -31,6 +30,7 @@ struct pair
 		friend bool	operator>(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) { return (rhs < lhs); }
 		friend bool	operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) { return !(lhs < rhs);}
 	
+	//private:
 		first_type	first;
 		second_type	second;
 };

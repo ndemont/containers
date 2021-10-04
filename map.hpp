@@ -65,14 +65,65 @@ class map
 	
 		map&	operator=(const map& x) { (void)x; };
 
-		iterator				begin(void) { return iterator(*m_root); };
-		const_iterator			begin(void) const { return const_iterator(*m_root); };
-		iterator				end(void) { return iterator(*m_root); };
-		const_iterator			end(void) const { return const_iterator(*m_root); };
-		reverse_iterator		rbegin(void) { return rbegin(*m_root); };
-		const_reverse_iterator	rbegin(void) const { return rbegin(*m_root); };
-		reverse_iterator		rend(void) { return rbegin(*m_root); };
-		const_reverse_iterator	rend(void) const { return rbegin(*m_root); };
+		iterator				begin(void)
+		{ 
+			tree*	node = *m_root;
+
+			while (node)
+			{
+				if (node->left)
+					node = node->left;
+				else
+					break ;
+			}
+			return iterator(node); 
+		};
+		const_iterator			begin(void) const 
+		{
+			tree*	node = *m_root;
+
+			while (node)
+			{
+				if (node->left)
+					node = node->left;
+				else
+					break ;
+			}
+			return const_iterator(node); 
+		};
+
+		iterator				end(void) 
+		{ 
+			tree*	node = *m_root;
+
+			// while (node)
+			// {
+			// 	if (node->right)
+			// 		node = node->right;
+			// 	else
+			// 		break ;
+			// }
+			return iterator(node); 
+		};
+
+		const_iterator			end(void) const 
+		{
+			tree*	node = *m_root;
+
+			// while (node)
+			// {
+			// 	if (node->right)
+			// 		node = node->right;
+			// 	else
+			// 		break ;
+			// }
+			return const_iterator(node); 
+		};
+
+		reverse_iterator		rbegin(void) { return reverse_iterator(end()--); };
+		const_reverse_iterator	rbegin(void) const { return const_reverse_iterator(end()--); };
+		reverse_iterator		rend(void) { return reverse_iterator(begin()); };
+		const_reverse_iterator	rend(void) const { return const_reverse_iterator(begin()); };
 
 
 		bool					empty(void) const { return (m_size); }
@@ -129,8 +180,24 @@ class map
 		const_iterator							lower_bound(const key_type& k) const { (void)k; return const_iterator(*m_root); };
 		iterator								upper_bound(const key_type& k) { (void)k; return iterator(*m_root); };
 		const_iterator							upper_bound(const key_type& k) const { (void)k; return const_iterator(*m_root); };
-		//ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const { return ft::pair<const_iterator, const_iterator>(k); };
-		//ft::pair<iterator,iterator>				equal_range(const key_type& k) { return ft::pair<iterator, iterator>(k); };
+		ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const 
+		{ 
+			ft::pair<const_iterator, const_iterator>	range;
+			
+			range.first = lower_bound(k); 
+			range.second = upper_bound(k);
+
+			return range; 
+		};
+		ft::pair<iterator,iterator>				equal_range(const key_type& k)
+		{ 
+			ft::pair<iterator, iterator> range;
+			
+			range.first = lower_bound(k); 
+			range.second = upper_bound(k);
+
+			return range; 
+		};
 
 		allocator_type get_allocator() const;
 
@@ -147,6 +214,7 @@ class map
 			{
 				m_root = new tree*;
 				*m_root = newNode(val);
+				m_size++;
 				return ;
 			}
 			tree	*ref = *m_root;

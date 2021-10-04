@@ -52,16 +52,5 @@
 //		tree			*left;
 //		tree			*right;
 
-//		bool	check_key(tree *root, value_type pair)
-//		{
-//			if (!root)
-//				return (false);
-//			if (pair.second_type == root->value)
-//				return (true);
-//			else if (pair.map < root->value)
-//				check_key(root->left, pair.second_type);
-//			else
-//				check_key(root->right, pair.second_type);
-//			return (false);
-//		}
+
 

@@ -53,9 +53,9 @@ class map
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef ptrdiff_t									difference_type;
 
-		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_alloc(alloc), m_root(NULL) { (void)comp; }
+		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(NULL), m_alloc(alloc), m_compare(comp), v_compare(comp) {};
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(NULL), m_alloc(alloc), m_compare(comp)
+		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(NULL), m_alloc(alloc), m_compare(comp), v_compare(comp)
 		{
 			for (InputIterator it = first; it != last; it++)
 				insert(*it);
@@ -79,15 +79,17 @@ class map
 		size_type				size(void) const { return (m_size); }
 		size_type				max_size(void) const { return (m_alloc.max_size()); }
 
-		//mapped_type&	operator[](const key_type& k)
-		//{
-		//	//if (!check_key(m_root, k))
-		//	//{
-		//	//	addNode(k, mapped_type());
-		//	//	m_size++;
-		//	//}
-		//	//return (findKey(k));
-		//}
+		mapped_type&			operator[](const key_type& k)
+		{
+			value_type pair(k, mapped_type());		
+
+			if (!check_key(*m_root, k))
+			{
+				addNode(pair);
+				m_size++;
+			}
+			return (*findKey(k));
+		}
 
 		//ft::pair<iterator,bool>		insert(const value_type& val)
 		void		insert(const value_type& val)
@@ -118,17 +120,17 @@ class map
 		void									clear(void) {};
 
 		key_compare		key_comp(void) const { return m_compare; };
-		value_compare	value_comp(void) const { return m_compare; };
+		value_compare	value_comp(void) const { return v_compare; };
 
-		iterator								find(const key_type& k) { (void)k; };
-		const_iterator							find(const key_type& k) const { (void)k; };
-		size_type								count(const key_type& k) const { (void)k;};
-		iterator								lower_bound(const key_type& k) { (void)k; };
-		const_iterator							lower_bound(const key_type& k) const { (void)k; };
-		iterator								upper_bound(const key_type& k) { (void)k; };
-		const_iterator							upper_bound(const key_type& k) const { (void)k; };
-		ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const { (void)k; };
-		ft::pair<iterator,iterator>				equal_range(const key_type& k) { (void)k; };
+		iterator								find(const key_type& k) { (void)k; return iterator(*m_root); };
+		const_iterator							find(const key_type& k) const { (void)k; return const_iterator(*m_root); };
+		size_type								count(const key_type& k) const { (void)k; return m_size; };
+		iterator								lower_bound(const key_type& k) { (void)k; return const_iterator(*m_root); };
+		const_iterator							lower_bound(const key_type& k) const { (void)k; return const_iterator(*m_root); };
+		iterator								upper_bound(const key_type& k) { (void)k; return iterator(*m_root); };
+		const_iterator							upper_bound(const key_type& k) const { (void)k; return const_iterator(*m_root); };
+		//ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const { return ft::pair<const_iterator, const_iterator>(k); };
+		//ft::pair<iterator,iterator>				equal_range(const key_type& k) { return ft::pair<iterator, iterator>(k); };
 
 		allocator_type get_allocator() const;
 
@@ -137,6 +139,7 @@ class map
 			tree			**m_root;
 			allocator_type	m_alloc;
 			key_compare		m_compare;
+			value_compare	v_compare;
 
 		void	addNode(ft::pair<const key_type, mapped_type> val)
 		{
@@ -188,6 +191,35 @@ class map
 			newNode->left = NULL;
 			newNode->right = NULL;
 			return newNode;
+		}
+
+		mapped_type*	findKey(const key_type& k) const
+		{
+			tree *node = *m_root;
+		
+			while (node)
+			{
+				if (k < node->first)
+					node = node->left;
+				else if (k > node->first)
+					node = node->right;
+				else
+					break;
+			}
+			return &(node->second);
+		}
+
+		bool	check_key(tree *root, const key_type& k)
+		{
+			if (!root)
+				return (false);
+			if (k == root->first)
+				return (true);
+			else if (k < root->first)
+				check_key(root->left, k);
+			else
+				check_key(root->right, k);
+			return (false);
 		}
 
 		void	print_tree(tree *root)

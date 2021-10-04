@@ -66,10 +66,10 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		
 		reference				operator[](difference_type n) const { return (m_iterator[n]); }
 
-		pointer					base(void) const {return m_iterator;};
+		value_type*				base(void) const {return m_iterator;};
 
 	private:
-		pointer		m_iterator;
+		value_type*				m_iterator;
 };
 
 template <class T>
@@ -126,11 +126,11 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		
 		reference					operator[](difference_type n) const { return (m_iterator[n]); }
 
-		pointer						base(void) const { return m_iterator; };
+		value_type*					base(void) const { return m_iterator; };
 
 
 	private:
-		pointer		m_iterator;
+		value_type*					m_iterator;
 };
 };
 

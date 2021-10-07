@@ -31,7 +31,12 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		map_iterator(const_map_iterator<T, U> const & x) : m_iterator(x.base()) {};
 		~map_iterator(void){};
 
-		map_iterator&			operator=(const map_iterator& x) { m_iterator = x.m_iterator; return *this; }
+		map_iterator&			operator=(const map_iterator& x)
+		{ 
+			std::cout << "operator = for iterator" << std::endl;
+			m_iterator = x.m_iterator;
+			return *this; 
+		}
 		
 		bool					operator==(const map_iterator& x) const { return (m_iterator == x.base()); }
 		bool					operator!=(const map_iterator& x) const { return (m_iterator != x.base()); }
@@ -64,8 +69,8 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 
 		map_iterator&			operator--(void) 
 		{
-			iterator<T, U>	father;
-			iterator<T, U>	node;
+			value_type*		father;
+			value_type*		node;
 
 			if (m_iterator->left)
 				m_iterator = m_iterator->left;
@@ -114,7 +119,12 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		const_map_iterator(map_iterator<T, U> const & x) : m_iterator(x.base()) {};
 		~const_map_iterator(void){};
 
-		const_map_iterator&			operator=(const const_map_iterator& x) { m_iterator = x.m_iterator; return *this; }
+		const_map_iterator&			operator=(const const_map_iterator& x)
+		{ 
+			std::cout << "operator = for iterator const" << std::endl;
+			m_iterator = x.m_iterator;
+			return *this; 
+		}
 
 		bool						operator==(const const_map_iterator& x) const { return (m_iterator == x.base()); }
 		bool						operator!=(const const_map_iterator& x) const { return (m_iterator != x.base()); }
@@ -130,8 +140,13 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 				while (m_iterator->left)
 					m_iterator = m_iterator->left;
 			}
-			else if (m_iterator->father)
+			else if (m_iterator->father && m_iterator->father->left == m_iterator)
 				m_iterator = m_iterator->father;
+			else if (m_iterator->father && m_iterator->father->right == m_iterator)
+			{
+				if (m_iterator->father->father)
+					m_iterator = m_iterator->father->father;
+			}
 			return *this; 
 		}
 		const_map_iterator			operator++(int) 
@@ -140,8 +155,8 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		}
 		const_map_iterator&			operator--(void)
 		{ 
-			const_map_iterator<T, U>	father;
-			const_map_iterator<T, U>	node;
+			value_type*	father;
+			value_type*	node;
 
 			if (m_iterator->left)
 				m_iterator = m_iterator->left;

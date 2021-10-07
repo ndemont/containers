@@ -59,22 +59,25 @@ class map
 				insert(*it);
 			}
 		};
-		map(const map& x) { (void)x; };
+		map(const map& x) : m_size(0), m_root(NULL), m_alloc(x.m_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
+		{ 
+			if (this != &x)
+				*this = x;
+		};
 		~map(void) {};
 	
 		map&	operator=(const map& x) 
-		{ 
-			iterator	begin = x.begin();
-			iterator	end = x.end();
-			insert(begin, end);
+		{
+			insert(x.begin(), x.end());
 			return *this;
 		};
 
 		iterator				begin(void)
-		{ 
+		{
+			if (!m_root)
+				return iterator(NULL);
 			tree*	node = *m_root;
 
-			std::cout << "begin" << std::endl;
 			while (node)
 			{
 				if (node->left)
@@ -82,14 +85,14 @@ class map
 				else
 					break ;
 			}
-			std::cout << node->first << std::endl;
 			return iterator(node); 
 		};
 		const_iterator			begin(void) const 
 		{
+			if (!m_root)
+				return iterator(NULL);
 			tree*	node = *m_root;
 
-			std::cout << "begin" << std::endl;
 			while (node)
 			{
 				if (node->left)
@@ -97,15 +100,14 @@ class map
 				else
 					break ;
 			}
-			std::cout << node->first << std::endl;
 			return const_iterator(node); 
 		};
 
 		iterator				end(void) 
 		{ 
+			if (!m_root)
+				return iterator(NULL);
 			tree*	node = *m_root;
-
-			std::cout << "end" << std::endl;
 			while (node && !node->end)
 				node = node->right;
 			return iterator(node); 
@@ -113,9 +115,9 @@ class map
 
 		const_iterator			end(void) const 
 		{
+			if (!m_root)
+				return iterator(NULL);
 			tree*	node = *m_root;
-
-			std::cout << "end" << std::endl;
 			while (node && !node->end)
 				node = node->right;
 			return const_iterator(node); 
@@ -135,7 +137,7 @@ class map
 		{
 			value_type pair(k, mapped_type());		
 
-			if (!check_key(*m_root, pair))
+			if (!m_root || !check_key(*m_root, pair))
 			{
 				addNode(pair);
 				m_size++;
@@ -160,14 +162,23 @@ class map
 		iterator insert(iterator position, const value_type& val)
 		{
 			(void)position;
-			(void)val;
-			return position;
+			ft::pair<iterator, bool>	inserted = insert(val); 
+			return inserted.first;
 		};
+
 		template <class InputIterator>
-		void									insert(InputIterator first, InputIterator last) {(void)last; (void)first;};
+		void	insert(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last)
+		{
+			int i = 0;
+			for (; first != last; first++)
+			{
+				std::cout << i << std::endl;
+				addNode(*first);
+			}
+		};
 		
-		void									erase(iterator position) {  (void)position; };
-		size_type								erase(const key_type& k)
+		void		erase(iterator position) {  (void)position; };
+		size_type	erase(const key_type& k)
 		{ 
 			tree	*found = findKey(k);
 			tree	*father = found->father;
@@ -324,6 +335,9 @@ class map
 			tree	*ref = *m_root;
 			while (ref)
 			{
+				std::cout << val.first << std::endl;
+				std::cout << ref << std::endl;
+				std::cout << ref->pair << std::endl;
 				if (m_compare(val.first, ref->pair->first))
 				{
 					if (!ref->left)

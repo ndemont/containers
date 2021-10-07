@@ -52,8 +52,12 @@ class map
 		template <class InputIterator>
 		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(NULL), m_alloc(alloc), m_compare(comp), v_compare(comp)
 		{
+			int i = 0;
 			for (InputIterator it = first; it != last; it++)
+			{
+				std::cout << i++ << std::endl;
 				insert(*it);
+			}
 		};
 		map(const map& x) { (void)x; };
 		~map(void) {};
@@ -70,6 +74,7 @@ class map
 		{ 
 			tree*	node = *m_root;
 
+			std::cout << "begin" << std::endl;
 			while (node)
 			{
 				if (node->left)
@@ -77,12 +82,14 @@ class map
 				else
 					break ;
 			}
+			std::cout << node->first << std::endl;
 			return iterator(node); 
 		};
 		const_iterator			begin(void) const 
 		{
 			tree*	node = *m_root;
 
+			std::cout << "begin" << std::endl;
 			while (node)
 			{
 				if (node->left)
@@ -90,6 +97,7 @@ class map
 				else
 					break ;
 			}
+			std::cout << node->first << std::endl;
 			return const_iterator(node); 
 		};
 
@@ -97,6 +105,7 @@ class map
 		{ 
 			tree*	node = *m_root;
 
+			std::cout << "end" << std::endl;
 			while (node && !node->end)
 				node = node->right;
 			return iterator(node); 
@@ -106,6 +115,7 @@ class map
 		{
 			tree*	node = *m_root;
 
+			std::cout << "end" << std::endl;
 			while (node && !node->end)
 				node = node->right;
 			return const_iterator(node); 
@@ -125,7 +135,7 @@ class map
 		{
 			value_type pair(k, mapped_type());		
 
-			if (!check_key(*m_root, k))
+			if (!check_key(*m_root, pair))
 			{
 				addNode(pair);
 				m_size++;
@@ -137,8 +147,10 @@ class map
 		ft::pair<iterator,bool>		insert(const value_type& val)
 		{
 			ft::pair<iterator, bool>	inserted;
-			inserted.second = check_key(*m_root, val.first);
-
+			if (m_root)
+				inserted.second = check_key(*m_root, val);
+			else
+				inserted.second = false;
 			tree	*newNode = addNode(val);
 			inserted.first = iterator(newNode); 
 
@@ -211,10 +223,10 @@ class map
 			return (m_size);
 		};
 
-		void									erase(iterator first, iterator last) { (void)last; (void)first; };
+		void	erase(iterator first, iterator last) { (void)last; (void)first; };
 
 
-		void									swap(map& x) 
+		void	swap(map& x) 
 		{ 
 			map<Key, T> tmp = x;
 				
@@ -379,16 +391,16 @@ class map
 			return node;
 		}
 
-		bool	check_key(tree *root, const key_type& k)
+		bool	check_key(tree *root, const value_type& val)
 		{
 			if (!root)
 				return (false);
-			if (k == root->first)
+			if (val.first == root->first)
 				return (true);
-			else if (k < root->first)
-				check_key(root->left, k);
+			else if (val.first < root->first)
+				check_key(root->left, val);
 			else
-				check_key(root->right, k);
+				check_key(root->right, val);
 			return (false);
 		}
 
@@ -404,6 +416,23 @@ class map
 			std::cout << "Key =   " << root->pair->first << std::endl;
 			std::cout << "Value = " << root->pair->second << std::endl << "   ---" << std::endl;
 		}
+
+		friend bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) 
+		{
+			if (lhs.size() == rhs.size()) 
+				return true;
+			return false;
+		}
+		friend bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(lhs == rhs)); }
+		friend bool operator<( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+		{
+			if (lhs.size() == rhs.size())
+				return true;
+			return false;
+		}
+		friend bool operator<=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(rhs < lhs)); }
+		friend bool operator>(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (rhs < lhs); }
+		friend bool operator>=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(lhs < rhs)); }
 
 };
 };

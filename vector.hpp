@@ -342,6 +342,7 @@ class vector
 			x = *this;
 			*this = tmp;
 		}
+
 		void	clear(void)
 		{
 			while (m_size)

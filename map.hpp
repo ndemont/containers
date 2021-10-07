@@ -52,12 +52,8 @@ class map
 		template <class InputIterator>
 		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(NULL), m_alloc(alloc), m_compare(comp), v_compare(comp)
 		{
-			int i = 0;
 			for (InputIterator it = first; it != last; it++)
-			{
-				std::cout << i++ << std::endl;
 				insert(*it);
-			}
 		};
 		map(const map& x) : m_size(0), m_root(NULL), m_alloc(x.m_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
 		{ 
@@ -68,6 +64,7 @@ class map
 	
 		map&	operator=(const map& x) 
 		{
+			std::cout << "operator = " << std::endl; 
 			insert(x.begin(), x.end());
 			return *this;
 		};
@@ -135,8 +132,7 @@ class map
 
 		mapped_type&			operator[](const key_type& k)
 		{
-			value_type pair(k, mapped_type());		
-
+			value_type pair(k, mapped_type());
 			if (!m_root || !check_key(*m_root, pair))
 			{
 				addNode(pair);
@@ -169,12 +165,8 @@ class map
 		template <class InputIterator>
 		void	insert(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last)
 		{
-			int i = 0;
 			for (; first != last; first++)
-			{
-				std::cout << i << std::endl;
 				addNode(*first);
-			}
 		};
 		
 		void		erase(iterator position) {  (void)position; };
@@ -335,9 +327,6 @@ class map
 			tree	*ref = *m_root;
 			while (ref)
 			{
-				std::cout << val.first << std::endl;
-				std::cout << ref << std::endl;
-				std::cout << ref->pair << std::endl;
 				if (m_compare(val.first, ref->pair->first))
 				{
 					if (!ref->left)
@@ -391,16 +380,30 @@ class map
 
 		tree	*findKey(const key_type& k) const
 		{
+			if (!m_root)
+				return NULL;
 			tree *node = *m_root;
-		
-			while (node)
+			while (node && node->right)
 			{
-				if (k < node->first)
-					node = node->left;
-				else if (k > node->first)
-					node = node->right;
-				else
+				if (node->right->end)
 					break;
+				if (k < node->first)
+				{
+					if (node->left)
+						node = node->left;
+					else if (node->father && node->father->right == node && node->father->left)
+						node = node->father->left;
+					else
+						break ;
+				}
+				else if (k > node->first)
+				{
+					node = node->right;
+				}
+				else
+				{
+					break;
+				}
 			}
 			return node;
 		}

@@ -33,8 +33,6 @@ class map
 		typedef struct		s_tree
 		{
 			value_type		*pair;
-			key_type		first;
-			mapped_type		second;
 			size_type		color;
 			bool			end;
 			s_tree			*father;
@@ -64,7 +62,6 @@ class map
 	
 		map&	operator=(const map& x) 
 		{
-			std::cout << "operator = " << std::endl; 
 			insert(x.begin(), x.end());
 			return *this;
 		};
@@ -249,41 +246,42 @@ class map
 		{
 			for (iterator it = begin(); it != end(); it++)
 			{
-				if (!(m_compare(k, it->first)))
-					return iterator(it--);
+				if (!(m_compare(it->first, k)))
+					return iterator(it);
 			}
-			return iterator(*m_root); 
+			return end(); 
 		};
 
 		const_iterator		lower_bound(const key_type& k) const
 		{ 
 			for (iterator it = begin(); it != end(); it++)
 			{
-				if (!(m_compare(k, it->first)))
-					return const_iterator(it--);
+				if (!(m_compare(it->first, k)))
+					return const_iterator(it);
 			}
-			return const_iterator(*m_root); 
+			return end();
 		};
 
 		iterator			upper_bound(const key_type& k)
 		{ 
 			for (iterator it = begin(); it != end(); it++)
 			{
-				if (!(m_compare(k, it->first)))
+				if ((m_compare(k, it->first)))
 					return iterator(it);
 			}
-			return iterator(*m_root); 
+			return end(); 
 		};
 
 		const_iterator		upper_bound(const key_type& k) const
 		{
 			for (iterator it = begin(); it != end(); it++)
 			{
-				if (!(m_compare(k, it->first)))
-					return const_iterator(it--);
+				if ((m_compare(k, it->first)))
+					return const_iterator(it);
 			}
-			return const_iterator(*m_root); 
+			return end(); 
 		};
+
 		ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const 
 		{ 
 			ft::pair<const_iterator, const_iterator>	range;
@@ -321,6 +319,7 @@ class map
 				tree	*last = newNode(val);
 				(*m_root)->right = last;
 				last->end = 1;
+				last->father = *m_root;
 				m_size++;
 				return *m_root;
 			}
@@ -368,8 +367,6 @@ class map
 			ft::pair<const key_type, mapped_type>	*pr = new pair<const key_type, mapped_type>(val);
 			
 			newNode->pair = pr;
-			newNode->first = pr->first;
-			newNode->second = pr->second;
 			newNode->color = BLACK;
 			newNode->end = 0;
 			newNode->father = NULL;
@@ -412,9 +409,9 @@ class map
 		{
 			if (!root)
 				return (false);
-			if (val.first == root->first)
+			if (val.first == root->pair->first)
 				return (true);
-			else if (val.first < root->first)
+			else if (val.first < root->pair->first)
 				check_key(root->left, val);
 			else
 				check_key(root->right, val);

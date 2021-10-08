@@ -30,13 +30,13 @@ class reverse_iterator
 		
 		iterator_type			base() const { return m_iterator; }
 
-		reference 				operator*(void) const { return *(m_iterator - 1); }
-		pointer 				operator->(void) const { return	&(*m_iterator); }
+		reference 				operator*(void) const { iterator_type it = m_iterator; return *(--it);}// return *(m_iterator - 1); }
+		pointer 				operator->(void) const { return	&(operator*()); }
 
-		reverse_iterator 				operator+(difference_type n) const { return reverse_iterator(m_iterator - n); }
-		friend reverse_iterator 		operator+(difference_type n, const reverse_iterator& x) { return reverse_iterator(x.base() - n); }
-		reverse_iterator 				operator-(difference_type n) const	{ return reverse_iterator(m_iterator + n); }
-		difference_type 				operator-(const reverse_iterator& x) const { return (m_iterator - x.base()); }
+		reverse_iterator 		operator+(difference_type n) const { return reverse_iterator(m_iterator - n); }
+		friend reverse_iterator	operator+(difference_type n, const reverse_iterator& x) { return reverse_iterator(x.base() - n); }
+		reverse_iterator 		operator-(difference_type n) const	{ return reverse_iterator(m_iterator + n); }
+		difference_type 		operator-(const reverse_iterator& x) const { return (m_iterator - x.base()); }
 
 		reverse_iterator& 		operator++(void) { m_iterator--; return *this; }
 		reverse_iterator  		operator++(int) { return reverse_iterator(m_iterator--); }

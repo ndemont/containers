@@ -33,7 +33,6 @@ class map
 		typedef struct		s_tree
 		{
 			value_type		*pair;
-			size_type		color;
 			bool			end;
 			s_tree			*father;
 			s_tree			*left;
@@ -62,6 +61,7 @@ class map
 	
 		map&	operator=(const map& x) 
 		{
+			clear();
 			insert(x.begin(), x.end());
 			return *this;
 		};
@@ -136,7 +136,7 @@ class map
 				m_size++;
 			}
 			tree	*found = findKey(k);
-			return (found->second);
+			return (found->pair->second);
 		}
 
 		ft::pair<iterator,bool>		insert(const value_type& val)
@@ -233,7 +233,19 @@ class map
 			x = *this;
 			*this = tmp;
 		};
-		void									clear(void) {};
+		void			clear(void)
+		{
+			size_t s = m_size;
+
+			if (m_root)
+			{
+				for (iterator it = begin(); s-- > 0; it++)
+					delete it.base();
+				delete m_root;
+				m_root = NULL;
+			}
+			m_size = 0;
+		};
 
 		key_compare		key_comp(void) const { return m_compare; };
 		value_compare	value_comp(void) const { return v_compare; };
@@ -367,7 +379,6 @@ class map
 			ft::pair<const key_type, mapped_type>	*pr = new pair<const key_type, mapped_type>(val);
 			
 			newNode->pair = pr;
-			newNode->color = BLACK;
 			newNode->end = 0;
 			newNode->father = NULL;
 			newNode->left = NULL;
@@ -384,7 +395,7 @@ class map
 			{
 				if (node->right->end)
 					break;
-				if (k < node->first)
+				if (k < node->pair->first)
 				{
 					if (node->left)
 						node = node->left;
@@ -393,7 +404,7 @@ class map
 					else
 						break ;
 				}
-				else if (k > node->first)
+				else if (k > node->pair->first)
 				{
 					node = node->right;
 				}
@@ -424,7 +435,7 @@ class map
 			{
 				if (root->left)
 					print_tree(root->left);
-				if (root->right)
+				if (root->right && !root->right->end)
 					print_tree(root->right);
 			}
 			std::cout << "Key =   " << root->pair->first << std::endl;

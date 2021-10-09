@@ -123,7 +123,7 @@ class map
 		const_reverse_iterator	rend(void) const { return const_reverse_iterator(begin()); };
 
 
-		bool					empty(void) const { return (m_size); }
+		bool					empty(void) const { return (!m_size); }
 		size_type				size(void) const { return (m_size); }
 		size_type				max_size(void) const { return (m_alloc.max_size()); }
 

@@ -106,7 +106,7 @@ class vector
 			}
 		}
 		size_type	capacity(void) const { return m_capacity; }
-		bool		empty(void) const { return (m_size); }
+		bool		empty(void) const { return (!m_size); }
 		
 		void	reserve(size_type n)
 		{

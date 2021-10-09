@@ -62,8 +62,10 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		}
 
 		map_iterator			operator++(int)  
-		{ 
-			return ++(*this); 
+		{
+			map_iterator it = *this;
+			++(*this);
+			return it; 
 		}
 
 		map_iterator&			operator--(void) 
@@ -92,7 +94,9 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 
 		map_iterator			operator--(int)  
 		{ 
-			return --(*this);
+			map_iterator it = *this;
+			--(*this);
+			return it; 
 		}
 
 		iterator_type*				base(void) const {return m_iterator;};
@@ -150,7 +154,9 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 		}
 		const_map_iterator		operator++(int) 
 		{
-			return ++(*this);
+			const_map_iterator it = *this;
+			++(*this);
+			return it; 
 		}
 		const_map_iterator&		operator--(void)
 		{ 
@@ -175,7 +181,12 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 			}
 			return *this;
 		}
-		const_map_iterator		operator--(int)  { return --(*this); }
+		const_map_iterator		operator--(int)
+		{ 
+			const_map_iterator it = *this;
+			--(*this);
+			return it;
+		}
 
 		iterator_type*			base(void) const { return m_iterator; };
 

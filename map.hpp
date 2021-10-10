@@ -71,7 +71,6 @@ class map
 			if (!m_root)
 				return iterator(NULL);
 			tree*	node = *m_root;
-
 			while (node)
 			{
 				if (node->left)
@@ -79,6 +78,7 @@ class map
 				else
 					break ;
 			}
+
 			return iterator(node); 
 		};
 		const_iterator			begin(void) const 
@@ -86,7 +86,6 @@ class map
 			if (!m_root)
 				return iterator(NULL);
 			tree*	node = *m_root;
-
 			while (node)
 			{
 				if (node->left)
@@ -114,6 +113,7 @@ class map
 			tree*	node = *m_root;
 			while (node && !node->end)
 				node = node->right;
+
 			return const_iterator(node); 
 		};
 
@@ -166,7 +166,11 @@ class map
 				addNode(*first);
 		};
 		
-		void		erase(iterator position) {  (void)position; };
+		void		erase(iterator position)
+		{
+			erase((*position).first);
+		};
+
 		size_type	erase(const key_type& k)
 		{ 
 			tree	*found = findKey(k);
@@ -178,26 +182,19 @@ class map
 			{
 				if (father && father->right == found)
 				{
-					if (right)
+					father->right = right;
+					right->father = father;
+					if (left)
 					{
-						father->right = right;
-						right->father = father;
+						tree	*tmp = father;
+						while (tmp->left)
+							tmp = tmp->left;
+						tmp->left = left;
 						if (left)
-						{
-							tree	*tmp = father;
-							while (tmp->left)
-								tmp = tmp->left;
-							tmp->left = left;
 							left->father = tmp;
-						}
-					}
-					else
-					{
-						father->right = left;
-						left->father = father;
 					}
 				}
-				if (father && father->left == found)
+				else if (father && father->left == found)
 				{
 					if (right)
 					{
@@ -217,6 +214,45 @@ class map
 						father->left = left;
 						left->father = father;
 					}
+				}
+				else
+				{
+					iterator up = upper_bound(k);
+					tree	*upt = findKey((*up).first);
+					if (left)
+					{
+						upt->left = left;
+						left->father = upt;
+					}
+					*m_root = right;
+					right->father = NULL;
+				}
+			}
+			else if (left)
+			{
+				if (father && father->right == found)
+				{
+					left->father = father;
+					father->right = left;
+					while (left->right)
+						left = left->right;
+					left->right = found->right;
+				}
+				else if (father && father->left == found)
+				{
+					left->father = father;
+					father->left = left;
+					while (left->right)
+						left = left->right;
+					left->right = found->right;
+				}
+				else
+				{
+					m_root = &left;
+					left->father = NULL;
+					while (left->right)
+						left = left->right;
+					left->right = found->right;
 				}
 			}
 			m_size--;
@@ -247,8 +283,8 @@ class map
 			m_size = 0;
 		};
 
-		key_compare		key_comp(void) const { return m_compare; };
-		value_compare	value_comp(void) const { return v_compare; };
+		key_compare			key_comp(void) const { return m_compare; };
+		value_compare		value_comp(void) const { return v_compare; };
 
 		iterator			find(const key_type& k) { (void)k; return iterator(*m_root); };
 		const_iterator		find(const key_type& k) const { (void)k; return const_iterator(*m_root); };
@@ -364,6 +400,7 @@ class map
 						ref->right = newNode(val);
 						ref->right->father = ref;
 						ref->right->right = last;
+						last->father = ref->right;
 						m_size++;
 						return ref->right;
 					}

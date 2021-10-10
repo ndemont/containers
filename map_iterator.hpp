@@ -73,10 +73,15 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 			iterator_type*		father;
 			iterator_type*		node;
 
+
 			if (m_iterator->left)
+			{
 				m_iterator = m_iterator->left;
+			}
 			else if (m_iterator->father && m_iterator->father->right == m_iterator)
+			{
 				m_iterator = m_iterator->father;
+			}
 			else if (m_iterator->father && m_iterator->father->left == m_iterator)
 			{
 				father = m_iterator->father;
@@ -99,7 +104,7 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 			return it; 
 		}
 
-		iterator_type*				base(void) const {return m_iterator;};
+		iterator_type*			base(void) const {return m_iterator;};
 
 	private:
 		iterator_type*			m_iterator;

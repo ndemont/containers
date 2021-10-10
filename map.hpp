@@ -131,10 +131,7 @@ class map
 		{
 			value_type pair(k, mapped_type());
 			if (!m_root || !check_key(*m_root, pair))
-			{
 				addNode(pair);
-				m_size++;
-			}
 			tree	*found = findKey(k);
 			return (found->pair->second);
 		}
@@ -259,8 +256,11 @@ class map
 			return (m_size);
 		};
 
-		void	erase(iterator first, iterator last) { (void)last; (void)first; };
-
+		void	erase(iterator first, iterator last)
+		{ 
+			for (iterator it = first; it != last; it++)
+				erase((*it).first);
+		};
 
 		void	swap(map& x) 
 		{ 

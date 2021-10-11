@@ -130,7 +130,7 @@ class map
 		mapped_type&			operator[](const key_type& k)
 		{
 			value_type pair(k, mapped_type());
-			if (!m_root || !check_key(*m_root, pair))
+			if (!m_root || !check_key(pair))
 				addNode(pair);
 			tree	*found = findKey(k);
 			return (found->pair->second);
@@ -140,7 +140,7 @@ class map
 		{
 			ft::pair<iterator, bool>	inserted;
 			if (m_root)
-				inserted.second = check_key(*m_root, val);
+				inserted.second = check_key(val);
 			else
 				inserted.second = false;
 			tree	*newNode = addNode(val);
@@ -171,6 +171,8 @@ class map
 		size_type	erase(const key_type& k)
 		{ 
 			tree	*found = findKey(k);
+			if (!found)
+				return 0;
 			tree	*father = found->father;
 			tree	*left = found->left;
 			tree	*right = found->right;
@@ -253,7 +255,7 @@ class map
 				}
 			}
 			m_size--;
-			return (m_size);
+			return (1);
 		};
 
 		void	erase(iterator first, iterator last)
@@ -425,45 +427,18 @@ class map
 
 		tree	*findKey(const key_type& k) const
 		{
-			if (!m_root)
-				return NULL;
-			tree *node = *m_root;
-			while (node && node->right)
-			{
-				if (node->right->end)
-					break;
-				if (k < node->pair->first)
-				{
-					if (node->left)
-						node = node->left;
-					else if (node->father && node->father->right == node && node->father->left)
-						node = node->father->left;
-					else
-						break ;
-				}
-				else if (k > node->pair->first)
-				{
-					node = node->right;
-				}
-				else
-				{
-					break;
-				}
-			}
-			return node;
+			for (iterator it = begin(); it != end(); it++)
+				if ((*it).first == k)
+					return it.base();
+			return NULL;
 		}
 
-		bool	check_key(tree *root, const value_type& val)
+		bool	check_key(const value_type& val)
 		{
-			if (!root)
-				return (false);
-			if (val.first == root->pair->first)
-				return (true);
-			else if (val.first < root->pair->first)
-				check_key(root->left, val);
-			else
-				check_key(root->right, val);
-			return (false);
+			for (iterator it = begin(); it != end(); it++)
+				if ((*it).first == val.first)
+					return true;
+			return false;
 		}
 
 		void	print_tree(tree *root)

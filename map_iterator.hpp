@@ -116,8 +116,8 @@ class const_map_iterator : public iterator<random_access_iterator_tag, T>
 	public:	
 		typedef T					iterator_type;
 		typedef U					value_type;
-		typedef U*					pointer;
-		typedef U&					reference;
+		typedef const U*			pointer;
+		typedef const U&			reference;
 		typedef	ptrdiff_t			difference_type;
 		typedef size_t				size_type;
 

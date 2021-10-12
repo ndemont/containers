@@ -265,11 +265,26 @@ class map
 		};
 
 		void	swap(map& x) 
-		{ 
-			map<Key, T> tmp = x;
+		{
+			map<Key, T> tmp;
+
+			tmp.m_root = x.m_root;
+			tmp.m_alloc = x.m_alloc;
+			tmp.m_compare = x.m_compare;
+			tmp.m_size = x.m_size;
+			tmp.v_compare = x.v_compare;
 				
-			x = *this;
-			*this = tmp;
+			x.m_root = this->m_root;
+			x.m_alloc = this->m_alloc;
+			x.m_compare = this->m_compare;
+			x.m_size = this->m_size;
+			x.v_compare = this->v_compare;
+
+			this->m_root = tmp.m_root;
+			this->m_alloc = tmp.m_alloc;
+			this->m_compare = tmp.m_compare;
+			this->m_size = tmp.m_size;
+			this->v_compare = tmp.v_compare;
 		};
 		void			clear(void)
 		{

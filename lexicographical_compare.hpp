@@ -1,6 +1,7 @@
 #ifndef LEXICOGRAPHICAL_COMPARE_HPP
 # define LEXICOGRAPHICAL_COMPARE_HPP
 
+//deux elements sont egaux si: 
 //if (!(a<b) && !(b<a)) or if (!comp(a,b) && !comp(b,a))
 
 template <class InputIterator1, class InputIterator2>

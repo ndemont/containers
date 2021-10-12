@@ -8,6 +8,7 @@
 # include "reverse_iterator.hpp"
 # include "map_iterator.hpp"
 # include "binary_search_tree.hpp"
+# include "lexicographical_compare.hpp"
 
 # define BLACK 0
 # define RED 1
@@ -45,14 +46,14 @@ class map
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef ptrdiff_t									difference_type;
 
-		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(NULL), m_alloc(alloc), m_compare(comp), v_compare(comp) {};
+		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_compare(comp), v_compare(comp) {};
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(NULL), m_alloc(alloc), m_compare(comp), v_compare(comp)
+		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_compare(comp), v_compare(comp)
 		{
 			for (InputIterator it = first; it != last; it++)
 				insert(*it);
 		};
-		map(const map& x) : m_size(0), m_root(NULL), m_alloc(x.m_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
+		map(const map& x) : m_size(0), m_root(initEnd()), m_alloc(x.m_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
 		{ 
 			if (this != &x)
 				*this = x;
@@ -97,9 +98,9 @@ class map
 		};
 
 		iterator				end(void) 
-		{ 
+		{
 			if (!m_root)
-				return iterator(NULL);
+				return begin();
 			tree*	node = *m_root;
 			while (node && !node->end)
 				node = node->right;
@@ -109,7 +110,7 @@ class map
 		const_iterator			end(void) const 
 		{
 			if (!m_root)
-				return iterator(NULL);
+				return begin();
 			tree*	node = *m_root;
 			while (node && !node->end)
 				node = node->right;
@@ -131,7 +132,9 @@ class map
 		{
 			value_type pair(k, mapped_type());
 			if (!m_root || !check_key(pair))
+			{
 				addNode(pair);
+			}
 			tree	*found = findKey(k);
 			return (found->pair->second);
 		}
@@ -139,10 +142,7 @@ class map
 		ft::pair<iterator,bool>		insert(const value_type& val)
 		{
 			ft::pair<iterator, bool>	inserted;
-			if (m_root)
-				inserted.second = check_key(val);
-			else
-				inserted.second = false;
+			inserted.second = !(check_key(val));
 			tree	*newNode = addNode(val);
 			inserted.first = iterator(newNode); 
 
@@ -288,9 +288,31 @@ class map
 		key_compare			key_comp(void) const { return m_compare; };
 		value_compare		value_comp(void) const { return v_compare; };
 
-		iterator			find(const key_type& k) { (void)k; return iterator(*m_root); };
-		const_iterator		find(const key_type& k) const { (void)k; return const_iterator(*m_root); };
-		size_type			count(const key_type& k) const { (void)k; return m_size; };
+		iterator			find(const key_type& k)
+		{ 
+			tree	*found = findKey(k);
+
+			if (!found)
+				return end();
+			else
+				return iterator(found); 
+		};
+		const_iterator		find(const key_type& k) const
+		{ 
+			tree	*found = findKey(k);
+
+			if (!found)
+				return end();
+			else
+				return const_iterator(found); 
+		};
+		size_type			count(const key_type& k) const
+		{ 
+			if (findKey(k))
+				return (1);
+			else
+				return (0);
+		};
 		
 		iterator			lower_bound(const key_type& k) 
 		{
@@ -362,6 +384,11 @@ class map
 
 		tree	*addNode(ft::pair<const key_type, mapped_type> val)
 		{
+			if (check_key(val))
+			{
+				iterator	existing = findKey(val.first);
+				return (existing.base());
+			}
 			if (!m_root)
 			{
 				m_root = new tree*;
@@ -374,6 +401,15 @@ class map
 				return *m_root;
 			}
 			tree	*ref = *m_root;
+			if (ref->end)
+			{
+				tree	*first = newNode(val);
+				first->right = ref;
+				ref->father = first;
+				*m_root = first;
+				m_size++;
+				return *m_root;
+			}
 			while (ref)
 			{
 				if (m_compare(val.first, ref->pair->first))
@@ -418,7 +454,7 @@ class map
 			ft::pair<const key_type, mapped_type>	*pr = new pair<const key_type, mapped_type>(val);
 			
 			newNode->pair = pr;
-			newNode->end = 0;
+			newNode->end = false;
 			newNode->father = NULL;
 			newNode->left = NULL;
 			newNode->right = NULL;
@@ -441,22 +477,32 @@ class map
 			return false;
 		}
 
-		void	print_tree(tree *root)
+		tree	**initEnd()
 		{
-			if (root)
-			{
-				if (root->left)
-					print_tree(root->left);
-				if (root->right && !root->right->end)
-					print_tree(root->right);
-			}
-			std::cout << "Key =   " << root->pair->first << std::endl;
-			std::cout << "Value = " << root->pair->second << std::endl << "   ---" << std::endl;
+			m_root = new tree*;
+			value_type val = value_type();
+			tree*	endNode = newNode(val);
+			endNode->end = true;
+			*m_root = endNode; 
+			return (m_root);
 		}
 
 		friend bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) 
 		{
 			if (lhs.size() == rhs.size()) 
+				return true;
+			iterator	it_lhs = lhs.begin();
+			iterator	it_rhs = rhs.begin();
+			while ((it_lhs != lhs.end()) && (it_rhs != rhs.end()))
+			{
+				if ((*it_lhs).first != (*it_rhs).first)
+					return false;
+				if ((*it_lhs).second != (*it_rhs).second)
+					return false;
+				it_lhs++;
+				it_rhs++;
+			}
+			if ((it_lhs == lhs.end()) && (it_rhs != rhs.end()))
 				return true;
 			return false;
 		}

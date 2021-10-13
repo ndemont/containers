@@ -131,10 +131,13 @@ class map
 		mapped_type&			operator[](const key_type& k)
 		{
 			value_type pair(k, mapped_type());
+			std::cout << "Access a key" << std::endl;
 			if (!m_root || !check_key(pair))
 			{
+				std::cout << "unexisting key" << std::endl;
 				addNode(pair);
 			}
+			std::cout << "existing key" << std::endl;
 			tree	*found = findKey(k);
 			return (found->pair->second);
 		}
@@ -429,6 +432,7 @@ class map
 			{
 				if (m_compare(val.first, ref->pair->first))
 				{
+					std::cout << "new key is smaller" << std::endl;
 					if (!ref->left)
 					{
 						ref->left = newNode(val);
@@ -440,8 +444,10 @@ class map
 				}
 				else
 				{
+					std::cout << "new key is not smaller" << std::endl;
 					if (!ref->right)
 					{
+						std::cout << "no right child" << std::endl;
 						ref->right = newNode(val);
 						ref->right->father = ref;
 						m_size++;
@@ -449,6 +455,7 @@ class map
 					}
 					if (ref->right->end)
 					{
+						std::cout << "right child is end" << std::endl;
 						tree	*last = ref->right;
 						ref->right = newNode(val);
 						ref->right->father = ref;

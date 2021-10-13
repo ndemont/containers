@@ -9,6 +9,7 @@
 # include "map_iterator.hpp"
 # include "binary_search_tree.hpp"
 # include "lexicographical_compare.hpp"
+# include "equal.hpp"
 
 # define BLACK 0
 # define RED 1
@@ -25,7 +26,7 @@ class map
 		typedef	Compare										key_compare;
 		typedef	Compare										value_compare;
 		typedef Alloc										allocator_type;
-		typedef value_type&									reference;
+		typedef value_type&									reference;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 		typedef const value_type&							const_reference;
 		typedef value_type*									pointer;
 		typedef const value_type*							const_pointer;
@@ -35,26 +36,26 @@ class map
 		{
 			value_type		*pair;
 			bool			end;
-			s_tree			*father;
-			s_tree			*left;
+			struct s_tree	*father;
+			struct s_tree	*left;
 			s_tree			*right;
 		}					tree;
 
-		typedef std::allocator<tree>						node_allocator_type;
+		typedef std::allocator<tree>						tree_allocator_type;
 		typedef ft::map_iterator<tree, value_type>			iterator;
 		typedef ft::const_map_iterator<tree, value_type>	const_iterator;
 		typedef ft::reverse_iterator<iterator>				reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef ptrdiff_t									difference_type;
 
-		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_compare(comp), v_compare(comp) {};
+		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(comp) {};
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_compare(comp), v_compare(comp)
+		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(comp)
 		{
 			for (InputIterator it = first; it != last; it++)
 				insert(*it);
 		};
-		map(const map& x) : m_size(0), m_root(initEnd()), m_alloc(x.m_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
+		map(const map& x) : m_size(0), m_root(initEnd()), m_alloc(x.m_alloc), m_tree_alloc(x.m_tree_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
 		{ 
 			if (this != &x)
 				*this = x;
@@ -63,9 +64,7 @@ class map
 	
 		map&	operator=(const map& x) 
 		{
-			std::cout << "operator =" << std::endl;
 			clear();
-			std::cout << "clear done" << std::endl;
 			insert(x.begin(), x.end());
 			return *this;
 		};
@@ -129,7 +128,7 @@ class map
 
 		bool					empty(void) const { return (!m_size); }
 		size_type				size(void) const { return (m_size); }
-		size_type				max_size(void) const { return (m_alloc.max_size()); }
+		size_type				max_size(void) const { return (m_tree_alloc.max_size()); }
 
 		mapped_type&			operator[](const key_type& k)
 		{
@@ -137,8 +136,6 @@ class map
 			if (!m_root || !check_key(pair))
 				addNode(pair);
 			tree	*found = findKey(k);
-			std::cout << "key found" << std::endl;
-			std::cout << found << std::endl;
 			return (found->pair->second);
 		}
 
@@ -176,13 +173,11 @@ class map
 			tree	*found = findKey(k);
 			if (!found)
 			{
-				std::cout << "key not found" << std::endl;
 				return 0;
 			}
 			tree	*father = found->father;
 			tree	*left = found->left;
 			tree	*right = found->right;
-			std::cout << "key to erase: " << k << std::endl;
 			if (right)
 			{
 				// if (right->end)
@@ -297,22 +292,13 @@ class map
 			map<Key, T> tmp;
 
 			tmp.m_root = x.m_root;
-			tmp.m_alloc = x.m_alloc;
-			tmp.m_compare = x.m_compare;
 			tmp.m_size = x.m_size;
-			tmp.v_compare = x.v_compare;
 				
 			x.m_root = this->m_root;
-			x.m_alloc = this->m_alloc;
-			x.m_compare = this->m_compare;
 			x.m_size = this->m_size;
-			x.v_compare = this->v_compare;
 
 			this->m_root = tmp.m_root;
-			this->m_alloc = tmp.m_alloc;
-			this->m_compare = tmp.m_compare;
 			this->m_size = tmp.m_size;
-			this->v_compare = tmp.v_compare;
 		};
 		void			clear(void)
 		{
@@ -419,15 +405,15 @@ class map
 		allocator_type get_allocator() const;
 
 		private:
-			size_type		m_size;
-			tree			**m_root;
-			allocator_type	m_alloc;
-			key_compare		m_compare;
-			value_compare	v_compare;
+			size_type			m_size;
+			tree				**m_root;
+			allocator_type		m_alloc;
+			tree_allocator_type	m_tree_alloc;
+			key_compare			m_compare;
+			value_compare		v_compare;
 
 		tree	*addNode(ft::pair<const key_type, mapped_type> val)
 		{
-			std::cout << "key " << val.first << std::endl;
 			if (check_key(val))
 			{
 				iterator	existing = findKey(val.first);
@@ -458,11 +444,8 @@ class map
 			{
 				if (m_compare(val.first, ref->pair->first))
 				{
-					std::cout << "key is inferior to ref" << std::endl;
 					if (!ref->left)
 					{
-						std::cout << "ref has no left child" << std::endl;
-
 						ref->left = newNode(val);
 						ref->left->father = ref;
 						m_size++;
@@ -472,10 +455,8 @@ class map
 				}
 				else
 				{
-					std::cout << "key is superior to ref" << std::endl;
 					if (!ref->right)
 					{
-						std::cout << "key has no right child" << std::endl;
 						ref->right = newNode(val);
 						ref->right->father = ref;
 						m_size++;
@@ -483,7 +464,6 @@ class map
 					}
 					if (ref->right->end)
 					{
-						std::cout << "key's right child is end" << std::endl;
 						tree	*last = ref->right;
 						ref->right = newNode(val);
 						ref->right->father = ref;
@@ -500,7 +480,7 @@ class map
  
 		tree	*newNode(ft::pair<const key_type, mapped_type> val)
 		{
-			tree									*newNode = new tree;
+			tree									*newNode = m_tree_alloc.allocate(1);
 			ft::pair<const key_type, mapped_type>	*pr = new pair<const key_type, mapped_type>(val);
 			
 			newNode->pair = pr;
@@ -513,10 +493,8 @@ class map
 
 		tree	*findKey(const key_type& k) const
 		{
-			std::cout << "begin find key" << std::endl;
 			for (iterator it = begin(); it != end(); it++)
 			{
-				//std::cout << (*it).first << std::endl;
 				if ((*it).first == k)
 					return it.base();
 			}
@@ -543,29 +521,16 @@ class map
 
 		friend bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) 
 		{
-			if (lhs.size() == rhs.size()) 
-				return true;
-			iterator	it_lhs = lhs.begin();
-			iterator	it_rhs = rhs.begin();
-			while ((it_lhs != lhs.end()) && (it_rhs != rhs.end()))
-			{
-				if ((*it_lhs).first != (*it_rhs).first)
-					return false;
-				if ((*it_lhs).second != (*it_rhs).second)
-					return false;
-				it_lhs++;
-				it_rhs++;
-			}
-			if ((it_lhs == lhs.end()) && (it_rhs != rhs.end()))
-				return true;
-			return false;
+			if (lhs.size() != rhs.size()) 
+				return (false);
+			return ft::equal(lhs.begin(), lhs.end(), rhs.begin(), lhs.m_compare);
 		}
 		friend bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(lhs == rhs)); }
 		friend bool operator<( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
 		{
-			if (lhs.size() == rhs.size())
+			if (lhs.size() < rhs.size())
 				return true;
-			return false;
+			return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), lhs.m_compare);
 		}
 		friend bool operator<=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(rhs < lhs)); }
 		friend bool operator>(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (rhs < lhs); }

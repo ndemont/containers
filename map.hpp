@@ -40,6 +40,7 @@ class map
 			s_tree			*right;
 		}					tree;
 
+		typedef std::allocator<tree>						node_allocator_type;
 		typedef ft::map_iterator<tree, value_type>			iterator;
 		typedef ft::const_map_iterator<tree, value_type>	const_iterator;
 		typedef ft::reverse_iterator<iterator>				reverse_iterator;
@@ -131,13 +132,8 @@ class map
 		mapped_type&			operator[](const key_type& k)
 		{
 			value_type pair(k, mapped_type());
-			std::cout << "Access a key" << std::endl;
 			if (!m_root || !check_key(pair))
-			{
-				std::cout << "unexisting key" << std::endl;
 				addNode(pair);
-			}
-			std::cout << "existing key" << std::endl;
 			tree	*found = findKey(k);
 			return (found->pair->second);
 		}
@@ -402,6 +398,7 @@ class map
 
 		tree	*addNode(ft::pair<const key_type, mapped_type> val)
 		{
+			std::cout << std::endl << "Key " << val.first << std::endl;
 			if (check_key(val))
 			{
 				iterator	existing = findKey(val.first);
@@ -451,6 +448,10 @@ class map
 						ref->right = newNode(val);
 						ref->right->father = ref;
 						m_size++;
+						std::cout << "Key " << val.first << std::endl;
+						std::cout << "New node " << ref->right << ref->right->pair->first << std::endl;
+						std::cout << "Father node " << ref << " " << ref->pair->first << std::endl;
+						std::cout << "Father node " << ref->right->father << " " << ref->right->father->pair->first << std::endl;
 						return ref->right;
 					}
 					if (ref->right->end)

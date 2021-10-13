@@ -63,7 +63,9 @@ class map
 	
 		map&	operator=(const map& x) 
 		{
+			std::cout << "operator =" << std::endl;
 			clear();
+			std::cout << "clear done" << std::endl;
 			insert(x.begin(), x.end());
 			return *this;
 		};
@@ -135,6 +137,8 @@ class map
 			if (!m_root || !check_key(pair))
 				addNode(pair);
 			tree	*found = findKey(k);
+			std::cout << "key found" << std::endl;
+			std::cout << found << std::endl;
 			return (found->pair->second);
 		}
 
@@ -171,25 +175,40 @@ class map
 		{ 
 			tree	*found = findKey(k);
 			if (!found)
+			{
+				std::cout << "key not found" << std::endl;
 				return 0;
+			}
 			tree	*father = found->father;
 			tree	*left = found->left;
 			tree	*right = found->right;
-
+			std::cout << "key to erase: " << k << std::endl;
 			if (right)
 			{
+				// if (right->end)
+				// {
+				// 	std::cout << "found is the last elem" << std::endl;
+				// 	left->father = father;
+				// 	if (father && father->right == found)
+				// 		father->right = left;
+				// 	else
+				// 		father->left = left;
+				// 	while (left->right)
+				// 		left = left->right;
+				// 	left->right = found->right;
+					
+				// }
 				if (father && father->right == found)
 				{
 					father->right = right;
 					right->father = father;
 					if (left)
 					{
-						tree	*tmp = father;
+						tree	*tmp = right;
 						while (tmp->left)
 							tmp = tmp->left;
 						tmp->left = left;
-						if (left)
-							left->father = tmp;
+						left->father = tmp;
 					}
 				}
 				else if (father && father->left == found)
@@ -251,6 +270,16 @@ class map
 					while (left->right)
 						left = left->right;
 					left->right = found->right;
+				}
+			}
+			else
+			{
+				if (father)
+				{
+					if (father->right == found)
+						father->right = 0;
+					else if (father->left == found)
+						father->left = 0;
 				}
 			}
 			m_size--;
@@ -398,7 +427,7 @@ class map
 
 		tree	*addNode(ft::pair<const key_type, mapped_type> val)
 		{
-			std::cout << std::endl << "Key " << val.first << std::endl;
+			std::cout << "key " << val.first << std::endl;
 			if (check_key(val))
 			{
 				iterator	existing = findKey(val.first);
@@ -429,9 +458,11 @@ class map
 			{
 				if (m_compare(val.first, ref->pair->first))
 				{
-					std::cout << "new key is smaller" << std::endl;
+					std::cout << "key is inferior to ref" << std::endl;
 					if (!ref->left)
 					{
+						std::cout << "ref has no left child" << std::endl;
+
 						ref->left = newNode(val);
 						ref->left->father = ref;
 						m_size++;
@@ -441,22 +472,18 @@ class map
 				}
 				else
 				{
-					std::cout << "new key is not smaller" << std::endl;
+					std::cout << "key is superior to ref" << std::endl;
 					if (!ref->right)
 					{
-						std::cout << "no right child" << std::endl;
+						std::cout << "key has no right child" << std::endl;
 						ref->right = newNode(val);
 						ref->right->father = ref;
 						m_size++;
-						std::cout << "Key " << val.first << std::endl;
-						std::cout << "New node " << ref->right << ref->right->pair->first << std::endl;
-						std::cout << "Father node " << ref << " " << ref->pair->first << std::endl;
-						std::cout << "Father node " << ref->right->father << " " << ref->right->father->pair->first << std::endl;
 						return ref->right;
 					}
 					if (ref->right->end)
 					{
-						std::cout << "right child is end" << std::endl;
+						std::cout << "key's right child is end" << std::endl;
 						tree	*last = ref->right;
 						ref->right = newNode(val);
 						ref->right->father = ref;
@@ -486,9 +513,13 @@ class map
 
 		tree	*findKey(const key_type& k) const
 		{
+			std::cout << "begin find key" << std::endl;
 			for (iterator it = begin(); it != end(); it++)
+			{
+				//std::cout << (*it).first << std::endl;
 				if ((*it).first == k)
 					return it.base();
+			}
 			return NULL;
 		}
 

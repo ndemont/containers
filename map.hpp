@@ -2,14 +2,16 @@
 # define MAP_HPP
 
 # include <memory>
-# include <functional>
-# include <iostream>
-# include "pair.hpp"
-# include "reverse_iterator.hpp"
-# include "map_iterator.hpp"
-# include "binary_search_tree.hpp"
-# include "lexicographical_compare.hpp"
+# include "binary_function.hpp"
 # include "equal.hpp"
+# include "input_iterator.hpp"
+# include "iterator.hpp"
+# include "iterator_traits.hpp"
+# include "lexicographical_compare.hpp"
+# include "map_iterator.hpp"
+# include "pair.hpp"
+# include "random_access_iterator_tag.hpp"
+# include "reverse_iterator.hpp"
 
 # define BLACK 0
 # define RED 1
@@ -17,7 +19,7 @@
 namespace ft
 {
 
-template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator< ft::pair < const Key, T > > >
+template < class Key, class T, class Compare = ft::less<Key>, class Alloc = std::allocator< ft::pair < const Key, T > > >
 class map
 {
 	public:
@@ -25,7 +27,7 @@ class map
 		typedef	T											mapped_type;
 		typedef	ft::pair<const key_type, mapped_type>		value_type;
 		typedef	Compare										key_compare;
-		class value_compare : std::binary_function<value_type, value_type, bool>
+		class value_compare : ft::binary_function<value_type, value_type, bool>
 		{ 
   			friend class map;
 			protected:

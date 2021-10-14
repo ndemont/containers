@@ -1,6 +1,11 @@
 #ifndef EQUAL_HPP
 # define EQUAL_HPP
 
+# include "binary_function.hpp"
+ 
+# include "lexicographical_compare.hpp"
+
+
 namespace ft 
 {
 

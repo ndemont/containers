@@ -1,20 +1,85 @@
 #ifndef REVERSE_ITERATOR_HPP
 # define REVERSE_ITERATOR_HPP
 
+
+#include <cstddef>
+#include <typeinfo>
 # include "iterator_traits.hpp"
-# include "random_access_iterator.hpp"
+# include "input_iterator.hpp"
+# include "iterator.hpp"
+# include "pair.hpp"
+# include "random_access_iterator_tag.hpp"
 
 namespace ft
 {
+
+
+	struct input_iterator_tag {};
+	struct forward_iterator_tag {};
+	struct bidirectional_iterator_tag {};
+	struct random_access_iterator_tag {};
+	struct output_iterator_tag {};
+
+	template <class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T& >
+	class iterator : public Category
+	{
+		public:
+			typedef T			value_type;
+			typedef Distance	difference_type;
+			typedef Pointer		pointer;
+			typedef Reference	reference;
+			typedef Category	iterator_category;
+	};
+
+
+	template <class Iterator>
+	class iterator_traits
+	{
+		public:
+			typedef typename Iterator::difference_type		difference_type;
+			typedef typename Iterator::value_type			value_type;
+			typedef typename Iterator::pointer				pointer;
+			typedef typename Iterator::reference			reference;
+			typedef typename Iterator::iterator_category	iterator_category;
+	};
+
+	template <class T>
+	class iterator_traits<T*>
+	{
+		public:
+			typedef std::ptrdiff_t								difference_type;
+			typedef T 										value_type;
+			typedef T* 										pointer;
+			typedef T& 										reference;
+			typedef	ft::random_access_iterator_tag			iterator_category;
+	};
+
+	template <class T>
+	class iterator_traits<const T*>
+	{
+		public:
+			typedef std::ptrdiff_t								difference_type;
+			typedef T 										value_type;
+			typedef T* 										pointer;
+			typedef T& 										reference;
+			typedef ft::random_access_iterator_tag			iterator_category;
+	};
+
 
 template <class U>
 class const_reverse_iterator;
 
 template <class Iterator>
-class reverse_iterator
+class reverse_iterator 
+: public iterator<typename iterator_traits<Iterator>::iterator_category, 
+					typename iterator_traits<Iterator>::value_type,
+					typename iterator_traits<Iterator>::difference_type,
+					typename iterator_traits<Iterator>::pointer,
+					typename iterator_traits<Iterator>::reference>
+
 {
 	public:
-		typedef Iterator												iterator_type;
+		typedef Iterator											iterator_type;
 		typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
 		typedef typename iterator_traits<Iterator>::value_type			value_type;
 		typedef typename iterator_traits<Iterator>::difference_type		difference_type;
@@ -84,11 +149,11 @@ class const_reverse_iterator
 {
 	public:
 		typedef Iterator												iterator_type;
-		typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
-		typedef typename iterator_traits<Iterator>::value_type			value_type;
-		typedef typename iterator_traits<Iterator>::difference_type		difference_type;
-		typedef typename iterator_traits<Iterator>::pointer				pointer;
-		typedef typename iterator_traits<Iterator>::reference			reference;
+		typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
+		typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
+		typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
+		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
+		typedef typename ft::iterator_traits<Iterator>::reference			reference;
 
 		const_reverse_iterator(void) {};
 		explicit const_reverse_iterator (iterator_type it) : m_iterator(it) {};

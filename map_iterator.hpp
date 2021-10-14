@@ -2,11 +2,16 @@
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
 
-# include <cstddef>
-# include "iterator_traits.hpp"
-# include "random_access_iterator.hpp"
-# include "binary_search_tree.hpp"
+# include "binary_function.hpp"
+# include "equal.hpp"
+# include "input_iterator.hpp"
 # include "iterator.hpp"
+# include "iterator_traits.hpp"
+# include "lexicographical_compare.hpp"
+# include "map.hpp"
+# include "pair.hpp"
+# include "random_access_iterator_tag.hpp"
+# include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -15,7 +20,7 @@ template <class T, class U>
 class const_map_iterator;
 
 template <class T, class U>
-class map_iterator : public iterator<random_access_iterator_tag, T>
+class map_iterator : public ft::iterator<random_access_iterator_tag, T>
 {
 	public:
 		typedef T					iterator_type;
@@ -122,7 +127,7 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 };
 
 template <class T, class U>
-class const_map_iterator : public iterator<random_access_iterator_tag, T>
+class const_map_iterator : public ft::iterator<random_access_iterator_tag, T>
 {
 	public:	
 		typedef T					iterator_type;

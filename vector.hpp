@@ -1,17 +1,16 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-//# include "iterator_traits.hpp"
-# include <iostream>
+# include <memory>
 # include <stdexcept>
-# include <new>
-# include "random_access_iterator.hpp"
+# include "iterator_traits.hpp"
 # include "input_iterator.hpp"
-# include "reverse_iterator.hpp"
 # include "iterator.hpp"
+# include "pair.hpp"
+# include "random_access_iterator_tag.hpp"
+# include "reverse_iterator.hpp"
+# include "stack.hpp"
 # include "vector_iterator.hpp"
-# include <cstddef>
-# include <type_traits>
 
 namespace ft
 {

@@ -50,24 +50,23 @@ class map
 			bool			end;
 			struct s_tree	*father;
 			struct s_tree	*left;
-			s_tree			*right;
+			struct s_tree	*right;
 		}					tree;
+		typedef typename Alloc::template rebind<tree>::other	node_allocator_type;
+		typedef ft::map_iterator<tree, value_type>				iterator;
+		typedef ft::const_map_iterator<tree, value_type>		const_iterator;
+		typedef ft::reverse_iterator<iterator>					reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
+		typedef ptrdiff_t										difference_type;
 
-		typedef std::allocator<tree>						tree_allocator_type;
-		typedef ft::map_iterator<tree, value_type>			iterator;
-		typedef ft::const_map_iterator<tree, value_type>	const_iterator;
-		typedef ft::reverse_iterator<iterator>				reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
-		typedef ptrdiff_t									difference_type;
-
-		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(value_compare(comp)) {};
+		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_node_alloc(node_allocator_type()), m_compare(comp), v_compare(value_compare(comp)) {};
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(value_compare(comp))
+		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_node_alloc(node_allocator_type()), m_compare(comp), v_compare(value_compare(comp))
 		{
 			for (InputIterator it = first; it != last; it++)
 				insert(*it);
 		};
-		map(const map& x) : m_size(0), m_root(initEnd()), m_alloc(x.m_alloc), m_tree_alloc(x.m_tree_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
+		map(const map& x) : m_size(0), m_root(initEnd()), m_alloc(x.m_alloc), m_node_alloc(x.m_node_alloc), m_compare(x.m_compare), v_compare(x.v_compare)
 		{ 
 			if (this != &x)
 				*this = x;
@@ -140,7 +139,7 @@ class map
 
 		bool					empty(void) const { return (!m_size); }
 		size_type				size(void) const { return (m_size); }
-		size_type				max_size(void) const { return (m_tree_alloc.max_size()); }
+		size_type				max_size(void) const { return (m_node_alloc.max_size()); }
 
 		mapped_type&			operator[](const key_type& k)
 		{
@@ -408,7 +407,7 @@ class map
 			size_type			m_size;
 			tree				**m_root;
 			allocator_type		m_alloc;
-			tree_allocator_type	m_tree_alloc;
+			node_allocator_type	m_node_alloc;
 			key_compare			m_compare;
 			value_compare		v_compare;
 
@@ -480,7 +479,7 @@ class map
  
 		tree	*newNode(ft::pair<const key_type, mapped_type> val)
 		{
-			tree									*newNode = m_tree_alloc.allocate(1);
+			tree									*newNode = m_node_alloc.allocate(1);
 			ft::pair<const key_type, mapped_type>	*pr = new pair<const key_type, mapped_type>(val);
 			
 			newNode->pair = pr;

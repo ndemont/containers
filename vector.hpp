@@ -115,7 +115,7 @@ class vector
 				vector<T>	newVector(begin(), end());
 
 				m_vector = m_alloc.allocate(n, m_vector);
-				m_capacity = m_capacity * 2;
+				m_capacity = n;
 				for (size_type i = 0; i < m_size; i++)
 					m_vector[i] = newVector[i];
 			}
@@ -218,92 +218,70 @@ class vector
 				else
 					amount = m_capacity * 2;
 				reserve(amount);
-				m_capacity = amount;
+				//m_capacity = amount;
 			}
 			m_alloc.construct(&m_vector[m_size], val);
 			m_size++;
 		}
 
 		void		pop_back(void) { m_size--; m_vector[m_size].~value_type(); }
+
 		iterator	insert(iterator position, const value_type& val)
 		{
-			vector<T>	tmp(*this);
-			iterator	begin = this->begin();
-			size_type	i = 0;
-
-			
-			m_alloc.deallocate(m_vector, m_capacity);
-			try 
-			{
-				m_vector = m_alloc.allocate(tmp.m_capacity + 1);
-			}
-			catch (std::bad_alloc& ba)
-  			{
-   				std::cerr << "bad_alloc caught: " << ba.what() << '\n';
-  			}
-			m_size = 0;
-			while (begin < position)
-			{
-				this->push_back(tmp[i]);
-				i++;
-				begin++;
-			}
-			this->push_back(val);
-			while (tmp[i])
-			{
-				this->push_back(tmp[i]);
-				i++;
-			}
-			return --position;
+				difference_type	diff = position - begin();
+				
+				if (m_size + 1 > m_capacity)
+				{
+					if (m_size * 2 > m_size + 1)
+						reserve(m_size * 2);
+					else
+						reserve(m_size + 1);
+				}
+				iterator	iter = end();
+				for (; iter != begin() + diff; iter--)
+				{
+					m_alloc.construct(&(*iter), *(iter - 1));
+					m_alloc.destroy(&(*(iter - 1)));
+				}
+				m_alloc.construct(&(*iter), val);
+				m_size++;
+				return (iter);
 		}
 
 		void	insert(iterator position, size_type n, const value_type& val)
 		{
-			vector<T>	tmp(*this);
-			iterator	begin = this->begin();
-			size_type	i = 0;
+				difference_type	diff = position - begin();
 
-			*this = vector(m_size + n);
-			while (begin < position)
-			{
-				m_vector[i] = tmp[i];
-				i++;
-				begin++;
-			}
-			for (size_t j = 0; j < n; j++)
-				m_vector[i + j] = val;
-			while (tmp[i])
-			{
-				m_vector[i + n] = tmp[i];
-				i++;
-			}
+				if (!n)
+					return ;
+				if (m_size + n > m_capacity)
+				{
+					if (m_size * 2 > m_size + n)
+						reserve(m_size * 2);
+					else
+						reserve(m_size + n);
+				}
+				while (n--)
+					insert(begin() + diff, val);
 		}
 
 		template <class InputIterator>
 		void	insert(iterator position, InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last)
-		{
-			vector<T>	tmp(*this);
-			iterator	begin = this->begin();
-			size_type	i = 0;
-			size_type	j = 0;
-			size_type	len = 0;
+		{		
+			difference_type	diff = position - begin();
+			difference_type len = 0;
 
-			for (InputIterator it = first; it != last; it++)
+			for(InputIterator it = first; it != last; it++)
 				len++;
-			*this = vector(m_size + len);
-			while (begin < position)
+			if (m_size + len > m_capacity)
 			{
-				m_vector[i] = tmp[i];
-				i++;
-				begin++;
+				if (m_size * 2 > m_size + len)
+					reserve(m_size * 2);
+				else
+					reserve(m_size + len);
 			}
-			for (; first != last; first++)
-				m_vector[i + j++] = *first;
-			while (tmp[i])
-			{
-				m_vector[i + len] = tmp[i];
-				i++;
-			}
+			for (difference_type i = 0; first != last; first++, i++)
+				insert(begin() + diff + i, *first);
 		}
 
 		iterator	erase(iterator position)

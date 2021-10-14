@@ -32,7 +32,7 @@ class map_iterator : public iterator<random_access_iterator_tag, T>
 		~map_iterator(void){};
 
 		map_iterator&			operator=(const map_iterator& x)
-		{
+		{ 
 			m_iterator = x.m_iterator;
 			return *this; 
 		}

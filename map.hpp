@@ -521,6 +521,8 @@ class map
 
 		friend bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) 
 		{
+			if (lhs.m_size != rhs.m_size)
+				return false;
 			return ft::equal(lhs.begin(), lhs.end(), rhs.begin(), lhs.m_compare);
 		}
 		friend bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(lhs == rhs)); }

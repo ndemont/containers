@@ -523,12 +523,12 @@ class map
 		{
 			if (lhs.m_size != rhs.m_size)
 				return false;
-			return ft::equal(lhs.begin(), lhs.end(), rhs.begin(), lhs.m_compare);
+			return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 		}
 		friend bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(lhs == rhs)); }
 		friend bool operator<( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
 		{
-			return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), lhs.m_compare);
+			return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 		}
 		friend bool operator<=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(rhs < lhs)); }
 		friend bool operator>(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (rhs < lhs); }

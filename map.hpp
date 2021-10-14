@@ -16,6 +16,7 @@
 
 namespace ft
 {
+
 template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator< ft::pair < const Key, T > > >
 class map
 {
@@ -24,7 +25,18 @@ class map
 		typedef	T											mapped_type;
 		typedef	ft::pair<const key_type, mapped_type>		value_type;
 		typedef	Compare										key_compare;
-		typedef	Compare										value_compare;
+		class value_compare : std::binary_function<value_type, value_type, bool>
+		{ 
+  			friend class map;
+			protected:
+  				Compare comp;
+ 			value_compare (Compare c) : comp(c) {}
+			public:
+  				typedef bool result_type;
+  				typedef value_type first_argument_type;
+  				typedef value_type second_argument_type;
+  				bool operator() (const value_type& x, const value_type& y) const { return comp(x.first, y.first); }
+		};
 		typedef Alloc										allocator_type;
 		typedef value_type&									reference;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 		typedef const value_type&							const_reference;
@@ -48,9 +60,9 @@ class map
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef ptrdiff_t									difference_type;
 
-		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(comp) {};
+		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(value_compare(comp)) {};
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(comp)
+		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_tree_alloc(tree_allocator_type()), m_compare(comp), v_compare(value_compare(comp))
 		{
 			for (InputIterator it = first; it != last; it++)
 				insert(*it);
@@ -180,19 +192,6 @@ class map
 			tree	*right = found->right;
 			if (right)
 			{
-				// if (right->end)
-				// {
-				// 	std::cout << "found is the last elem" << std::endl;
-				// 	left->father = father;
-				// 	if (father && father->right == found)
-				// 		father->right = left;
-				// 	else
-				// 		father->left = left;
-				// 	while (left->right)
-				// 		left = left->right;
-				// 	left->right = found->right;
-					
-				// }
 				if (father && father->right == found)
 				{
 					father->right = right;
@@ -315,6 +314,7 @@ class map
 		};
 
 		key_compare			key_comp(void) const { return m_compare; };
+
 		value_compare		value_comp(void) const { return v_compare; };
 
 		iterator			find(const key_type& k)
@@ -521,8 +521,6 @@ class map
 
 		friend bool operator==( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) 
 		{
-			if (lhs.size() != rhs.size()) 
-				return (false);
 			return ft::equal(lhs.begin(), lhs.end(), rhs.begin(), lhs.m_compare);
 		}
 		friend bool operator!=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(lhs == rhs)); }
@@ -535,6 +533,8 @@ class map
 		friend bool operator>=( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) { return (!(lhs < rhs)); }
 
 };
+
+
 };
 
 #endif

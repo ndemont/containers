@@ -4,6 +4,23 @@
 namespace ft 
 {
 
+template <class T, class Compare> 
+struct pair_less : std::binary_function <T,T,bool>
+{
+	bool operator() (const T& x, const T& y) const
+	{ 
+		if (Compare(x.first, y.first))
+			return true;
+		else if (Compare(y.first, x.first))
+			return false;
+		else if (Compare(x.second, y.second))
+			return true;
+		else
+			return false;
+	}
+};
+
+
 template <class InputIterator1, class InputIterator2>
 bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
 {

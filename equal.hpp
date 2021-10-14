@@ -4,15 +4,6 @@
 namespace ft 
 {
 
-// template <class T, class Key, class Compare = std::less<Key> > 
-// struct node_less : std::binary_function <T, T, bool> 
-// {
-// 	bool operator() (const T& x, const T& y) const 
-//   	{
-// 		return (!Compare(x, y) && !Compare(y, x));
-// 	}
-// };
-
 template <class InputIterator1, class InputIterator2>
 bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
 {

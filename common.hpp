@@ -1,5 +1,5 @@
-#include "stack.hpp"
-#include <stack>
+#include "vector.hpp"
+#include <vector>
 #include <iostream>
 #include <string>
 
@@ -7,52 +7,43 @@
 # define TESTED_NAMESPACE ft
 #endif
 
-template <typename T_STACK>
-void	printSize(T_STACK &stck, bool print_content = 1)
+#define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
+
+template <typename T>
+void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true)
 {
-	std::cout << "size: " << stck.size() << std::endl;
+	const T_SIZE_TYPE size = vct.size();
+	const T_SIZE_TYPE capacity = vct.capacity();
+	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
+	// Cannot limit capacity's max value because it's implementation dependent
+
+	std::cout << "size: " << size << std::endl;
+	std::cout << "capacity: " << isCapacityOk << std::endl;
+	std::cout << "max_size: " << vct.max_size() << std::endl;
 	if (print_content)
 	{
-		std::cout << std::endl << "Content was:" << std::endl;
-		while (stck.size() != 0) {
-			std::cout << "- " << stck.top() << std::endl;
-			stck.pop();
-		}
+		typename TESTED_NAMESPACE::vector<T>::const_iterator it = vct.begin();
+		typename TESTED_NAMESPACE::vector<T>::const_iterator ite = vct.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << *it << std::endl;
 	}
 	std::cout << "###############################################" << std::endl;
 }
 
-template <typename T>
 class foo {
 	public:
-		typedef T	value_type;
-
-		foo(void) : value(), _verbose(false) { };
-		foo(value_type src, const bool verbose = false) : value(src), _verbose(verbose) { };
-		foo(foo const &src, const bool verbose = false) : value(src.value), _verbose(verbose) { };
-		~foo(void) { if (this->_verbose) std::cout << "~foo::foo()" << std::endl; };
+		foo(void) { };
+		~foo(void) { };
 		void m(void) { std::cout << "foo::m called [" << this->value << "]" << std::endl; };
 		void m(void) const { std::cout << "foo::m const called [" << this->value << "]" << std::endl; };
-		foo &operator=(value_type src) { this->value = src; return *this; };
-		foo &operator=(foo const &src) {
-			if (this->_verbose || src._verbose)
-				std::cout << "foo::operator=(foo) CALLED" << std::endl;
-			this->value = src.value;
-			return *this;
-		};
-		value_type	getValue(void) const { return this->value; };
-		void		switchVerbose(void) { this->_verbose = !(this->_verbose); };
-
-		operator value_type(void) const {
-			return value_type(this->value);
-		}
+		foo &operator=(int src) { this->value = src; return *this; };
+		int getValue(void) const { return this->value; };
 	private:
-		value_type	value;
-		bool		_verbose;
+		int	value;
 };
 
-template <typename T>
-std::ostream	&operator<<(std::ostream &o, foo<T> const &bar) {
+std::ostream	&operator<<(std::ostream &o, foo const &bar) {
 	o << bar.getValue();
 	return o;
 }

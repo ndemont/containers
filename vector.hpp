@@ -10,6 +10,7 @@
 # include "random_access_iterator_tag.hpp"
 # include "reverse_iterator.hpp"
 # include "vector_iterator.hpp"
+# include <iostream>
 
 namespace ft
 {
@@ -34,7 +35,7 @@ class vector
 		typedef	size_t														size_type;
 
 		/* CONSTRUCTORS */
-		explicit vector(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) { };
+		explicit vector(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
 		explicit vector(size_t n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(n), m_capacity(n), m_alloc(alloc)
 		{
 			this->assign(n, val);
@@ -66,6 +67,8 @@ class vector
 		/* DESTRUCTOR */
 		~vector(void)
 		{
+			for (iterator it = begin(); it != end(); it++)
+				m_alloc.destroy(&(*it));
 			if (m_vector)
 				m_alloc.deallocate(m_vector, m_capacity);
 		}
@@ -216,13 +219,16 @@ class vector
 				else
 					amount = m_capacity * 2;
 				reserve(amount);
-				//m_capacity = amount;
 			}
 			m_alloc.construct(&m_vector[m_size], val);
 			m_size++;
 		}
 
-		void		pop_back(void) { m_size--; m_vector[m_size].~value_type(); }
+		void		pop_back(void)
+		{ 
+			m_alloc.destroy(&(*(end() - 1))); 
+			m_size--; 
+		}
 
 		iterator	insert(iterator position, const value_type& val)
 		{
@@ -284,39 +290,39 @@ class vector
 
 		iterator	erase(iterator position)
 		{
-			size_t	pos = position - begin();
-			size_t	len = end() - begin() - 1;
-
-			for (; pos < len; pos++)
+			m_alloc.destroy(&(*position));
+			for (iterator it = position; it != end() - 1; it++)
 			{
-				(*this)[pos] = (*this)[pos + 1];
+				m_alloc.construct(&*(it), *(it + 1));
+				m_alloc.destroy(&(*(it + 1)));
 			}
-			(*(end())).~value_type();
 			m_size--;
 			return position;
 		}
 
 		iterator	erase(iterator first, iterator last)
 		{
-			size_t	start = first - begin();
-			size_t	end = last - begin();
-			size_t	erased = last - first;
-
-			for (; start <= end; start++)
-			{
-				(*this)[start] = (*this)[start + erased];
-			}
-			//(*(end())).~value_type();
-			m_size = m_size - erased;
+			for (iterator it = first; first != last; it++)
+				erase(it);
 			return first;
 		}
 
 		void	swap(vector& x)
 		{
-			vector tmp(x);
+			pointer			vector = x.m_vector;
+			size_type		size = x.m_size;
+			size_type		capacity = x.m_capacity;
+			allocator_type	alloc = x.m_alloc;
 
-			x = *this;
-			*this = tmp;
+			x.m_vector = this->m_vector;
+			x.m_size = this->m_size;
+			x.m_capacity = this->m_capacity;
+			x.m_alloc = this->m_alloc;
+
+			this->m_vector = vector;
+			this->m_size = size;
+			this->m_capacity = capacity;
+			this->m_alloc = alloc;
 		}
 
 		void	clear(void)
@@ -377,10 +383,22 @@ class vector
 
 		friend void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
 		{
-			vector<T> tmp = x;
+			vector<T> tmp;
 			
-			x = y;
-			y = tmp;
+			tmp.m_vector = x.m_vector;
+			tmp.m_size = x.m_size;
+			tmp.m_capacity = x.m_capacity;
+			tmp.m_alloc = x.m_alloc;
+
+			x.m_vector = y.m_vector;
+			x.m_size = y.m_size;
+			x.m_capacity = y.m_capacity;
+			x.m_alloc = y.m_alloc;
+
+			y.m_vector = tmp.m_vector;
+			y.m_size = tmp.m_size;
+			y.m_capacity = tmp.m_capacity;
+			y.m_alloc = tmp.m_alloc;
 		}
 
 	private:

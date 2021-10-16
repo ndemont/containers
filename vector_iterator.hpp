@@ -3,15 +3,10 @@
 # define VECTOR_ITERATOR_HPP
 
 # include "iterator_traits.hpp"
-# include "binary_function.hpp"
-# include "equal.hpp"
 # include "input_iterator.hpp"
 # include "iterator.hpp"
-# include "lexicographical_compare.hpp"
-# include "pair.hpp"
 # include "random_access_iterator_tag.hpp"
 # include "reverse_iterator.hpp"
-# include "stack.hpp"
 # include "vector.hpp"
 
 namespace ft

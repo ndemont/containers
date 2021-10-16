@@ -383,22 +383,20 @@ class vector
 
 		friend void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
 		{
-			vector<T> tmp;
-			
-			tmp.m_vector = x.m_vector;
-			tmp.m_size = x.m_size;
-			tmp.m_capacity = x.m_capacity;
-			tmp.m_alloc = x.m_alloc;
+			pointer			vector = x.m_vector;
+			size_type		size = x.m_size;
+			size_type		capacity = x.m_capacity;
+			allocator_type	alloc = x.m_alloc;
 
 			x.m_vector = y.m_vector;
 			x.m_size = y.m_size;
 			x.m_capacity = y.m_capacity;
 			x.m_alloc = y.m_alloc;
 
-			y.m_vector = tmp.m_vector;
-			y.m_size = tmp.m_size;
-			y.m_capacity = tmp.m_capacity;
-			y.m_alloc = tmp.m_alloc;
+			y.m_vector = vector;
+			y.m_size = size;
+			y.m_capacity = capacity;
+			y.m_alloc = alloc;
 		}
 
 	private:

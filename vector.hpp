@@ -36,7 +36,7 @@ class vector
 
 		/* CONSTRUCTORS */
 		explicit vector(const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc) {};
-		explicit vector(size_t n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(n), m_capacity(n), m_alloc(alloc)
+		explicit vector(size_t n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(alloc)
 		{
 			this->assign(n, val);
 		}
@@ -58,7 +58,7 @@ class vector
 				first++;
 			}
 		}
-		vector(const vector<T>&x) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(x.m_alloc)
+		vector(const vector<T>&x) : m_vector(x.m_alloc.allocate(1)), m_size(0), m_capacity(0), m_alloc(x.m_alloc)
 		{
 			if (this != &x)
 				*this = x;
@@ -69,8 +69,7 @@ class vector
 		{
 			for (iterator it = begin(); it != end(); it++)
 				m_alloc.destroy(&(*it));
-			if (m_vector)
-				m_alloc.deallocate(m_vector, m_capacity);
+			m_alloc.deallocate(m_vector, m_capacity);
 		}
 
 		/* OPERATOR= */
@@ -114,7 +113,8 @@ class vector
 			if (n > m_capacity)
 			{
 				vector<T>	newVector(begin(), end());
-
+				clear();
+				m_alloc.deallocate(m_vector, m_capacity);
 				m_vector = m_alloc.allocate(n, m_vector);
 				m_capacity = n;
 				for (size_type i = 0; i < m_size; i++)
@@ -179,33 +179,35 @@ class vector
 		{
  			InputIterator tmp = first;
 			
-			m_alloc.deallocate(m_vector, m_capacity);
+			for (iterator it = begin(); it != end(); it++)
+				m_alloc.destroy(&(*it));
 			size_type	k = 0;
 			for ( ; tmp != last; tmp++)
 				k++;
 			if (k > m_capacity)
+			{
+				m_alloc.deallocate(m_vector, m_capacity);
 				m_capacity = k;
-			m_vector = m_alloc.allocate(m_capacity);
+				m_vector = m_alloc.allocate(m_capacity);
+			}
 			m_size = 0;
 			for (InputIterator it = first; it != last; it++)
-			{
 				this->push_back(*it);
-			}
 		}
 
 		void	assign(size_type n, const value_type& val)
 		{
-			
-			m_alloc.deallocate(m_vector, m_capacity);
-
+			for (iterator it = begin(); it != end(); it++)
+				m_alloc.destroy(&(*it));
 			if (n > m_capacity)
+			{
+				m_alloc.deallocate(m_vector, m_capacity);
 				m_capacity = n;
-			m_vector = m_alloc.allocate(m_capacity);
+				m_vector = m_alloc.allocate(m_capacity);
+			}
 			m_size = 0;
 			for (size_type i = 0; i < n; i++)
-			{
 				this->push_back(val);
-			}
 		}
 
 		void	push_back(const value_type& val)
@@ -220,7 +222,7 @@ class vector
 					amount = m_capacity * 2;
 				reserve(amount);
 			}
-			m_alloc.construct(&m_vector[m_size], val);
+			m_alloc.construct(m_vector + m_size, val);
 			m_size++;
 		}
 
@@ -331,7 +333,7 @@ class vector
 				pop_back();
 		}
 
-		allocator_type get_allocator() const;
+		allocator_type get_allocator() const { return m_alloc; }
 
 		friend bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{

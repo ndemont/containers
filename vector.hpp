@@ -58,7 +58,7 @@ class vector
 				first++;
 			}
 		}
-		vector(const vector<T>&x) : m_vector(x.m_alloc.allocate(1)), m_size(0), m_capacity(0), m_alloc(x.m_alloc)
+		vector(const vector<T>&x) : m_vector(NULL), m_size(0), m_capacity(0), m_alloc(x.m_alloc)
 		{
 			if (this != &x)
 				*this = x;

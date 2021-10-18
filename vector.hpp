@@ -117,8 +117,11 @@ class vector
 				m_alloc.deallocate(m_vector, m_capacity);
 				m_vector = m_alloc.allocate(n, m_vector);
 				m_capacity = n;
-				for (size_type i = 0; i < m_size; i++)
-					m_vector[i] = newVector[i];
+				for (size_type i = 0; i < newVector.m_size; i++)
+				{
+					m_size++;
+					m_alloc.construct(&(m_vector[i]), newVector[i]);
+				}
 			}
 		}
 
@@ -215,11 +218,11 @@ class vector
 			int amount = 0;
 			if (m_capacity <= m_size)
 			{
-
 				if (m_capacity == 0)
 					amount = 1;
 				else
 					amount = m_capacity * 2;
+				vector<T> tmp(*this);
 				reserve(amount);
 			}
 			m_alloc.construct(m_vector + m_size, val);

@@ -84,10 +84,10 @@ class vector
 		const_iterator			begin(void) const { return const_iterator(m_vector); }
 		iterator				end(void) { return iterator(m_vector + m_size); }
 		const_iterator			end(void) const { return const_iterator(m_vector + m_size); }
-		reverse_iterator		rbegin(void) { return reverse_iterator(m_vector + m_size - 1); }
-		const_reverse_iterator	rbegin(void) const { return const_reverse_iterator(m_vector + m_size - 1); }
-		reverse_iterator		rend(void) { return reverse_iterator(m_vector - 1); }
-		const_reverse_iterator	rend(void) const { return const_reverse_iterator(m_vector - 1); return rend; }
+		reverse_iterator		rbegin(void) { return reverse_iterator(end()); }
+		const_reverse_iterator	rbegin(void) const { return const_reverse_iterator(end()); }
+		reverse_iterator		rend(void) { return reverse_iterator(begin()); }
+		const_reverse_iterator	rend(void) const { return const_reverse_iterator(begin()); }
 
 		/* CAPACITY */
 		size_type	size(void) const { return m_size; }
@@ -273,25 +273,26 @@ class vector
 
 		template <class InputIterator>
 		void	insert(iterator position, InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last)
-		{		
-			difference_type	diff = position - begin();
-			difference_type len = 0;
-
-			for(InputIterator it = first; it != last; it++)
-				len++;
-			if (m_size + len > m_capacity)
-			{
-				if (m_size * 2 > m_size + len)
-					reserve(m_size * 2);
-				else
-					reserve(m_size + len);
-			}
-			for (difference_type i = 0; first != last; first++, i++)
-				insert(begin() + diff + i, *first);
+		{	
+				difference_type	diff = position - begin();
+				
+				difference_type len = 0;
+				for (InputIterator it = first; it != last; it++)
+					len++;
+				if (m_size + len > m_capacity)
+				{
+					if (m_size * 2 > m_size +len)
+						reserve(m_size * 2);
+					else
+						reserve(m_size + len);
+				}
+				for (difference_type i = 0; first != last; first++, i++)
+					insert(begin() + diff + i, *first);
 		}
 
 		iterator	erase(iterator position)
 		{
+
 			m_alloc.destroy(&(*position));
 			for (iterator it = position; it != end() - 1; it++)
 			{
@@ -300,12 +301,16 @@ class vector
 			}
 			m_size--;
 			return position;
+
 		}
 
 		iterator	erase(iterator first, iterator last)
 		{
-			for (iterator it = first; first != last; it++)
-				erase(it);
+			difference_type range = 0;
+			for (iterator it = first; it != last; it++)
+				range++;
+			for (; range > 0; range--)
+				erase(first);
 			return first;
 		}
 

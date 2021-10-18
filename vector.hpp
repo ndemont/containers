@@ -292,7 +292,6 @@ class vector
 
 		iterator	erase(iterator position)
 		{
-
 			m_alloc.destroy(&(*position));
 			for (iterator it = position; it != end() - 1; it++)
 			{

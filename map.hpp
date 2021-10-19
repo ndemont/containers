@@ -54,6 +54,7 @@ class map
 			struct s_tree	*left;
 			struct s_tree	*right;
 		}					tree;
+
 		typedef typename Alloc::template rebind<tree>::other	node_allocator_type;
 		typedef ft::map_iterator<tree, value_type>				iterator;
 		typedef ft::const_map_iterator<tree, value_type>		const_iterator;

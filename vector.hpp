@@ -87,7 +87,7 @@ class vector
 		iterator				end(void) { return iterator(m_vector + m_size); }
 		const_iterator			end(void) const { return const_iterator(m_vector + m_size); }
 		reverse_iterator		rbegin(void) { return reverse_iterator(end()); }
-		const_reverse_iterator	rbegin(void) const { return const_reverse_iterator(end()); }
+		const_reverse_iterator	rbegin(void) const { return const_reverse_iterator(end() - 1); }
 		reverse_iterator		rend(void) { return reverse_iterator(begin()); }
 		const_reverse_iterator	rend(void) const { return const_reverse_iterator(begin()); }
 
@@ -207,8 +207,8 @@ class vector
 			if (n > m_capacity)
 			{
 				m_alloc.deallocate(m_vector, m_capacity);
+				m_vector = m_alloc.allocate(n);
 				m_capacity = n;
-				m_vector = m_alloc.allocate(m_capacity);
 			}
 			m_size = 0;
 			for (size_type i = 0; i < n; i++)

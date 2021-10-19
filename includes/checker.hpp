@@ -6,8 +6,12 @@
 #include "stack.hpp"
 #include "map.hpp"
 
-#ifndef NSPACE
-# define NSPACE ft
+#ifndef NAMESPACE
+# define NAMESPACE ft
+#endif
+
+#ifndef TYPE
+# define TYPE int
 #endif
 
 #endif

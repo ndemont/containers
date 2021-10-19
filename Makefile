@@ -1,32 +1,38 @@
-NAME		= checker
 CLEAR		= \033[2K\c
 CC			= clang++
 RM			= rm -rf
 
-CFLAGS		= -Wall -Wextra -Werror
-IFLAGS		= -I${INC_DIR}
-
+CFLAGS		= -Wall -Wextra -Werror -std=c++98
 SRCS_DIR	= sources
 INC_DIR		= includes
-OBJS_DIR	= objects
 
-INC			= $(shell find ${INC_DIR} -type f -name "*.hpp")
-SRCS 		= $(notdir $(shell find ${SRCS_DIR} -type f -name "*.cpp"))
-OBJS 		= $(addprefix ${OBJS_DIR}/, $(SRCS:.cpp=.o))
-vpath		%.cpp $(shell find ${SRCS_DIR} -type d)
+VCT_DIR		= ${SRCS_DIR}/vector
+STCK_DIR	= ${SRCS_DIR}/stack
 
-all: 		init ${NAME}
+all: 		vector map stack
 
-init:
-			$(shell mkdir -p ${OBJS_DIR})
+v_size:
+			${CC} ${CFLAGS} -I${INC_DIR} ${VCT_DIR}/size.cpp
 
-${NAME}:	${OBJS}
-			${CC} ${CFLAGS} -o $@ $^
+s_empty:	
+			${CC} ${CFLAGS} -I${INC_DIR} ${STCK_DIR}/empty.cpp
+s_pop:	
+			${CC} ${CFLAGS} -I${INC_DIR} ${STCK_DIR}/pop.cpp
+s_push:	
+			${CC} ${CFLAGS} -I${INC_DIR} ${STCK_DIR}/push.cpp
+s_rel_op:	
+			${CC} ${CFLAGS} -I${INC_DIR} ${STCK_DIR}/relation_operators.cpp
+s_size:
+			${CC} ${CFLAGS} -I${INC_DIR} ${STCK_DIR}/size.cpp
+s_top:
+			${CC} ${CFLAGS} -I${INC_DIR} ${STCK_DIR}/top.cpp
+	
 
-${OBJS_DIR}/%.o:	%.cpp
-			@echo "${CLEAR}"
-			@echo "compiling $<\r\c"
-			@${CC} ${CFLAGS} ${IFLAGS} -c $< -o $@
+vector:	v_size
+
+map:
+
+stack: s_empty s_pop s_push s_rel_op s_size s_top
 
 clean:
 			${RM} ${OBJS_DIR}

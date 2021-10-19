@@ -10,6 +10,8 @@
 # include "random_access_iterator_tag.hpp"
 # include "reverse_iterator.hpp"
 # include "vector_iterator.hpp"
+# include "lexicographical_compare.hpp"
+# include "equal.hpp"
 # include <iostream>
 
 namespace ft
@@ -344,50 +346,17 @@ class vector
 
 		friend bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			if (lhs.m_size == rhs.m_size)
-			{
-				for (size_t i = 0; i < lhs.m_size; i++)
-				{
-					if (lhs.m_vector[i] != rhs.m_vector[i])
-						return false;
-				}
-				return true;
-			}
-			else
+			if (lhs.m_size != rhs.m_size)
 				return false;
+			return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 		}
 		friend bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs)); }
 		friend bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			for (size_t i = 0; i < lhs.size(); i++)
-			{
-				if (i >= rhs.size())
-					return false;
-				if (lhs.m_vector[i] < rhs.m_vector[i])
-					return true;
-				else if (lhs.m_vector[i] > rhs.m_vector[i])
-					return false;
-			}
-			if (lhs.size() < rhs.size())
-				return true;
-			return false;
+			return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 		}
-		friend bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-		{
-			for (size_t i = 0; i < lhs.m_size; i++)
-			{
-				if (i >= rhs.size())
-					return true;
-				if (lhs.m_vector[i] > rhs.m_vector[i])
-					return true;
-				else if (lhs.m_vector[i] < rhs.m_vector[i])
-					return false;
-			}
-			if (lhs.size() > rhs.size())
-				return true;
-			return false;
-		}
-		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs > rhs)); }
+		friend bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (rhs < lhs); }
+		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(rhs < lhs)); }
 		friend bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs < rhs)); }
 
 		friend void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)

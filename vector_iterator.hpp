@@ -28,11 +28,11 @@ class vector_iterator : public iterator<random_access_iterator_tag, T>
 
 		vector_iterator(void) {};
 		vector_iterator(value_type *x) : m_iterator(x) {};
-		vector_iterator(vector_iterator const & x) : m_iterator(x.m_iterator) {};
+		vector_iterator(vector_iterator const & x) : m_iterator(x.base()) {};
 		vector_iterator(const_vector_iterator<T> const & x) : m_iterator(x.base()) {};
 		~vector_iterator(void){};
 
-		vector_iterator&		operator=(const vector_iterator& x) { m_iterator = x.m_iterator; return *this; }
+		vector_iterator&		operator=(const vector_iterator& x) { m_iterator = x.base(); return *this; }
 		
 		bool					operator==(const vector_iterator& x) const { return (m_iterator == x.base()); }
 		bool					operator!=(const vector_iterator& x) const { return (m_iterator != x.base()); }
@@ -78,7 +78,7 @@ class const_vector_iterator : public iterator<random_access_iterator_tag, T>
 {
 
 	public:
-		typedef T			value_type;
+		typedef T		value_type;
 		typedef const T*	pointer;
 		typedef const T&	reference;
 		typedef	ptrdiff_t	difference_type;
@@ -86,14 +86,14 @@ class const_vector_iterator : public iterator<random_access_iterator_tag, T>
 
 		const_vector_iterator(void) {};
 		const_vector_iterator(value_type *x) : m_iterator(x) {};
-		const_vector_iterator(const_vector_iterator const & x) : m_iterator(x.m_iterator) {};
+		const_vector_iterator(const_vector_iterator const & x) : m_iterator(x.base()) {};
 		const_vector_iterator(vector_iterator<T> const & x) : m_iterator(x.base()) {};
 		~const_vector_iterator(void){};
 
-		const_vector_iterator&			operator=(const const_vector_iterator& x) { m_iterator = x.m_iterator; return *this; }
+		const_vector_iterator&			operator=(const const_vector_iterator& x) { m_iterator = x.base(); return *this; }
 
 		bool							operator==(const const_vector_iterator& x) const { return (m_iterator == x.base()); }
-		bool							operator!=(const const_vector_iterator& x) const { return (m_iterator != x.m_iterator); }
+		bool							operator!=(const const_vector_iterator& x) const { return (m_iterator != x.base()); }
 
 		reference						operator*(void) const { return *m_iterator; }
 		pointer							operator->(void) const { return	&(*m_iterator); }
@@ -127,7 +127,7 @@ class const_vector_iterator : public iterator<random_access_iterator_tag, T>
 		
 		reference						operator[](difference_type n) const { return (m_iterator[n]); }
 
-		value_type*						base() const {return m_iterator;};
+		value_type*						    base() const { return m_iterator; };
 
 
 	private:

@@ -31,13 +31,13 @@ int		main(void)
 	vct_four.assign(6, 84);
 	printSize(vct_four);
 
-	// std::cout << "\t### assign() on enough capacity and low size: ###" << std::endl;
+	std::cout << "\t### assign() on enough capacity and low size: ###" << std::endl;
 
-	// vct.assign(5, 53);
-	// vct_two.assign(vct_three.begin(), vct_three.begin() + 3);
+	vct.assign(5, 53);
+	vct_two.assign(vct_three.begin(), vct_three.begin() + 3);
 
-	// printSize(vct);
-	// printSize(vct_two);
+	printSize(vct);
+	printSize(vct_two);
 
 	return (0);
 }

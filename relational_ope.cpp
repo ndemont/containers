@@ -1,11 +1,11 @@
 #include "common.hpp"
 
-#define TESTED_TYPE int
-#define t_stack_ TESTED_NAMESPACE::stack<TESTED_TYPE>
-typedef t_stack_::container_type container_type;
+#define T1 char
+#define T2 int
+typedef _pair<const T1, T2> T3;
 
-template <class T_STACK>
-void	cmp(const T_STACK &lhs, const T_STACK &rhs)
+template <class MAP>
+void	cmp(const MAP &lhs, const MAP &rhs)
 {
 	static int i = 0;
 
@@ -17,36 +17,29 @@ void	cmp(const T_STACK &lhs, const T_STACK &rhs)
 
 int		main(void)
 {
-	container_type	ctnr;
+	TESTED_NAMESPACE::map<T1, T2> mp1;
+	TESTED_NAMESPACE::map<T1, T2> mp2;
 
-	ctnr.push_back(21);
-	ctnr.push_back(42);
-	ctnr.push_back(1337);
-	ctnr.push_back(19);
-	ctnr.push_back(0);
-	ctnr.push_back(183792);
+	mp1['a'] = 2; mp1['b'] = 3; mp1['c'] = 4; mp1['d'] = 5;
+	mp2['a'] = 2; mp2['b'] = 3; mp2['c'] = 4; mp2['d'] = 5;
 
-	t_stack_	stck(ctnr);
-	t_stack_	stck2(ctnr);
+	cmp(mp1, mp1); // 0
+	cmp(mp1, mp2); // 1
 
-	cmp(stck, stck);  // 0
-	cmp(stck, stck2); // 1
+	mp2['e'] = 6; mp2['f'] = 7; mp2['h'] = 8; mp2['h'] = 9;
 
-	stck2.push(60);
-	stck2.push(61);
-	stck2.push(62);
+	cmp(mp1, mp2); // 2
+	cmp(mp2, mp1); // 3
 
-	cmp(stck, stck2); // 2
-	cmp(stck2, stck); // 3
+	(++(++mp1.begin()))->second = 42;
 
-	stck.push(42);
+	cmp(mp1, mp2); // 4
+	cmp(mp2, mp1); // 5
 
-	cmp(stck, stck2); // 4
-	cmp(stck2, stck); // 5
+	swap(mp1, mp2);
 
-	stck.push(100);
+	cmp(mp1, mp2); // 6
+	cmp(mp2, mp1); // 7
 
-	cmp(stck, stck2); // 6
-	cmp(stck2, stck); // 7
 	return (0);
 }

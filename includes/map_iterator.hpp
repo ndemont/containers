@@ -45,7 +45,7 @@ class map_iterator : public ft::iterator<random_access_iterator_tag, T>
 		bool					operator==(const map_iterator& x) const { return (m_iterator == x.base()); }
 		bool					operator!=(const map_iterator& x) const { return (m_iterator != x.base()); }
 
-		reference				operator*(void) const { return *(m_iterator->pair); }
+		reference				operator*(void) const { return (m_iterator->pair); }
 		pointer					operator->(void) const { return	&(operator*()); }
 
 		map_iterator&			operator++(void)
@@ -79,6 +79,7 @@ class map_iterator : public ft::iterator<random_access_iterator_tag, T>
 
 		map_iterator			operator++(int)  
 		{
+			//return map_iterator(++(*this));
 			map_iterator it = *this;
 			++(*this);
 			return it; 
@@ -153,22 +154,22 @@ class const_map_iterator : public ft::iterator<random_access_iterator_tag, T>
 		bool					operator!=(const const_map_iterator& x) const { return (m_iterator != x.base()); }
 
 
-		reference				operator*(void) const { return *(m_iterator->pair); }
+		reference				operator*(void) const { return (m_iterator->pair); }
 		pointer					operator->(void) const { return	&(operator*()); }
 
 		const_map_iterator&		operator++(void) 
-		{ 
-			if (m_iterator->right)
+		{
+			if (m_iterator && m_iterator->right)
 			{
 				m_iterator = m_iterator->right;
 				while (m_iterator->left)
 					m_iterator = m_iterator->left;
 			}
-			else if (m_iterator->father && m_iterator->father->left == m_iterator)
+			else if (m_iterator && m_iterator->father && m_iterator->father->left == m_iterator)
 			{
 				m_iterator = m_iterator->father;
 			}
-			else if (m_iterator->father && m_iterator->father->right == m_iterator)
+			else if (m_iterator && m_iterator->father && m_iterator->father->right == m_iterator)
 			{
 				m_iterator = m_iterator->father;
 				while (m_iterator->father)

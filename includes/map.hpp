@@ -65,7 +65,7 @@ class map
 
 		explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_node_alloc(node_allocator_type()), m_compare(comp), v_compare(value_compare(comp)) {};
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_node_alloc(node_allocator_type()), m_compare(comp), v_compare(value_compare(comp))
+		map(InputIterator first, typename ft::enable_if<!(ft::is_integral<InputIterator>::value), InputIterator>::type last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : m_size(0), m_root(initEnd()), m_alloc(alloc), m_node_alloc(node_allocator_type()), m_compare(comp), v_compare(value_compare(comp))
 		{
 			for (InputIterator it = first; it != last; it++)
 				insert(*it);
@@ -75,17 +75,9 @@ class map
 			if (this != &x)
 				*this = x;
 		};
-		~map(void)
-		{
-			clear();
-		};
+		~map(void) { clear(); };
 	
-		map&	operator=(const map& x) 
-		{
-			clear();
-			insert(x.begin(), x.end());
-			return *this;
-		};
+		map&	operator=(const map& x) { clear(); insert(x.begin(), x.end()); return *this; };
 
 		iterator				begin(void)
 		{
@@ -374,7 +366,7 @@ class map
 
 		const_iterator		lower_bound(const key_type& k) const
 		{ 
-			for (iterator it = begin(); it != end(); it++)
+			for (const_iterator it = begin(); it != end(); it++)
 			{
 				if (!(m_compare(it->first, k)))
 					return const_iterator(it);
@@ -394,7 +386,7 @@ class map
 
 		const_iterator		upper_bound(const key_type& k) const
 		{
-			for (iterator it = begin(); it != end(); it++)
+			for (const_iterator it = begin(); it != end(); it++)
 			{
 				if ((m_compare(k, it->first)))
 					return const_iterator(it);
@@ -440,7 +432,6 @@ class map
 			}
 			if (!m_root)
 			{
-				//m_root = new tree<value_type>*;
 				m_root = newNode(val);
 				tree<value_type>	*last = newNode(val);
 				(m_root)->right = last;
@@ -509,9 +500,9 @@ class map
 			return newNode;
 		}
 
-		tree<value_type>	*findKey(const key_type& k) const
+		node_type	*findKey(const key_type& k) const
 		{
-			for (iterator it = begin(); it != end(); it++)
+			for (const_iterator it = begin(); it != end(); it++)
 			{
 				if ((*it).first == k)
 					return it.base();
@@ -529,10 +520,10 @@ class map
 			return false;
 		}
 
-		tree<value_type>	*initEnd()
+		node_type	*initEnd()
 		{
 			value_type val = value_type();
-			tree<value_type>*	endNode = newNode(val);
+			node_type*	endNode = newNode(val);
 			endNode->end = true;
 			m_root = endNode; 
 			return (m_root);

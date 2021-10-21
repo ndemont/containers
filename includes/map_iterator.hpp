@@ -32,18 +32,16 @@ class map_iterator : public ft::iterator<random_access_iterator_tag, T>
 
 		map_iterator(void) {};
 		map_iterator(iterator_type *x) : m_iterator(x) {};
-		map_iterator(map_iterator const & x) : m_iterator(x.m_iterator) {};
-		map_iterator(const_map_iterator<T, U> const & x) : m_iterator(x.base()) {};
+		map_iterator(map_iterator const & x) : m_iterator(x.base()) {};
+		//map_iterator(const_map_iterator<T, U> const & x) : m_iterator(x.base()) {};
 		~map_iterator(void){};
 
-		map_iterator&			operator=(const map_iterator& x)
-		{ 
-			m_iterator = x.m_iterator;
-			return *this; 
-		}
+		map_iterator&			operator=(const map_iterator& x) { m_iterator = x.m_iterator; return *this; }
 		
 		bool					operator==(const map_iterator& x) const { return (m_iterator == x.base()); }
 		bool					operator!=(const map_iterator& x) const { return (m_iterator != x.base()); }
+		template <class V, class W>
+		friend bool				operator!=(const map_iterator& lhs, const const_map_iterator<V, W>& rhs) { return (lhs.base() != rhs.base()); }
 
 		reference				operator*(void) const { return (m_iterator->pair); }
 		pointer					operator->(void) const { return	&(operator*()); }
@@ -139,7 +137,7 @@ class const_map_iterator : public ft::iterator<random_access_iterator_tag, T>
 
 		const_map_iterator(void) {};
 		const_map_iterator(iterator_type *x) : m_iterator(x) {};
-		const_map_iterator(const_map_iterator const & x) : m_iterator(x.m_iterator) {};
+		const_map_iterator(const_map_iterator const & x) : m_iterator(x.base()) {};
 		const_map_iterator(map_iterator<T, U> const & x) : m_iterator(x.base()) {};
 		~const_map_iterator(void){};
 

@@ -483,6 +483,8 @@ stack: s_empty s_pop s_push s_rel_op s_size s_top
 
 clean:
 			${RM} ${OBJS_DIR}
+			rm -rf results
+			rm -rf differences
 
 fclean:
 			${RM} ${OBJS_DIR}

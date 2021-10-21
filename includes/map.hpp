@@ -190,14 +190,12 @@ class map
 
 		size_type	erase(const key_type& k)
 		{ 
-			tree<value_type>	*found = findKey(k);
+			node_type	*found = findKey(k);
 			if (!found)
-			{
 				return 0;
-			}
-			tree<value_type>	*father = found->father;
-			tree<value_type>	*left = found->left;
-			tree<value_type>	*right = found->right;
+			node_type	*father = found->father;
+			node_type	*left = found->left;
+			node_type	*right = found->right;
 			if (right)
 			{
 				if (father && father->right == found)
@@ -206,7 +204,7 @@ class map
 					right->father = father;
 					if (left)
 					{
-						tree<value_type>	*tmp = right;
+						node_type	*tmp = right;
 						while (tmp->left)
 							tmp = tmp->left;
 						tmp->left = left;
@@ -221,7 +219,7 @@ class map
 						right->father = father;
 						if (left)
 						{
-							tree<value_type>	*tmp = father;
+							node_type	*tmp = father;
 							while (tmp->left)
 								tmp = tmp->left;
 							tmp->left = left;
@@ -237,7 +235,7 @@ class map
 				else
 				{
 					iterator up = upper_bound(k);
-					tree<value_type>	*upt = findKey((*up).first);
+					node_type	*upt = findKey((*up).first);
 					if (left)
 					{
 						upt->left = left;
@@ -279,18 +277,22 @@ class map
 				if (father)
 				{
 					if (father->right == found)
-						father->right = 0;
+						father->right = NULL;
 					else if (father->left == found)
-						father->left = 0;
+						father->left = NULL;
 				}
 			}
+			m_alloc.destroy(&(found->pair));
+			m_node_alloc.deallocate(found, 1);
+			found = NULL;
 			m_size--;
 			return (1);
 		};
 
 		void	erase(iterator first, iterator last)
-		{ 
-			for (iterator it = first; it != last; it++)
+		{
+			map<key_type, mapped_type>	tmp(first, last);
+			for (iterator it = tmp.begin(); it != tmp.end(); it++)
 				erase((*it).first);
 		};
 
@@ -336,7 +338,7 @@ class map
 
 		iterator			find(const key_type& k)
 		{ 
-			tree<value_type>	*found = findKey(k);
+			node_type	*found = findKey(k);
 
 			if (!found)
 				return end();
@@ -345,7 +347,7 @@ class map
 		};
 		const_iterator		find(const key_type& k) const
 		{ 
-			tree<value_type>	*found = findKey(k);
+			node_type	*found = findKey(k);
 
 			if (!found)
 				return end();

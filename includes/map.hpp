@@ -27,6 +27,7 @@ namespace ft
 		struct tree<T>	*father;
 		struct tree<T>	*left;
 		struct tree<T>	*right;
+		tree(T p, bool last = false) : pair(p), end(last), father(NULL), left(NULL), right(NULL) {}; 
 	};
 
 template < class Key, class T, class Compare = ft::less<Key>, class Alloc = std::allocator< ft::pair < const Key, T > > >
@@ -423,7 +424,7 @@ class map
 			key_compare			m_compare;
 			value_compare		v_compare;
 
-		tree<value_type>	*addNode(ft::pair<const key_type, mapped_type> val)
+		node_type	*addNode(ft::pair<const key_type, mapped_type> val)
 		{
 			if (check_key(val))
 			{
@@ -440,7 +441,7 @@ class map
 				m_size++;
 				return m_root;
 			}
-			tree<value_type>	*ref = m_root;
+			node_type	*ref = m_root;
 			if (ref->end)
 			{
 				node_type	*first = newNode(val);
@@ -474,7 +475,7 @@ class map
 					}
 					if (ref->right->end)
 					{
-						tree<value_type>	*last = ref->right;
+						node_type	*last = ref->right;
 						ref->right = newNode(val);
 						ref->right->father = ref;
 						ref->right->right = last;
@@ -522,9 +523,8 @@ class map
 
 		node_type	*initEnd()
 		{
-			value_type val = value_type();
-			node_type*	endNode = newNode(val);
-			endNode->end = true;
+			node_type*	endNode = m_node_alloc.allocate(1);
+			m_node_alloc.construct(endNode, node_type(value_type(), true));
 			m_root = endNode; 
 			return (m_root);
 		}

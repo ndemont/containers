@@ -1,6 +1,5 @@
 #include "checker.hpp"
 
-
 template <typename T>
 void	printSize(NAMESPACE::vector<T> const &vct, bool print_content = true)
 {

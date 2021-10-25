@@ -1,53 +1,21 @@
 #include "checker.hpp"
 
-template <typename T>
-void	printSize(NAMESPACE::vector<T> const &vct, bool print_content = true)
+int	main(void)
 {
-	const size_t size = vct.size();
-	const size_t capacity = vct.capacity();
-	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
-
-	std::cout << "size: " << size << std::endl;
-	std::cout << "capacity: " << isCapacityOk << std::endl;
-	std::cout << "max_size: " << vct.max_size() << std::endl;
-	if (print_content)
-	{
-		typename NAMESPACE::vector<T>::const_iterator it = vct.begin();
-		typename NAMESPACE::vector<T>::const_iterator ite = vct.end();
-		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
-			std::cout << "- " << *it << std::endl;
-	}
-	std::cout << "###############################################" << std::endl;
-}
-
-int main (void)
-{
-	NAMESPACE::vector<TYPE> foo(3, 15);
-	NAMESPACE::vector<TYPE> bar(5, 42);
-	
-	NAMESPACE::vector<TYPE>::const_iterator it_foo = foo.begin();
-	NAMESPACE::vector<TYPE>::const_iterator it_bar = bar.begin();
-
-	std::cout << "BEFORE SWAP" << std::endl;
-
-	std::cout << "foo contains:" << std::endl;
-	printSize(foo);
-	std::cout << "bar contains:" << std::endl;
-	printSize(bar);
+	NAMESPACE::vector<TYPE> foo (3,100);   // three ints with a value of 100
+	NAMESPACE::vector<TYPE> bar (5,200);   // five ints with a value of 200
 
 	foo.swap(bar);
 
-	std::cout << "AFTER SWAP" << std::endl;
+	std::cout << "foo contains:";
+	for (unsigned i = 0; i < foo.size(); i++)
+		std::cout << ' ' << foo[i];
+	std::cout << std::endl;
 
-	std::cout << "foo contains:" << std::endl;
-	printSize(foo);
-	std::cout << "bar contains:" << std::endl;
-	printSize(bar);
+	std::cout << "bar contains:";
+	for (unsigned i = 0; i < bar.size(); i++)
+		std::cout << ' ' << bar[i];
+	std::cout << std::endl;
 
-	std::cout << "Iterator validity:" << std::endl;
-	std::cout << (it_foo == bar.begin()) << std::endl;
-	std::cout << (it_bar == foo.begin()) << std::endl;
-
-	return (0);
+	return 0;
 }

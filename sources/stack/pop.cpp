@@ -2,5 +2,18 @@
 
 int	main(void)
 {
-	return (0);
+	NAMESPACE::stack<int>	mystack;
+
+	for (int i = 0; i < 5; ++i)
+		mystack.push(i);
+
+	std::cout << "Popping out elements...";
+	while (!mystack.empty())
+	{
+		std::cout << ' ' << mystack.top();
+		mystack.pop();
+	}
+	std::cout << std::endl;
+
+	return 0;
 }

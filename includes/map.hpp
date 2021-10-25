@@ -22,7 +22,7 @@ namespace ft
 	template <typename T>
 	struct tree
 	{
-		T		        pair;
+		T				pair;
 		bool			end;
 		struct tree<T>	*father;
 		struct tree<T>	*left;
@@ -404,7 +404,7 @@ class map
 
 			return range; 
 		};
-		ft::pair<iterator,iterator>				equal_range(const key_type& k)
+		ft::pair<iterator,iterator>	equal_range(const key_type& k)
 		{ 
 			ft::pair<iterator, iterator> range;
 			
@@ -521,7 +521,7 @@ class map
 			return false;
 		}
 
-		node_type	*initEnd()
+		node_type	*initEnd(void)
 		{
 			node_type*	endNode = m_node_alloc.allocate(1);
 			m_node_alloc.construct(endNode, node_type(value_type(), true));

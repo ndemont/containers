@@ -1,7 +1,7 @@
 #include "checker.hpp"
 
 template <typename T>
-void	printSize(NAMESPACE::vector<T> const &vct, bool print_content = true)
+void	DisplayContainer(NAMESPACE::vector<T> const &vct, bool print_content = true)
 {
 	const size_t size = vct.size();
 	const size_t capacity = vct.capacity();
@@ -25,7 +25,7 @@ void	checkErase(NAMESPACE::vector<std::string> const &vct, NAMESPACE::vector<std
 {
 	static int i = 0;
 	std::cout << "[" << i++ << "] " << "erase: " << it - vct.begin() << std::endl;
-	printSize(vct);
+	DisplayContainer(vct);
 }
 
 int		main(void)
@@ -34,7 +34,7 @@ int		main(void)
 
 	for (unsigned long int i = 0; i < vct.size(); ++i)
 		vct[i] = std::string((vct.size() - i), i + 65);
-	printSize(vct);
+	DisplayContainer(vct);
 
 	checkErase(vct, vct.erase(vct.begin() + 2));
 
@@ -46,14 +46,14 @@ int		main(void)
 
 	vct.push_back("Hello");
 	vct.push_back("Hi there");
-	printSize(vct);
+	DisplayContainer(vct);
 	checkErase(vct, vct.erase(vct.end() - 3, vct.end()));
 
 	vct.push_back("ONE");
 	vct.push_back("TWO");
 	vct.push_back("THREE");
 	vct.push_back("FOUR");
-	printSize(vct);
+	DisplayContainer(vct);
 	checkErase(vct, vct.erase(vct.begin(), vct.end()));
 
 	return (0);

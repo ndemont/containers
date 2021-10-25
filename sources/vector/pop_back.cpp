@@ -1,7 +1,7 @@
 #include "checker.hpp"
 
 template <typename T>
-void	printSize(NAMESPACE::vector<T> const &vct, bool print_content = true)
+void	DisplayContainer(NAMESPACE::vector<T> const &vct, bool print_content = true)
 {
 	const size_t size = vct.size();
 	const size_t capacity = vct.capacity();
@@ -16,6 +16,7 @@ void	printSize(NAMESPACE::vector<T> const &vct, bool print_content = true)
 		typename NAMESPACE::vector<T>::const_iterator ite = vct.end();
 		std::cout << std::endl << "Content is:" << std::endl;
 		for (; it != ite; ++it)
+		\
 			std::cout << "- " << *it << std::endl;
 	}
 	std::cout << "###############################################" << std::endl;
@@ -30,21 +31,21 @@ int		main(void)
 
 	for (unsigned long int i = 0; i < vct.size(); ++i)
 		it[i] = std::string((vct.size() - i), i + 65);
-	printSize(vct, true);
+	DisplayContainer(vct, true);
 
 	std::cout << "push_back():\n" << std::endl;
 
 	vct.push_back("One long string");
 	vct2.push_back("Another long string");
 
-	printSize(vct);
-	printSize(vct2);
+	DisplayContainer(vct);
+	DisplayContainer(vct2);
 
 	vct.pop_back();
 	vct2.pop_back();
 
-	printSize(vct);
-	printSize(vct2);
+	DisplayContainer(vct);
+	DisplayContainer(vct2);
 
 	return (0);
 }

@@ -176,7 +176,7 @@ v_insert: init_vector
 v_max_size: init_vector
 			@${CC} ${CFLAGS} -I${INC_DIR} ${VCT_DIR}/max_size.cpp
 			@touch ${RSLT_DIR}/${VECTOR}/max_size_ft
-			@./a.out > ${RSLT_DIR}/${VECTOR}/max_size_d\ft
+			@./a.out > ${RSLT_DIR}/${VECTOR}/max_size_ft
 			@${CC} ${CFLAGS} -I${INC_DIR} ${VCT_DIR}/max_size.cpp -D NAMESPACE=std
 			@touch ${RSLT_DIR}/${VECTOR}/max_size_std
 			@./a.out > ${RSLT_DIR}/${VECTOR}/max_size_std
@@ -311,7 +311,7 @@ m_clear: init_map
 m_count: init_map
 			@${CC} ${CFLAGS} -I${INC_DIR} ${MAP_DIR}/count.cpp
 			@touch ${RSLT_DIR}/${MAP}/count_ft
-			@./a.out > ${RSLT_DIR}/${MAP}/coun_ft
+			@./a.out > ${RSLT_DIR}/${MAP}/count_ft
 			@${CC} ${CFLAGS} -I${INC_DIR} ${MAP_DIR}/count.cpp -D NAMESPACE=std
 			@touch ${RSLT_DIR}/${MAP}/count_std
 			@./a.out > ${RSLT_DIR}/${MAP}/count_std
@@ -461,11 +461,11 @@ m_swap: init_map
 			@${CC} ${CFLAGS} -I${INC_DIR} ${SRCS_DIR}/checker.cpp && ./a.out ${DIFF_DIR}/${MAP}/swap_diff
 m_uppr_bnd: init_map
 			@${CC} ${CFLAGS} -I${INC_DIR} ${MAP_DIR}/upper_bound.cpp
-			@touch ${RSLT_DIR}/${MAP}/upper_bound_ftß
+			@touch ${RSLT_DIR}/${MAP}/upper_bound_ft
 			@./a.out > ${RSLT_DIR}/${MAP}/upper_bound_ft
 			@${CC} ${CFLAGS} -I${INC_DIR} ${MAP_DIR}/upper_bound.cpp -D NAMESPACE=std
 			@touch ${RSLT_DIR}/${MAP}/upper_bound_std
-			@./a.out > ${RSLT_DIR}/${MAP}/upper_bound
+			@./a.out > ${RSLT_DIR}/${MAP}/upper_bound_std
 			@touch ${DIFF_DIR}/${MAP}/upper_bound_diff
 			@diff ${RSLT_DIR}/${MAP}/upper_bound_ft ${RSLT_DIR}/${MAP}/upper_bound_std > ${DIFF_DIR}/${MAP}/upper_bound_diff
 			@${CC} ${CFLAGS} -I${INC_DIR} ${SRCS_DIR}/checker.cpp && ./a.out ${DIFF_DIR}/${MAP}/upper_bound_diff

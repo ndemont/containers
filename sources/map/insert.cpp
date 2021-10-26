@@ -26,11 +26,11 @@ int	main(void)
 	anothermap.insert(mymap.begin(),mymap.find('c'));
 
 	// showing contents:
-	std::cout << "mymap contains:\n";
+	std::cout << "mymap contains:" << std::endl;
 	for (it = mymap.begin(); it!=mymap.end(); ++it)
 		std::cout << it->first << " => " << it->second << std::endl;
 
-	std::cout << "anothermap contains:\n";
+	std::cout << "anothermap contains:" << std::endl;
 	for (it = anothermap.begin(); it != anothermap.end(); ++it)
 		std::cout << it->first << " => " << it->second << std::endl;
 

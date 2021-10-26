@@ -4,9 +4,9 @@ int	main(void)
 {
 	NAMESPACE::map<char,int> mymap;
 
-	mymap['a']=10;
-	mymap['b']=20;
-	mymap['c']=30;
+	mymap['a'] = 10;
+	mymap['b'] = 20;
+	mymap['c'] = 30;
 
 	NAMESPACE::pair<NAMESPACE::map<char,int>::iterator, NAMESPACE::map<char,int>::iterator> ret;
 	ret = mymap.equal_range('b');

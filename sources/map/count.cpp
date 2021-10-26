@@ -5,9 +5,9 @@ int	main(void)
 	NAMESPACE::map<char,int>	mymap;
 	char						c;
 
-	mymap ['a']=101;
-	mymap ['c']=202;
-	mymap ['f']=303;
+	mymap['a'] = 101;
+	mymap['c'] = 202;
+	mymap['f'] = 303;
 
 	for (c = 'a'; c < 'h'; c++)
 	{

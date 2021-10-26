@@ -5,10 +5,10 @@ int	main(void)
 	NAMESPACE::map<char,int>			mymap;
 	NAMESPACE::map<char,int>::iterator	it;
 
-	mymap['a']=50;
-	mymap['b']=100;
-	mymap['c']=150;
-	mymap['d']=200;
+	mymap['a'] = 50;
+	mymap['b'] = 100;
+	mymap['c'] = 150;
+	mymap['d'] = 200;
 
 	it = mymap.find('b');
 	if (it != mymap.end())

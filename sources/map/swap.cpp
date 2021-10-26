@@ -5,12 +5,12 @@ int	main(void)
 	NAMESPACE::map<char,int>	foo;
 	NAMESPACE::map<char,int>	bar;
 
-	foo['x']=100;
-	foo['y']=200;
+	foo['x'] = 100;
+	foo['y'] = 200;
 
-	bar['a']=11;
-	bar['b']=22;
-	bar['c']=33;
+	bar['a'] = 11;
+	bar['b'] = 22;
+	bar['c'] = 33;
 
 	foo.swap(bar);
 
@@ -20,7 +20,7 @@ int	main(void)
 
 	std::cout << "bar contains:\n";
 	for (NAMESPACE::map<char,int>::iterator it = bar.begin(); it != bar.end(); ++it)
-		std::cout << it->first << " => " << it->second << '\n';
+		std::cout << it->first << " => " << it->second << std::endl;
 
 	return 0;
 }

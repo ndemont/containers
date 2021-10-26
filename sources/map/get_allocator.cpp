@@ -7,7 +7,7 @@ int	main(void)
 	std::pair<const char,int>*	p;
 
 	// allocate an array of 5 elements using mymap's allocator:
-	p=mymap.get_allocator().allocate(5);
+	p = mymap.get_allocator().allocate(5);
 
 	// assign some values to array
 	psize = sizeof(std::map<char,int>::value_type) * 5;

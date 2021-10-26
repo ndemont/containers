@@ -3,8 +3,8 @@
 int main (void)
 {
 	NAMESPACE::vector<TYPE> myvector;
-	int * p;
-	unsigned int i;
+	int*					p;
+	unsigned int			i;
 
 	// allocate an array with space for 5 elements using vector's allocator:
 	p = myvector.get_allocator().allocate(5);

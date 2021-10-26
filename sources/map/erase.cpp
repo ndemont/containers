@@ -6,12 +6,12 @@ int	main(void)
 	NAMESPACE::map<char,int>::iterator	it;
 
 	// insert some values:
-	mymap['a']=10;
-	mymap['b']=20;
-	mymap['c']=30;
-	mymap['d']=40;
-	mymap['e']=50;
-	mymap['f']=60;
+	mymap['a'] = 10;
+	mymap['b'] = 20;
+	mymap['c'] = 30;
+	mymap['d'] = 40;
+	mymap['e'] = 50;
+	mymap['f'] = 60;
 
 	it = mymap.find('b');
 	mymap.erase (it);                   // erasing by iterator

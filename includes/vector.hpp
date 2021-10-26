@@ -4,11 +4,8 @@
 # include <memory>
 # include <stdexcept>
 # include "iterator_traits.hpp"
-# include "input_iterator.hpp"
 # include "iterator.hpp"
 # include "pair.hpp"
-# include "random_access_iterator_tag.hpp"
-# include "reverse_iterator.hpp"
 # include "vector_iterator.hpp"
 # include "lexicographical_compare.hpp"
 # include "equal.hpp"
@@ -359,23 +356,7 @@ class vector
 		friend bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(rhs < lhs)); }
 		friend bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs < rhs)); }
 
-		friend void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
-		{
-			pointer			vector = x.m_vector;
-			size_type		size = x.m_size;
-			size_type		capacity = x.m_capacity;
-			allocator_type	alloc = x.m_alloc;
 
-			x.m_vector = y.m_vector;
-			x.m_size = y.m_size;
-			x.m_capacity = y.m_capacity;
-			x.m_alloc = y.m_alloc;
-
-			y.m_vector = vector;
-			y.m_size = size;
-			y.m_capacity = capacity;
-			y.m_alloc = alloc;
-		}
 
 	private:
 		pointer				m_vector;
@@ -383,6 +364,12 @@ class vector
 		size_type			m_capacity;
 		allocator_type 		m_alloc;
 };
+
+	template <class T, class Alloc>
+	void swap(ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y)
+	{
+		x.swap(y);
+	}
 
 template <class Alloc>
 class vector<bool,Alloc>;

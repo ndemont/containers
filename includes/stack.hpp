@@ -34,6 +34,7 @@ class stack
 	private:
 		container_type	m_ctnr;
 };
+
 };
 
 #endif

@@ -4,14 +4,11 @@
 
 # include "binary_function.hpp"
 # include "equal.hpp"
-# include "input_iterator.hpp"
 # include "iterator.hpp"
 # include "iterator_traits.hpp"
 # include "lexicographical_compare.hpp"
 # include "map.hpp"
 # include "pair.hpp"
-# include "random_access_iterator_tag.hpp"
-# include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -33,7 +30,6 @@ class map_iterator : public ft::iterator<random_access_iterator_tag, T>
 		map_iterator(void) {};
 		map_iterator(iterator_type *x) : m_iterator(x) {};
 		map_iterator(map_iterator const & x) : m_iterator(x.base()) {};
-		//map_iterator(const_map_iterator<T, U> const & x) : m_iterator(x.base()) {};
 		~map_iterator(void){};
 
 		map_iterator&			operator=(const map_iterator& x) { m_iterator = x.m_iterator; return *this; }

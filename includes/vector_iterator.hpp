@@ -3,10 +3,7 @@
 # define VECTOR_ITERATOR_HPP
 
 # include "iterator_traits.hpp"
-# include "input_iterator.hpp"
 # include "iterator.hpp"
-# include "random_access_iterator_tag.hpp"
-# include "reverse_iterator.hpp"
 # include "vector.hpp"
 
 namespace ft

@@ -4,14 +4,11 @@
 # include <memory>
 # include "binary_function.hpp"
 # include "equal.hpp"
-# include "input_iterator.hpp"
 # include "iterator.hpp"
 # include "iterator_traits.hpp"
 # include "lexicographical_compare.hpp"
 # include "map_iterator.hpp"
 # include "pair.hpp"
-# include "random_access_iterator_tag.hpp"
-# include "reverse_iterator.hpp"
 
 # define BLACK 0
 # define RED 1

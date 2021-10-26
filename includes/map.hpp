@@ -24,6 +24,7 @@ namespace ft
 	{
 		T				pair;
 		bool			end;
+		int				nada;
 		struct tree<T>	*father;
 		struct tree<T>	*left;
 		struct tree<T>	*right;

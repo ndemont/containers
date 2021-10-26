@@ -1,52 +1,27 @@
 #include "checker.hpp"
 
-template <typename T>
-void	DisplayContainer(NAMESPACE::vector<T> const &vct, bool print_content = true)
+int	main(void)
 {
-	const size_t size = vct.size();
-	const size_t capacity = vct.capacity();
-	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
+  NAMESPACE::vector<TYPE> 			myvector(3,100);
+  namespace::vector<TYPE>::iterator	it;
 
-	std::cout << "size: " << size << std::endl;
-	std::cout << "capacity: " << isCapacityOk << std::endl;
-	std::cout << "max_size: " << vct.max_size() << std::endl;
-	if (print_content)
-	{
-		typename NAMESPACE::vector<T>::const_iterator it = vct.begin();
-		typename NAMESPACE::vector<T>::const_iterator ite = vct.end();
-		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
-			std::cout << "- " << *it << std::endl;
-	}
-	std::cout << "###############################################" << std::endl;
-}
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
 
-int		main(void)
-{
-	NAMESPACE::vector<TYPE> vct(10);
-	NAMESPACE::vector<TYPE> vct2;
+  myvector.insert (it,2,300);
 
-	for (unsigned long int i = 0; i < vct.size(); ++i)
-		vct[i] = (vct.size() - i) * 3;
-	DisplayContainer(vct);
+  // "it" no longer valid, get a new one:
+  it = myvector.begin();
 
-	vct2.insert(vct2.end(), 42);
-	vct2.insert(vct2.begin(), 2, 21);
-	DisplayContainer(vct2);
+  NAMESPACE::vector<TYPE>	anothervector(2,400);
+  myvector.insert(it + 2, anothervector.begin(), anothervector.end());
 
-	vct2.insert(vct2.end() - 2, 42);
-	DisplayContainer(vct2);
+  int myarray[] = { 501,502,503 };
+  myvector.insert(myvector.begin(), myarray, myarray + 3);
 
-	vct2.insert(vct2.end(), 2, 84);
-	DisplayContainer(vct2);
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;
+  std::cout << std::endl;
 
-	vct2.resize(4);
-	DisplayContainer(vct2);
-
-	vct2.insert(vct2.begin() + 2, vct.begin(), vct.end());
-	vct.clear();
-	DisplayContainer(vct2);
-
-	DisplayContainer(vct);
-	return (0);
-}
+  

@@ -364,17 +364,11 @@ class vector
 		size_type			m_capacity;
 		allocator_type 		m_alloc;
 };
-
 	template <class T, class Alloc>
 	void swap(ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y)
 	{
 		x.swap(y);
 	}
-
-template <class Alloc>
-class vector<bool,Alloc>;
-
-
 };
 
 #endif

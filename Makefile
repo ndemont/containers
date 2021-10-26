@@ -429,6 +429,18 @@ m_rbegin: init_map
 			@touch ${DIFF_DIR}/${MAP}/rbegin_diff
 			@diff ${RSLT_DIR}/${MAP}/rbegin_ft ${RSLT_DIR}/${MAP}/rbegin_std > ${DIFF_DIR}/${MAP}/rbegin_diff
 			@${CC} ${CFLAGS} -I${INC_DIR} ${SRCS_DIR}/checker.cpp && ./a.out ${DIFF_DIR}/${MAP}/rbegin_diff
+
+m_rel_op: init_map
+			@${CC} ${CFLAGS} -I${INC_DIR} ${MAP_DIR}/relational_operators.cpp
+			@touch ${RSLT_DIR}/${MAP}/relational_operators_ft
+			@./a.out > ${RSLT_DIR}/${MAP}/relational_operators_ft
+			@${CC} ${CFLAGS} -I${INC_DIR} ${MAP_DIR}/relational_operators.cpp -D NAMESPACE=std
+			@touch ${RSLT_DIR}/${MAP}/relational_operators_std
+			@./a.out > ${RSLT_DIR}/${MAP}/relational_operators_std
+			@touch ${DIFF_DIR}/${MAP}/relational_operators_diff
+			@diff ${RSLT_DIR}/${MAP}/relational_operators_ft ${RSLT_DIR}/${MAP}/relational_operators_std > ${DIFF_DIR}/${MAP}/relational_operators_diff
+			@${CC} ${CFLAGS} -I${INC_DIR} ${SRCS_DIR}/checker.cpp && ./a.out ${DIFF_DIR}/${MAP}/relational_operators_diff
+
 m_rend: init_map
 			@${CC} ${CFLAGS} -I${INC_DIR} ${MAP_DIR}/rend.cpp
 			@touch ${RSLT_DIR}/${MAP}/rend_ft
@@ -546,7 +558,7 @@ s_top: init_stack
 			@${CC} ${CFLAGS} -I${INC_DIR} ${SRCS_DIR}/checker.cpp && ./a.out ${DIFF_DIR}/${STACK}/top_diff
 
 vector:	v_accss_op v_assign v_at v_back v_begin v_capacity v_clear v_empty v_end v_erase v_front v_get_alloc v_insert v_max_size v_pop_back v_push_back v_rbegin v_rel_op v_rend v_reserve v_resize v_size v_swap
-map: m_accss_op m_begin m_clear m_count m_empty m_end m_eql_rng m_erase m_find m_get_alloc m_insert m_key_comp m_lwr_bnd m_max_size m_rbegin m_rend m_size m_swap m_uppr_bnd m_val_cmp
+map: m_accss_op m_begin m_clear m_count m_empty m_end m_eql_rng m_erase m_find m_get_alloc m_insert m_key_comp m_lwr_bnd m_max_size m_rbegin m_rel_op m_rend m_size m_swap m_uppr_bnd m_val_cmp
 stack: s_empty s_pop s_push s_rel_op s_size s_top
 
 clean:

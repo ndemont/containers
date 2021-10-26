@@ -18,7 +18,19 @@ int	main(void)
 	for (NAMESPACE::map<char,int>::iterator it = foo.begin(); it != foo.end(); ++it)
 		std::cout << it->first << " => " << it->second << std::endl;
 
-	std::cout << "bar contains:\n";
+	std::cout << "bar contains:" << std::endl;
+	for (NAMESPACE::map<char,int>::iterator it = bar.begin(); it != bar.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	std::cout << "Non member swap" << std::endl;
+
+	swap(foo,bar);
+
+	std::cout << "foo contains:" << std::endl;
+	for (NAMESPACE::map<char,int>::iterator it = foo.begin(); it != foo.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	std::cout << "bar contains:" << std::endl;
 	for (NAMESPACE::map<char,int>::iterator it = bar.begin(); it != bar.end(); ++it)
 		std::cout << it->first << " => " << it->second << std::endl;
 

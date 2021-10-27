@@ -31,7 +31,7 @@ class stack
 	friend bool	operator>(const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return (lhs.m_ctnr > rhs.m_ctnr); }
 	friend bool	operator>=(const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return (lhs.m_ctnr >= rhs.m_ctnr); }
 	
-	private:
+	protected:
 		container_type	m_ctnr;
 };
 
